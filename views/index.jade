@@ -1,0 +1,22 @@
+extends layout
+
+block content
+	h1= title
+	p Welcome to #{title}
+	select(id="category")
+		option(value="") Choose a category
+		each val, key in wishlist
+			option(
+				value=key
+			)= helpers.capitalize(val.description)
+	each val, key in wishlist
+		select(class="choices" id=key + "_choices")
+			each choice in wishlist[key].values
+				option(value=choice)= helpers.capitalize(choice) + (helpers.isCurrent(key, current, choice) ? " (current)" : "")
+	button(id="setreminder") Set Reminder
+	if !user
+		a(href="/auth/login") Login
+	else
+		p= "User: " + user.displayName
+		a(href="/auth/logout") Logout
+	script(src="/js/index.js")
