@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 const fs = require('fs');
-const key = fs.readFileSync('./key.pem');
-const cert = fs.readFileSync('./cert.pem');
+//const key = fs.readFileSync('./key.pem');
+//const cert = fs.readFileSync('./cert.pem');
 
 /**
  * Module dependencies.
@@ -23,7 +23,8 @@ app.set('port', port);
  * Create HTTP server.
  */
 
-var server = https.createServer({key: key, cert: cert }, app);
+//var server = https.createServer({key: key, cert: cert }, app);
+var server = http.createServer(app);
 
 /**
  * Listen on provided port, on all network interfaces.
