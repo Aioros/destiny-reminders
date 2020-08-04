@@ -10,6 +10,7 @@ const fs = require('fs');
 
 var app = require('../app');
 var debug = require('debug')('destiny-reminders:server');
+var http = require('http');
 var https = require('https');
 
 /**
