@@ -22,7 +22,7 @@ app.set('port', port);
  * Create HTTP server.
  */
 var server;
-if (process.env.ENVIRONMENT == "prod") { 
+if (process.env.ENVIRONMENT != "local") { 
   server = http.createServer(app);
 } else {
   server = require('https').createServer({
