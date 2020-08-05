@@ -6,12 +6,20 @@ const apiConfig = require("./apiConfig.js");
 
 const aiorosWarlock = "2305843009269797090";
 
-// temporary
-var activityDefUrl = "https://www.bungie.net/common/destiny2_content/json/en/DestinyActivityDefinition-fdddf2ca-57f5-4da0-88d9-10be10a553d5.json";
-var activityTypeDefUrl = "https://www.bungie.net/common/destiny2_content/json/en/DestinyActivityTypeDefinition-fdddf2ca-57f5-4da0-88d9-10be10a553d5.json";
-var milestoneDefUrl = "https://www.bungie.net/common/destiny2_content/json/en/DestinyMilestoneDefinition-fdddf2ca-57f5-4da0-88d9-10be10a553d5.json";
+async function getManifest() {
+	var response = await helpers.getData(apiConfig.baseUrl + "/Destiny2/Manifest");
+	return response.Response;
+}
 
 async function getCurrentActivities() {
+
+	var manifest = await getManifest();
+
+	var activityDefUrl = "https://www.bungie.net" + manifest.jsonWorldComponentContentPaths.en.DestinyActivityDefinition;
+	var activityTypeDefUrl = "https://www.bungie.net" + manifest.jsonWorldComponentContentPaths.en.DestinyActivityTypeDefinition;
+	var milestoneDefUrl = "https://www.bungie.net" + manifest.jsonWorldComponentContentPaths.en.DestinyMilestoneDefinition;
+
+
 	var [availableActivities, actDefs, actTypeDefs, milestones, milestoneDefs] = await Promise.all([
 		helpers.getData(apiConfig.baseUrl + "/Destiny2/2/Profile/4611686018461991702/?components=204"),
 		helpers.getData(activityDefUrl),

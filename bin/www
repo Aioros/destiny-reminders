@@ -1,17 +1,15 @@
 #!/usr/bin/env node
 
-const fs = require('fs');
-//const key = fs.readFileSync('./key.pem');
-//const cert = fs.readFileSync('./cert.pem');
-
 /**
  * Module dependencies.
  */
 
+const dotenv = require("dotenv");
+dotenv.config();
+
 var app = require('../app');
 var debug = require('debug')('destiny-reminders:server');
 var http = require('http');
-var https = require('https');
 
 /**
  * Get port from environment and store in Express.
@@ -23,9 +21,15 @@ app.set('port', port);
 /**
  * Create HTTP server.
  */
-
-//var server = https.createServer({key: key, cert: cert }, app);
-var server = http.createServer(app);
+var server;
+if (process.env.ENVIRONMENT == "prod") { 
+  server = http.createServer(app);
+} else {
+  server = require('https').createServer({
+    key: require('fs').readFileSync('./key.pem'),
+    cert: require('fs').readFileSync('./cert.pem')
+  }, app);
+}
 
 /**
  * Listen on provided port, on all network interfaces.
