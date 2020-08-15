@@ -7,10 +7,6 @@ a {
   color: #00B7FF;
 }
 
-.choices {
-	display: none;
-}
-
-#setreminder {
+.hidden, .placeholder {
 	display: none;
 }

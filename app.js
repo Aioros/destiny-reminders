@@ -21,7 +21,6 @@ passport.use(new BungieOAuth2Strategy({
 		callbackURL: apiConfig.callbackURL
 	},
 	function(accessToken, refreshToken, profile, done) {
-		console.log(profile);
 		helpers.getUserInfo(profile.membershipId).then(user => {
 			return done(null, user);
 		});
