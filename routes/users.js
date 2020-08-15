@@ -7,6 +7,6 @@ router.get("/logout", function(req, res){
 	req.logout();
 	res.redirect('/');
 });
-router.get("/callback", passport.authenticate('bungie-oauth2', { successRedirect: "/", failureRedirect: "/login" }));
+router.get("/callback", passport.authenticate('bungie-oauth2', { successRedirect: "/", failureRedirect: "/" }));
 
 module.exports = router;

@@ -10,13 +10,33 @@ block content
 				value=key
 			)= helpers.capitalize(val.description)
 	each val, key in wishlist
-		select(class="choices" id=key + "_choices")
-			each choice in wishlist[key].values
-				option(value=choice)= helpers.capitalize(choice) + (helpers.isCurrent(key, current, choice) ? " (current)" : "")
-	button(id="setreminder") Set Reminder
+		select(class="choices hidden" id=key + "_choices")
+			each choice in val.values
+				option(value=choice.name)= helpers.capitalize(choice.name) + (helpers.isCurrent(key, choice.name, current) ? " (current)" : "") + (choice.needed.value ? " (needed for " + choice.needed.for.name + ")" : "")
+	div(id="reminder" class="hidden")
+		label Email
+		input(type="email", id="email")
+		button(id="setreminder") Set Reminder
+	div(id="loading" class="hidden") Loading
 	if !user
-		a(href="/auth/login") Login
+		div(class="logged-out")
+			a(href="/auth/login") Login
 	else
-		p= "User: " + user.displayName
-		a(href="/auth/logout") Logout
+		div(class="logged-in")
+			p= "User: " + user.bungieNetUser.displayName + " (" + user.bungieNetUser.membershipId + ")"
+			div(id="user_reminders")
+				h2 Your reminders
+				table
+					thead
+						th Category
+						th Choice
+						th Email
+						th
+					tbody
+						tr(class="reminder placeholder")
+							td(class="category")
+							td(class="choice")
+							td(class="email")
+							td(class="delete") x
+			a(href="/auth/logout") Logout
 	script(src="/js/index.js")

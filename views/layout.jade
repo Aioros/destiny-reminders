@@ -3,5 +3,5 @@ html
 	head
 		title= title
 		link(rel='stylesheet', href='/styles/style.css')
-	body
+	body(data-user= user ? user.bungieNetUser.membershipId : "")
 		block content
