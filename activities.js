@@ -36,7 +36,7 @@ async function getActivityInfo(user) {
 	var flashpointQuest = milestoneInfo[flashpointMilestone.hash].availableQuests[0].questItemHash;
 	var flashpoint = definitions.milestone[flashpointMilestone.hash].quests[flashpointQuest];
 
-	// TODO: crucible rotators, vendors (xur, spider)
+	// TODO: crucible rotators, zero hour, whisper, vendors (xur, spider)
 
 	var today = moment();
 	var start = moment("20200714");
@@ -58,7 +58,9 @@ async function getActivityInfo(user) {
 			reckoning: wishlist.reckoning.values[weekDiff % wishlist.reckoning.values.length].name,
 			menagerie: wishlist.menagerie.values[weekDiff % wishlist.menagerie.values.length].name,
 			altars: wishlist.altars.values[dayDiff % wishlist.altars.values.length].name,
-			wanderingNightmares: wishlist.wanderingNightmares.values[weekDiff % wishlist.wanderingNightmares.values.length].name
+			wanderingNightmares: wishlist.wanderingNightmares.values[weekDiff % wishlist.wanderingNightmares.values.length].name,
+			whisper: wishlist.whisper.values[dayDiff % wishlist.whisper.values.length].name,
+			zeroHour: wishlist.zeroHour.values[dayDiff % wishlist.zeroHour.values.length].name
 		}
 	};
 
@@ -66,7 +68,8 @@ async function getActivityInfo(user) {
 		for (let category in wishlist) {
 			let values = wishlist[category].values;
 			for (let v in wishlist[category].values) {
-				values[v].needed.value = await wishlist[category].isNeeded(values[v], profileInfo, definitions);
+				await wishlist[category].setNeeded(values[v], profileInfo, definitions);
+				//debugger;
 			}
 		}
 	}
