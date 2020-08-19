@@ -49,7 +49,8 @@ module.exports = {
 			milestone: "Milestone",
 			record: "Record",
 			objective: "Objective",
-			collectible: "Collectible"
+			collectible: "Collectible",
+			checklist: "Checklist"
 		};
 		var outputDefs = {};
 
@@ -87,7 +88,7 @@ module.exports = {
 
 	getProfileInfo: async function(user) {
 		var membershipId = user.primaryMembershipId || user.destinyMemberships[0].membershipId;
-		var profileUrl = apiConfig.baseUrl + "/Destiny2/2/Profile/" + membershipId + "/?components=800,900";
+		var profileUrl = apiConfig.baseUrl + "/Destiny2/2/Profile/" + membershipId + "/?components=104,800,900";
 		var profileInfo = {};
 		await this.getData(profileUrl).then(info => {
 			profileInfo.collectibles = info.Response.profileCollectibles.data.collectibles;
@@ -98,6 +99,7 @@ module.exports = {
 					info.Response.characterRecords.data[c].records
 				);
 			}
+			profileInfo.checklists = info.Response.profileProgression.data.checklists;
 		});
 		return profileInfo;
 	},

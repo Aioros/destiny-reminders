@@ -12,7 +12,7 @@ block content
 	each val, key in wishlist
 		select(class="choices hidden" id=key + "_choices")
 			each choice in val.values
-				option(value=choice.name)= helpers.capitalize(choice.name) + (helpers.isCurrent(key, choice.name, current) ? " (current)" : "") + (choice.needed.value ? " (needed for " + choice.needed.for.name + ")" : "")
+				option(value=choice.name)= helpers.capitalize(choice.name) + (helpers.isCurrent(key, choice.name, current) ? " (current)" : "") + (choice.neededFor.some(f => f.value) ? " (needed for " + choice.neededFor.filter(f => f.value).map(f => f.name).join(", ") + ")" : "")
 	div(id="reminder" class="hidden")
 		label Email
 		input(type="email", id="email")
