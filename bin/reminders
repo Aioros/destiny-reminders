@@ -1,0 +1,62 @@
+#!/usr/bin/env node
+
+const dotenv = require("dotenv");
+dotenv.config();
+
+var mailer = require("../mail.js");
+var db = require("../db.js");
+var helpers = require("../helpers.js");
+var wishlist = require("../wishlist.js");
+var getActivityInfo = require("../activities.js");
+
+async function main() {
+
+	await helpers.updateDbInfo();
+
+	var currentActivities = (await getActivityInfo()).current;
+
+	for (let category in currentActivities) {
+
+		var current = currentActivities[category];
+		if (typeof current === "string") {
+			current = [current];
+		}
+		
+		try {
+			var [result,] = await db.query(
+				"SELECT id, user, category, choice, email " +
+					"FROM reminder " +
+					"WHERE category = ? " +
+					"AND choice IN (?)",
+				[category, current]
+			);
+			
+			for (let row of result) {
+				console.log("send reminder to user " + row.user + " at " + row.email + " for " + row.choice);
+				let userName = (await helpers.getUserInfo(row.user)).bungieNetUser.displayName;
+				let text = "Hi " + userName + ", the activity you needed is available now: \n" +
+						helpers.capitalize(wishlist[category].description) + ": " +
+						helpers.capitalize(row.choice);
+				console.log(text);
+				/*let info = await mailer.sendMail({
+					from: '"Destiny Reminders" <postmaster@mg.destinyreminders.net>', // sender address
+					to: row.email,
+					subject: "Reminder: " +
+						helpers.capitalize(wishlist[category].description) + ": " +
+						helpers.capitalize(row.choice),
+					text: text,
+					//html: "<b>Hello world?</b>"
+				});
+				console.log("Message sent: %s", info.messageId);*/
+			}
+		} catch (ex) {
+			console.log("error: ", ex);
+		}
+
+	}
+
+}
+
+main()
+	.then(() => {process.exit();})
+	.catch(console.error);

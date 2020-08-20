@@ -113,11 +113,9 @@ module.exports = {
 	},
 
 	getUserInfo: async function(membershipId) {
-		console.log(membershipId);
 		var userInfo = await this.getData(
 			apiConfig.baseUrl + "/User/GetMembershipsById/"+membershipId+"/0/"
 		);
-		console.log(userInfo.Response);
 		return userInfo.Response;
 	},
 
