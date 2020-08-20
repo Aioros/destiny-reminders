@@ -8,18 +8,6 @@ var getActivityInfo = require("../activities.js");
 
 const db = require("../db.js");
 
-/*router.get("/temp", async function(req, res, next) {
-	const fs = require("fs");
-	var lowlidev = await helpers.getData("https://lowlidev.com.au/destiny/api/v2/map/supported?debug")
-		.then(data => data.data.nodes);
-	lowlidev = lowlidev.filter(node => 
-		node.destinationId == "dreaming-city"
-		&& ["corrupted-egg", "record-scan", "chest"].includes(node.node.type)
-	);
-	await fs.promises.writeFile("./data/lowlidevDc.json", JSON.stringify(lowlidev));
-	res.json({});
-});*/
-
 router.get("/", async function(req, res, next) {
 
 	await helpers.updateDbInfo();
@@ -70,17 +58,13 @@ router.delete("/reminders/:id", async function(req, res, next) {
 	}
 });
 
-router.get("/check/:category/:choice", async function(req, res, next) {
+router.get("/current/:category", async function(req, res, next) {
 
-	var current = await getCurrentActivities();
-	var isCurrent = helpers.isCurrent(req.params.category, req.params.choice, current);
-	res.json({result: isCurrent});
+	await helpers.updateDbInfo();
 
-});
+	var activityInfo = await getActivityInfo();
 
-router.get("/testmail", function(req, res, next) {
-
-
+	res.json(activityInfo.current[req.params.category]);
 
 });
 
