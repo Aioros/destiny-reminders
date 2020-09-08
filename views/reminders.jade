@@ -1,0 +1,28 @@
+extends layout
+
+block content
+	main
+		div.container
+			div.row
+				div.col-auto.mr-auto
+					p My Reminders
+				div.col-auto
+					a.btn.btn-primary(href="/") New Reminder
+			div.row
+				div.table-responsive
+					table#reminders_table.table.table-hover
+						thead
+							tr
+								th(scope="col") Category
+								th(scope="col") Choice
+								th(scope="col") Email
+								th(scope="col") &nbsp;
+						tbody
+							each reminder in reminders
+								tr(data-id=reminder.id)
+									td.reminder-category= helpers.capitalize(wishlist[reminder.category].description)
+									td.reminder-choice= helpers.capitalize(reminder.choice)
+									td.reminder-email= reminder.email
+									td.reminder-delete
+										a(href="#", title="Delete")
+											span.oi.oi-trash

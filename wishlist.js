@@ -1,6 +1,6 @@
 const helpers = require("./helpers.js");
 
-module.exports = {
+module.exports = () => ({
 
 	dailyMissions: {
 		description: "daily heroic story mission",
@@ -527,7 +527,7 @@ module.exports = {
 				name: "shattered ruins (spine of keres)",
 				neededFor: [
 					{type: "triumph", name: "shatter that record", value: false},
-					{type: "lore", name: "ecstasiate i", value: false},
+					{type: "lore", name: "ecstasiate I", value: false},
 					{type: "eggs", name: "corrupted eggs", value: false, checklist: [
 						1084474583,
 						1067697005
@@ -538,7 +538,7 @@ module.exports = {
 				name: "keep of honed edges (harbinger's seclude)",
 				neededFor: [
 					{type: "triumph", name: "honed for speed", value: false},
-					{type: "lore", name: "ecstasiate ii", value: false},
+					{type: "lore", name: "ecstasiate II", value: false},
 					{type: "eggs", name: "corrupted eggs", value: false, checklist: [
 						1084474579,
 						1084474578
@@ -549,7 +549,7 @@ module.exports = {
 				name: "agonarch abyss (bay of drowned wishes)",
 				neededFor: [
 					{type: "triumph", name: "agonarch agony", value: false},
-					{type: "lore", name: "cosmogyre iv", value: false},
+					{type: "lore", name: "cosmogyre IV", value: false},
 					{type: "eggs", name: "corrupted eggs", value: false, checklist: [
 						1084474580,
 						1084474582,
@@ -561,7 +561,7 @@ module.exports = {
 				name: "cimmerian garrison (chamber of starlight)",
 				neededFor: [
 					{type: "triumph", name: "run the gauntlet", value: false},
-					{type: "lore", name: "brephos iii", value: false},
+					{type: "lore", name: "brephos III", value: false},
 					{type: "eggs", name: "corrupted eggs", value: false, checklist: [
 						1067696994,
 						1067697004,
@@ -573,7 +573,7 @@ module.exports = {
 				name: "ouroborea (aphelion's rest)",
 				neededFor: [
 					{type: "triumph", name: "eating your own tail", value: false},
-					{type: "lore", name: "imponent i", value: false},
+					{type: "lore", name: "imponent I", value: false},
 					{type: "eggs", name: "corrupted eggs", value: false, checklist: [
 						1084474577,
 						1084474591,
@@ -598,9 +598,9 @@ module.exports = {
 					var eggsChecklistHash = Object.values(definitions.checklist).find(
 						c => c.displayProperties.name.toLowerCase() == "corrupted eggs"
 					).hash;
-					var missingEggs = f.checklist.filter(egg => egg in profileInfo.checklists[eggsChecklistHash]);
-					f.value = true;
-					f.name += " (" + missingEggs.length + ")";
+					var missingEggs = f.checklist.filter(egg => !profileInfo.checklists[eggsChecklistHash][egg]);
+					f.value = missingEggs.length > 0;
+					f.name = "corrupted eggs (" + missingEggs.length + ")";
 				}
 			});
 		}
@@ -846,4 +846,4 @@ module.exports = {
 		],
 		setNeeded: function() {}
 	}
-};
+});

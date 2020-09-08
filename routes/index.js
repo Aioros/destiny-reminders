@@ -1,7 +1,6 @@
 var express = require('express');
 var router = express.Router();
-
-const nodemailer = require("nodemailer");
+const passport = require("passport");
 
 var helpers = require("../helpers.js");
 var getActivityInfo = require("../activities.js");
@@ -14,12 +13,11 @@ router.get("/", async function(req, res, next) {
 
 	var activityInfo = await getActivityInfo(req.user);
 
-	if (req.isAuthenticated()) {
+	/*if (req.isAuthenticated()) {
 		req.user.userReminders = await helpers.getUserReminders(req.user.bungieNetUser.membershipId);
-	}
+	}*/
 
 	res.render('index', {
-		title: "Destiny Reminders",
 		user: req.isAuthenticated ? req.user : null,
 		helpers: helpers,
 		wishlist: activityInfo.wishlist,
@@ -28,43 +26,51 @@ router.get("/", async function(req, res, next) {
 
 });
 
-router.get("/reminders/user/:user", async function(req, res, next) {
-	res.json(await helpers.getUserReminders(req.params.user));
+router.get("/reminders", function(req, res, next) {
+	if (!req.isAuthenticated()) {
+		res.redirect("/auth/login?returnTo="+encodeURIComponent("/reminders"));
+	} else {
+		return next();
+	}
+}, async function(req, res, next) {
+	var reminders = await helpers.getUserReminders(req.user.bungieNetUser.membershipId);
+	res.render("reminders", {
+		user: req.user,
+		helpers: helpers,
+		wishlist: require("../wishlist.js")(),
+		reminders: reminders
+	});
 });
 
-router.post("/reminders/", async function(req, res, next) {
-	var newReminder = {
-		user: req.isAuthenticated() ? req.user.bungieNetUser.membershipId : null,
-		category: req.body.category,
-		choice: req.body.choice,
-		email: req.body.email
-	};
+router.get("/action", async function(req, res, next) {
+
+	var [id, keep, hash] = [req.query.i, req.query.k, req.query.h];
+	var valid = true;
 	try {
-		var [result,] = await db.query("INSERT INTO reminder SET ?", newReminder);
-		res.json({status: "ok", reminder: {id: result.insertId, ...newReminder}});
+		var [result,] = await db.query("SELECT user, category, choice, keep " +
+			"FROM reminder WHERE id = ? AND hash = ?", [id, hash]);
+		if (result.length == 0) {
+			valid = false;
+		} else {
+			var {user, category, choice} = result[0];
+			user = await helpers.getUserInfo(user);
+			await db.query("UPDATE reminder " +
+				"SET keep = ?, hash = NULL " +
+				"WHERE id = ?", [Number(keep), id]);
+		}
 	} catch (ex) {
 		console.log("error: ", ex);
-		res.json(ex);
+		valid = false;
 	}
-});
 
-router.delete("/reminders/:id", async function(req, res, next) {
-	try {
-		await db.query("DELETE FROM reminder WHERE id = ?", req.params.id);
-		res.json({status: "ok"});
-	} catch (ex) {
-		console.log("error: ", ex);
-		res.json(ex);
-	}
-});
-
-router.get("/current/:category", async function(req, res, next) {
-
-	await helpers.updateDbInfo();
-
-	var activityInfo = await getActivityInfo();
-
-	res.json(activityInfo.current[req.params.category]);
+	res.render("action", {
+		user: user,
+		helpers: helpers,
+		wishlist: require("../wishlist.js")(),
+		category: category,
+		choice: choice,
+		valid: valid
+	});
 
 });
 

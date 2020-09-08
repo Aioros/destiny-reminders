@@ -4,7 +4,8 @@ const config = {
 	port: process.env.DBPORT,
 	user: process.env.DBUSER,
 	password: process.env.DBPASSWORD,
-	database: process.env.DB
+	database: process.env.DB,
+	timezone: "Z"
 }
 
 const pool = mysql.createPool(config);
