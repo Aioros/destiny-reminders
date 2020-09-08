@@ -1,12 +1,47 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+main {
+	padding-top: 12px;
 }
 
-a {
-  color: #00B7FF;
+.oi-account-logout {
+	margin-left: 4px;
 }
 
-.hidden, .placeholder {
-	display: none;
+.category {
+	height: 80px;
+    padding: 10px;
+    margin: 10px 0px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+}
+
+.choice {
+	margin: 4px 0px;
+	padding: 4px;
+	border: 1px solid #ddd;
+}
+
+.current, #reminder_current {
+	background-color: #d3e1ff;
+}
+
+.needed, #reminder_needed {
+	background-color: #fffb88;
+}
+
+#reminder_current, #reminder_needed {
+	padding: 4px;
+}
+
+.current.needed {
+	background-color: #b3ff9f;
+}
+
+.spinner {
+	margin-right: 8px;
+}
+
+@media (max-width: 767.98px) {
+	#reminders_table th, #reminders_table td {
+		padding: .3em;
+	}
 }

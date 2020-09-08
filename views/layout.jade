@@ -1,7 +1,40 @@
 doctype html
-html
+html(lang="en")
 	head
-		title= title
-		link(rel='stylesheet', href='/styles/style.css')
+		meta(charset="utf-8")
+		meta(name="viewport", content="width=device-width, initial-scale=1, shrink-to-fit=no")
+		link(rel="stylesheet", href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css", integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z", crossorigin="anonymous")
+		link(href="/font/css/open-iconic-bootstrap.css", rel="stylesheet")
+		link(rel="stylesheet", href="/styles/style.css")
+		title Destiny Reminders
 	body(data-user= user ? user.bungieNetUser.membershipId : "")
+		block header
+			header
+				nav.navbar.navbar-expand-md.navbar-dark.bg-dark.box-shadow
+					a.navbar-brand.d-flex.align-items-center(href="/")
+						strong Destiny Reminders
+					if user
+						button.navbar-toggler(type="button", data-toggle="collapse", data-target="#navbar_content", aria-controls="navbar_content", aria-expanded="false", aria-label="Toggle navigation")
+							img.user-icon(src="//bungie.net/" + user.bungieNetUser.profilePicturePath, width=30)
+						div#navbar_content.collapse.navbar-collapse
+							ul.navbar-nav.ml-auto
+								li.nav-item
+									a.nav-link(href="/") Home
+								li.nav-item
+									a.nav-link(href="/reminders")= user.bungieNetUser.displayName + "'s Reminders"
+								li.nav-item
+									a.nav-link(href="/auth/logout", aria-label="Logout")
+										| Logout
+										span.oi.oi-account-logout(title="Logout")
+					else
+						ul.navbar-nav.ml-auto
+							li.nav-item
+								a.nav-link.navbar-icon.login(href="/auth/login", title="Login with Bungie.net", aria-label="Login")
+									span.oi.oi-person
 		block content
+		block footer
+			script(src="https://code.jquery.com/jquery-3.5.1.slim.min.js", integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj", crossorigin="anonymous")
+			script(src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js", integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN", crossorigin="anonymous")
+			script(src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js", integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV", crossorigin="anonymous")
+			script(src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.4.0/bootbox.min.js")
+			script(src="/js/index.js")

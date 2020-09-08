@@ -1,10 +1,10 @@
 const moment = require("moment");
 
-const wishlist = require("./wishlist.js");
 const helpers = require("./helpers.js");
 const apiConfig = require("./apiConfig.js");
 
 async function getActivityInfo(user) {
+	var wishlist = require("./wishlist.js")();
 
 	var [definitions, avActivityInfo, milestoneInfo, profileInfo] = await Promise.all([
 		helpers.getDefinitions(),
@@ -39,7 +39,7 @@ async function getActivityInfo(user) {
 	// TODO: crucible rotators, zero hour, whisper, vendors (xur, spider)
 
 	var today = moment();
-	var start = moment("20200714");
+	var start = moment("2020-07-14 17Z");
 	var weekDiff = today.diff(start, "week");
 	var dayDiff = today.diff(start, "day");
 
