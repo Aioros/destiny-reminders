@@ -18,6 +18,7 @@ router.get("/", async function(req, res, next) {
 	}*/
 
 	res.render('index', {
+		section: "home",
 		user: req.isAuthenticated ? req.user : null,
 		helpers: helpers,
 		wishlist: activityInfo.wishlist,
@@ -35,6 +36,7 @@ router.get("/reminders", function(req, res, next) {
 }, async function(req, res, next) {
 	var reminders = await helpers.getUserReminders(req.user.bungieNetUser.membershipId);
 	res.render("reminders", {
+		section: "reminders",
 		user: req.user,
 		helpers: helpers,
 		wishlist: require("../wishlist.js")(),

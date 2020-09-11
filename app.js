@@ -19,7 +19,8 @@ const passport = require('passport');
 const BungieOAuth2Strategy = require('passport-bungie-oauth2').Strategy;
 passport.use(new BungieOAuth2Strategy({
 		clientID: apiConfig.clientID,
-		callbackURL: apiConfig.callbackURL
+		callbackURL: apiConfig.callbackURL,
+    authorizationURL: "https://www.bungie.net/en/OAuth/Authorize?reauth=true"
 	},
 	function(accessToken, refreshToken, profile, done) {
 		helpers.getUserInfo(profile.membershipId).then(user => {

@@ -1,9 +1,8 @@
 extends layout
 
 block content
-	main
+	main.text-light
 		div.container
-			p Create a new reminder
 			div#selection_header.row.d-none
 				div.col-6.name
 				div.col-6
@@ -12,14 +11,18 @@ block content
 			div#main_selection.row
 				each category, key in wishlist
 					- var isNeeded = category.values.some(choice => choice.neededFor.some(f => f.value));
-					div.col-12.col-sm-6.col-md-3
-						div.category(
+					div.col-12.col-sm-6.col-md-4.col-lg-3
+						div.container.category(
 							id="category_" + key,
 							class=isNeeded ? "needed" : "",
 							data-category=key,
 							data-needed=isNeeded,
 							data-description=helpers.capitalize(category.description)
-						)= helpers.capitalize(category.description)
+						)
+							div.row.h-100.no-gutters.align-items-center
+								div.col-3
+									img.category-icon.mw-100(src="/img/"+key+".png")
+								div.col-9.pl-2= helpers.capitalize(category.description)
 			div#parked.d-none
 				each category, key in wishlist
 					each choice in category.values
@@ -47,8 +50,8 @@ block content
 						form
 							div.modal-body
 								div.form-group
-									small#reminder_current.form-text.text-muted.d-none This activity is available now
-									small#reminder_needed.form-text.text-muted.d-none
+									small#reminder_current.form-text.d-none This activity is available now
+									small#reminder_needed.form-text.d-none
 								div.form-group
 									label(for="reminder_email") Email
 									input#reminder_email.form-control(type="email", required, disabled=!user, name="reminder_email", aria-describedby="email_help")
