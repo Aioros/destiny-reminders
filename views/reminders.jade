@@ -1,16 +1,11 @@
 extends layout
 
 block content
-	main
+	main.text-light
 		div.container
 			div.row
-				div.col-auto.mr-auto
-					p My Reminders
-				div.col-auto
-					a.btn.btn-primary(href="/") New Reminder
-			div.row
 				div.table-responsive
-					table#reminders_table.table.table-hover
+					table#reminders_table.table.table-striped.table-dark.table-hover
 						thead
 							tr
 								th(scope="col") Category

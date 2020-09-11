@@ -8,6 +8,7 @@ html(lang="en")
 		link(rel="stylesheet", href="/styles/style.css")
 		title Destiny Reminders
 	body(data-user= user ? user.bungieNetUser.membershipId : "")
+		div#background
 		block header
 			header
 				nav.navbar.navbar-expand-md.navbar-dark.bg-dark.box-shadow
@@ -18,9 +19,9 @@ html(lang="en")
 							img.user-icon(src="//bungie.net/" + user.bungieNetUser.profilePicturePath, width=30)
 						div#navbar_content.collapse.navbar-collapse
 							ul.navbar-nav.ml-auto
-								li.nav-item
+								li.nav-item(class=(section == "home" ? "active" : ""))
 									a.nav-link(href="/") Home
-								li.nav-item
+								li.nav-item(class=(section == "reminders" ? "active" : ""))
 									a.nav-link(href="/reminders")= user.bungieNetUser.displayName + "'s Reminders"
 								li.nav-item
 									a.nav-link(href="/auth/logout", aria-label="Logout")
