@@ -10,16 +10,16 @@ body {
 }
 
 #background {
-	position: fixed; 
+	/*position: fixed; 
 	top: -50%; 
 	left: -50%; 
 	width: 200%; 
 	height: 200%;
-	background: url(/img/bgdark.png) no-repeat center center fixed, #0e0e0e;
+	/*background: url(/img/bgdark.png) no-repeat center center fixed, #0e0e0e;
     background-size: cover;
     filter: blur(1.5px);
     opacity: 0.3;
-    animation: spin 240s linear infinite;
+    animation: spin 240s linear infinite;*/
 }
 #background img {
 	position: absolute; 
