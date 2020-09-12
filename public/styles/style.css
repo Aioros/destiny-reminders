@@ -17,8 +17,8 @@ body {
 	height: 200%;
 	background: url(/img/bgdark.png) no-repeat center center fixed, #0e0e0e;
     background-size: cover;
-    filter: blur(1.5px);
     opacity: 0.3;
+    /*filter: blur(1.5px);
     /*animation: spin 240s linear infinite;*/
 }
 #background img {
