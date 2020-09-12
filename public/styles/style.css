@@ -89,7 +89,7 @@ main {
 }
 
 .needed, #reminder_needed {
-	background-color: #d0c000;
+	background-color: #a99400;
 	font-weight: bold;
 	text-shadow: 1px 1px 4px black;
 }
