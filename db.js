@@ -11,7 +11,7 @@ if (process.env.ENVIRONMENT == "local") {
     config.host = process.env.DBHOST;
 	config.port = process.env.DBPORT;
 } else {
-	config.socketPath = "`/cloudsql/${process.env.CLOUD_SQL_CONNECTION_NAME}`";
+	config.socketPath = `/cloudsql/${process.env.CLOUD_SQL_CONNECTION_NAME}`;
 }
 console.log(config);
 
