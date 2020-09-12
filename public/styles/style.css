@@ -18,7 +18,6 @@ body {
 	background: url(/img/bgdarkblur.png) no-repeat center center fixed;
     background-size: cover;
     opacity: 0.7;
-    /*filter: blur(1.5px);*/
     animation: spin 240s linear infinite;
 }
 #background img {
@@ -90,12 +89,14 @@ main {
 }
 
 .needed, #reminder_needed {
-	background-color: #a29600;
+	background-color: #d0c000;
+	font-weight: bold;
+	text-shadow: 1px 1px 4px black;
 }
 
 #reminder_current, #reminder_needed {
 	padding: 4px;
-	color: #b8b8b8;
+	color: #d6d6d6;
 }
 
 .current.needed {
