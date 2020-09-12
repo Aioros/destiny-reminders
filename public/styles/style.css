@@ -18,8 +18,8 @@ body {
 	background: url(/img/bgdark.png) no-repeat center center fixed, #0e0e0e;
     background-size: cover;
     opacity: 0.3;
-    /*filter: blur(1.5px);
-    /*animation: spin 240s linear infinite;*/
+    /*filter: blur(1.5px);*/
+    animation: spin 240s linear infinite;
 }
 #background img {
 	position: absolute; 
