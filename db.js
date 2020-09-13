@@ -13,7 +13,6 @@ if (process.env.ENVIRONMENT == "local") {
 } else {
 	config.socketPath = `/cloudsql/${process.env.CLOUD_SQL_CONNECTION_NAME}`;
 }
-console.log(config);
 
 const pool = mysql.createPool(config);
 
