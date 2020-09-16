@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const passport = require("passport");
+const fetch = require("node-fetch");
 
 var helpers = require("../helpers.js");
 var getActivityInfo = require("../activities.js");
@@ -79,9 +80,38 @@ router.get("/action", async function(req, res, next) {
 
 });
 
-router.get("/runReminders", function(req, res, next) {
-	console.log(req.headers);
-	res.json(req.headers);
+router.get("/runReminders", async function(req, res, next) {
+	var authHeader = req.header("Authorization");
+	if (!authHeader || !authHeader.startsWith("Bearer ")) {
+		res.sendStatus(401);
+	} else {
+		try {
+			var token = authHeader.substring(7, authHeader.length);
+
+			const {OAuth2Client} = require('google-auth-library');
+			const client = new OAuth2Client("destinyreminders.net");
+			const ticket = await client.verifyIdToken({
+				idToken: token,
+				audience: "destinyreminders.net"
+			});
+			const payload = ticket.getPayload();
+			const userid = payload['sub'];
+
+			/*const response = await fetch("https://oauth2.googleapis.com/tokeninfo?id_token="+token);
+			if (
+				response.aud.includes("destinyreminders.net") &&
+				response.iss.includes("accounts.google.com") &&
+			) {
+
+			}*/
+			console.log("USER", userid);
+			console.log(payload);
+			res.json(200);
+		} catch (ex) {
+			console.log(ex);
+			res.sendStatus(401);
+		}
+	}
 });
 
 module.exports = router;
