@@ -1,0 +1,7 @@
+#!/usr/bin/env node
+
+var sweepReminders = require("../sweepReminders.js");
+
+sweepReminders()
+	.then(() => {process.exit();})
+	.catch(console.error);

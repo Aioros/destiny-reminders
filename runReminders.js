@@ -1,3 +1,6 @@
+const dotenv = require("dotenv");
+dotenv.config();
+
 var moment = require("moment");
 var crypto = require("crypto");
 var mailer = require("./mail.js");

@@ -80,7 +80,7 @@ router.get("/action", async function(req, res, next) {
 
 });
 
-router.get("/runReminders", async function(req, res, next) {
+router.get("/run/:action", async function(req, res, next) {
 	var authHeader = req.header("Authorization");
 	if (!authHeader || !authHeader.startsWith("Bearer ")) {
 		res.sendStatus(401);
@@ -100,8 +100,19 @@ router.get("/runReminders", async function(req, res, next) {
 			if (!userid) {
 				res.sendStatus(401);
 			} else {
-				var runReminders = require("../runReminders.js");
-				runReminders().catch(console.error);
+				var action;
+				switch (req.params.action) {
+					case "reminders":
+						action = require("../runReminders.js");
+						break;
+					case "sweep":
+						action = require("../sweepReminders.js");
+						break;
+					default:
+						action = function() {};
+				}
+				action().catch(console.error);
+				res.sendStatus(200);
 			}
 		} catch (ex) {
 			console.log(ex);
