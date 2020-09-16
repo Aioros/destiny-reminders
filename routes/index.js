@@ -97,16 +97,12 @@ router.get("/runReminders", async function(req, res, next) {
 			const payload = ticket.getPayload();
 			const userid = payload['sub'];
 
-			/*const response = await fetch("https://oauth2.googleapis.com/tokeninfo?id_token="+token);
-			if (
-				response.aud.includes("destinyreminders.net") &&
-				response.iss.includes("accounts.google.com") &&
-			) {
-
-			}*/
-			console.log("USER", userid);
-			console.log(payload);
-			res.json(200);
+			if (!userid) {
+				res.sendStatus(401);
+			} else {
+				var runReminders = require("./runReminders.js");
+				runReminders().catch(console.error);
+			}
 		} catch (ex) {
 			console.log(ex);
 			res.sendStatus(401);
