@@ -79,4 +79,9 @@ router.get("/action", async function(req, res, next) {
 
 });
 
+router.get("/runReminders", function(req, res, next) {
+	console.log(req);
+	res.json(req);
+});
+
 module.exports = router;
