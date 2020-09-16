@@ -80,8 +80,8 @@ router.get("/action", async function(req, res, next) {
 });
 
 router.get("/runReminders", function(req, res, next) {
-	console.log(req);
-	res.json(req);
+	console.log(req.body);
+	res.json(req.body);
 });
 
 module.exports = router;
