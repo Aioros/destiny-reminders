@@ -100,7 +100,7 @@ router.get("/runReminders", async function(req, res, next) {
 			if (!userid) {
 				res.sendStatus(401);
 			} else {
-				var runReminders = require("./runReminders.js");
+				var runReminders = require("../runReminders.js");
 				runReminders().catch(console.error);
 			}
 		} catch (ex) {
