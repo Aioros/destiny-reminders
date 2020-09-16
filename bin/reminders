@@ -1,16 +1,5 @@
 #!/usr/bin/env node
 
-/*const dotenv = require("dotenv");
-dotenv.config();
-
-var moment = require("moment");
-var crypto = require("crypto");
-var mailer = require("../mail.js");
-var db = require("../db.js");
-var helpers = require("../helpers.js");
-var wishlist = require("../wishlist.js")();
-var getActivityInfo = require("../activities.js");*/
-
 var runReminders = require("../runReminders.js");
 
 runReminders()
