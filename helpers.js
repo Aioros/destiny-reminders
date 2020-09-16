@@ -2,6 +2,7 @@ const fetch = require("node-fetch");
 const fs = require("fs");
 const apiConfig = require("./apiConfig.js");
 const db = require("./db.js");
+const moment = require("moment");
 
 const aiorosMembership = "4611686018461991702";
 //const aiorosWarlock = "2305843009269797090";
@@ -22,11 +23,16 @@ module.exports = {
 
 	getData: async url => {
 		try {
+			var start = moment();
+			var log = start.format("HH:mm:ss:SSS") + "; GET " + url + "; ";
 			const response = await fetch(url, {
 				headers: {
 					"X-API-Key": apiConfig.apiKey
 				}
 			});
+			var end = moment();//.diff(start);
+			log += end.format("HH:mm:ss:SSS") + "; " + end.diff(start) + "ms";
+			//console.log(log);
 			const json = await response.json();
 			return json;
 		} catch (error) {
