@@ -1,9 +1,0 @@
-extends layout
-
-block content
-	h1= title
-	if !valid
-		p Sorry, the reminder was not found
-	else
-		p= user.bungieNetUser.displayName + ", your reminder for " + helpers.capitalize(wishlist[category].description) + ": " + helpers.capitalize(choice) + " has been extended."
-	

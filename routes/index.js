@@ -48,7 +48,7 @@ router.get("/reminders", function(req, res, next) {
 	});
 });
 
-router.get("/action", async function(req, res, next) {
+router.get("/renew", async function(req, res, next) {
 
 	var [id, keep, hash] = [req.query.i, req.query.k, req.query.h];
 	var valid = true;
@@ -69,7 +69,7 @@ router.get("/action", async function(req, res, next) {
 		valid = false;
 	}
 
-	res.render("action", {
+	res.render("renew", {
 		user: user,
 		helpers: helpers,
 		wishlist: require("../wishlist.js")(),

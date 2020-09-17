@@ -1,0 +1,10 @@
+extends layout
+
+block content
+	main.text-light
+		div.container
+			if !valid
+				p Sorry, the reminder was not found
+			else
+				p= user.bungieNetUser.displayName + ", your reminder for " + helpers.capitalize(wishlist[category].description) + ": " + helpers.capitalize(choice) + " has been extended."
+	
