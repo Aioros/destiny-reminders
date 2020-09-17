@@ -32,6 +32,16 @@ async function main() {
 		if (typeof current === "string") {
 			current = [current];
 		}
+
+		var currentValid = [];
+		current.forEach(c => {
+			var valid = wishlist[category].values.find(
+				v => c.toLowerCase().includes(v.name.toLowerCase())
+			);
+			if (valid) {
+				currentValid.push(valid.name);
+			}
+		});
 		
 		try {
 			var [result,] = await db.query(
@@ -39,7 +49,7 @@ async function main() {
 					"FROM reminder " +
 					"WHERE category = ? " +
 					"AND choice IN (?)",
-				[category, current]
+				[category, currentValid]
 			);
 			
 			for (let row of result) {
