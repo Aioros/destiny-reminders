@@ -27,7 +27,7 @@ body {
 	height: 200%;
 	background: url(/img/bgdarkblur.png) no-repeat center center fixed;
     background-size: cover;
-    opacity: 0.7;
+    opacity: 0.4;
     animation: spin 240s linear infinite;
 }
 #background img {
@@ -157,6 +157,10 @@ footer a, footer a:hover {
 }
 
 @media (max-width: 767.98px) {
+	#background {
+		opacity: 0.9;
+	}
+	
 	#reminders_table th, #reminders_table td {
 		padding: .3em;
 	}
