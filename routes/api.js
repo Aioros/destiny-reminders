@@ -24,7 +24,7 @@ router.post("/reminders/", isLoggedIn, async function(req, res, next) {
         email: req.body.email
     };
     try {
-        var [result,] = await db.query("INSERT INTO reminder SET ? ON DUPLICATE KEY UPDATE id=id", newReminder);
+        var [result,] = await db.query("INSERT INTO reminder SET ? ON DUPLICATE KEY UPDATE id=id, keep=1", newReminder);
         res.json({status: "ok", reminder: {id: result.insertId, ...newReminder}});
     } catch (ex) {
         console.log("error: ", ex);
