@@ -23,7 +23,7 @@ async function main() {
 		categories[wishlist[category].frequency].push(category);
 	}
 
-	var deleteQuery = "SELECT * FROM reminder " +
+	var deleteQuery = "DELETE FROM reminder " +
 				"WHERE keep = 0 AND (" +
 					"category IN (?) AND sent_date < ? OR " +
 					"category IN (?) AND sent_date < ?" +

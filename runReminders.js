@@ -63,12 +63,13 @@ async function main() {
 						template: "reminder",
 						message: {
 							from: '"Destiny Reminders ✓" <postmaster@mg.destinyreminders.net>',
-							to: row.email,
+							to: row.email
 						},
 						locals: {
 							userName: userName,
 							category: helpers.capitalize(wishlist[category].description),
 							choice: helpers.capitalize(row.choice),
+							frequency: wishlist[category].frequency,
 							when: wishlist[category].frequency == "weekly" ? "this week" : "today",
 							id: row.id,
 							newHash: newHash
