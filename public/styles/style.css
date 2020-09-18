@@ -25,7 +25,7 @@ body {
 	left: -50%; 
 	width: 200%; 
 	height: 200%;
-	background: url(/img/bgdarkblur.png) no-repeat center center fixed;
+	background: url(/img/bgblur.png) no-repeat center center fixed;
     background-size: cover;
     opacity: 0.4;
     animation: spin 240s linear infinite;
