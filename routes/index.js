@@ -10,17 +10,22 @@ const db = require("../db.js");
 
 router.get("/", async function(req, res, next) {
 
-	await helpers.updateDbInfo();
+	try {
+		await helpers.updateDbInfo();
 
-	var activityInfo = await getActivityInfo(req.user);
+		var activityInfo = await getActivityInfo(req.user);
 
-	res.render('index', {
-		section: "home",
-		user: req.isAuthenticated ? req.user : null,
-		helpers: helpers,
-		wishlist: activityInfo.wishlist,
-		current: activityInfo.current
-	});
+		res.render('index', {
+			section: "home",
+			user: req.isAuthenticated ? req.user : null,
+			helpers: helpers,
+			wishlist: activityInfo.wishlist,
+			current: activityInfo.current
+		});
+	} catch (ex) {
+		console.error(ex);
+		next(createError());
+	}
 
 });
 
@@ -31,21 +36,26 @@ router.get("/reminders", function(req, res, next) {
 		return next();
 	}
 }, async function(req, res, next) {
-	var wishlist = require("../wishlist.js")();
-	var reminders = (await helpers.getUserReminders(req.user.bungieNetUser.membershipId))
-		.sort((a, b) => {
-			var compareCategory = wishlist[a.category].description.localeCompare(wishlist[b.category].description);
-			if (compareCategory !== 0)
-				return compareCategory;
-			return a.choice.localeCompare(b.choice);
+	try {
+		var wishlist = require("../wishlist.js")();
+		var reminders = (await helpers.getUserReminders(req.user.bungieNetUser.membershipId))
+			.sort((a, b) => {
+				var compareCategory = wishlist[a.category].description.localeCompare(wishlist[b.category].description);
+				if (compareCategory !== 0)
+					return compareCategory;
+				return a.choice.localeCompare(b.choice);
+			});
+		res.render("reminders", {
+			section: "reminders",
+			user: req.user,
+			helpers: helpers,
+			wishlist: wishlist,
+			reminders: reminders
 		});
-	res.render("reminders", {
-		section: "reminders",
-		user: req.user,
-		helpers: helpers,
-		wishlist: wishlist,
-		reminders: reminders
-	});
+	} catch (ex) {
+		console.error(ex);
+		next(createError());
+	}
 });
 
 router.get("/renew", async function(req, res, next) {
