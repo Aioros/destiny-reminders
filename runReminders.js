@@ -42,6 +42,10 @@ async function main() {
 				currentValid.push(valid.name);
 			}
 		});
+
+		if (currentValid.length == 0) {
+			continue;
+		}
 		
 		try {
 			var selectQuery = "SELECT id, user, category, choice, email, sent_date, keep " +
