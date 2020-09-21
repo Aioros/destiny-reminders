@@ -28,12 +28,15 @@ async function main() {
 					"category IN (?) AND sent_date < ? OR " +
 					"category IN (?) AND sent_date < ?" +
 				")";
-	//const sql = db.format(deleteQuery, [
+	const sql = db.format(deleteQuery, [
+		categories.weekly, lastReset.weekly.format("YYYY-MM-DD HH:mm:ss"),
+		categories.daily, lastReset.daily.format("YYYY-MM-DD HH:mm:ss")
+	]);
+	console.log(sql);
 	await db.query(deleteQuery, [
 		categories.weekly, lastReset.weekly.format("YYYY-MM-DD HH:mm:ss"),
 		categories.daily, lastReset.daily.format("YYYY-MM-DD HH:mm:ss")
 	]);
-	//console.log(sql);
 
 }
 

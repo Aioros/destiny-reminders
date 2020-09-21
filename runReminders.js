@@ -44,13 +44,13 @@ async function main() {
 		});
 		
 		try {
-			var [result,] = await db.query(
-				"SELECT id, user, category, choice, email, sent_date, keep " +
+			var selectQuery = "SELECT id, user, category, choice, email, sent_date, keep " +
 					"FROM reminder " +
 					"WHERE category = ? " +
-					"AND choice IN (?)",
-				[category, currentValid]
-			);
+					"AND choice IN (?)";
+			const sql = db.format(selectQuery, [category, currentValid]);
+			console.log(sql);
+			var [result,] = await db.query(selectQuery,	[category, currentValid]);
 			
 			for (let row of result) {
 				let sentDate = moment(row.sent_date || "1970-01-01");
