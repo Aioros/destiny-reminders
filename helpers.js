@@ -96,6 +96,7 @@ module.exports = {
 	},
 
 	getProfileInfo: async function(user) {
+		console.log("getProfileInfo", user);
 		var membershipId = user.primaryMembershipId || user.destinyMemberships[0].membershipId;
 		var profileUrl = apiConfig.baseUrl + "/Destiny2/2/Profile/" + membershipId + "/?components=104,800,900";
 		var profileInfo = {};
