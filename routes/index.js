@@ -25,6 +25,9 @@ router.get("/", async function(req, res, next) {
 		});
 	} catch (ex) {
 		console.error(ex);
+		if (ex.name == "BungieAPIException") {
+			next(createError(503, "Bungie APIs are currently unavailable, please retry later", {expose: true}));
+		}
 		next(createError());
 	}
 
@@ -55,6 +58,9 @@ router.get("/reminders", function(req, res, next) {
 		});
 	} catch (ex) {
 		console.error(ex);
+		if (ex.name == "BungieAPIException") {
+			next(createError(503, "Bungie APIs are currently unavailable, please retry later", {expose: true}));
+		}
 		next(createError());
 	}
 });

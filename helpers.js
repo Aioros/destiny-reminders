@@ -7,6 +7,12 @@ const moment = require("moment");
 const aiorosMembership = "4611686018461991702";
 //const aiorosWarlock = "2305843009269797090";
 
+function BungieAPIException(status, message) {
+	this.status = status;
+	this.message = message;
+	this.name = "BungieAPIException";
+}
+
 module.exports = {
 	capitalize: function(str) {
 		return str
@@ -34,9 +40,14 @@ module.exports = {
 			log += end.format("HH:mm:ss:SSS") + "; " + end.diff(start) + "ms";
 			//console.log(log);
 			const json = await response.json();
+			//console.log(json);
+			if (json.ErrorCode > 1) {
+				throw new BungieAPIException(json.ErrorStatus, json.Message);
+			}
 			return json;
 		} catch (error) {
-			console.log(error);
+			console.error(error);
+			throw error;
 		}
 	},
 
