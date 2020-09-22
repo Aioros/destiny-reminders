@@ -4,7 +4,9 @@ const config = {
 	user: process.env.DBUSER,
 	password: process.env.DBPASSWORD,
 	database: process.env.DB,
-	timezone: "Z"
+	timezone: "Z",
+	enableKeepAlive: true,
+	keepAliveInitialDelay: 10000
 };
 
 if (process.env.ENVIRONMENT == "local") {
