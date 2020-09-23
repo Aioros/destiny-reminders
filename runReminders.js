@@ -6,14 +6,15 @@ var crypto = require("crypto");
 var mailer = require("./mail.js");
 var db = require("./db.js");
 var helpers = require("./helpers.js");
-var wishlist = require("./wishlist.js")();
 var getActivityInfo = require("./activities.js");
 
 async function main() {
 	
 	await helpers.updateDbInfo();
 
-	var currentActivities = (await getActivityInfo()).current;
+	var activityInfo = await getActivityInfo();
+	var currentActivities = activityInfo.current;
+	var wishlist = activityInfo.wishlist;
 	
 	let now = moment().utc();
 	let lastReset = {};

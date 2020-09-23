@@ -5,7 +5,10 @@ const db = require("./db.js");
 const moment = require("moment");
 
 const aiorosMembership = "4611686018461991702";
-//const aiorosWarlock = "2305843009269797090";
+const aiorosWarlock = "2305843009269797090";
+
+const dotenv = require("dotenv");
+dotenv.config();
 
 function BungieAPIException(status, message) {
 	this.status = status;
@@ -27,15 +30,30 @@ module.exports = {
 			.join(" ");
 	},
 
-	getData: async url => {
+	getData: async (url, token = null) => {
 		try {
 			var start = moment();
 			var log = start.format("HH:mm:ss:SSS") + "; GET " + url + "; ";
-			const response = await fetch(url, {
-				headers: {
-					"X-API-Key": apiConfig.apiKey
-				}
+			var headers = {
+				"X-API-Key": token ? apiConfig.aiorosApiKey : apiConfig.apiKey
+			};
+			if (token) {
+				headers["Authorization"] = "Bearer " + token.access_token;
+			}
+			var response = await fetch(url, {
+				headers: headers
 			});
+			if (token && response.status == 401) {
+				response = await fetch(apiConfig.baseUrl + "/app/oauth/token/", {
+					method: "POST",
+					headers: {"Content-Type": "application/x-www-form-urlencoded"},
+					body: "client_id="+apiConfig.aiorosClientID+"&client_secret="+apiConfig.clientSecret+"&grant_type=refresh_token&refresh_token="+token.refresh_token
+				});
+				var newToken = await response.json();
+				await fs.promises.writeFile("./data/token.json", JSON.stringify({access_token: newToken.access_token, refresh_token: newToken.refresh_token}));
+				headers["Authorization"] = "Bearer " + newToken.access_token;
+				response = await fetch(url, {headers: headers});
+			}
 			var end = moment();//.diff(start);
 			log += end.format("HH:mm:ss:SSS") + "; " + end.diff(start) + "ms";
 			//console.log(log);
@@ -64,6 +82,8 @@ module.exports = {
 
 	updateDefinitions: function(manifest) {
 		var definitions = {
+			vendor: "Vendor",
+			item: "InventoryItemLite",
 			activity: "Activity",
 			activityType: "ActivityType",
 			milestone: "Milestone",
@@ -104,6 +124,24 @@ module.exports = {
 
 	getMilestoneInfo: function() {
 		return this.getData(apiConfig.baseUrl + "/Destiny2/Milestones").then(info => info.Response);
+	},
+
+	getVendorInfo: async function() {
+		var token;
+		try {
+			token = await fs.promises.readFile("./data/token.json").then(JSON.parse);
+		} catch (ex) {
+			token = {
+				access_token: process.env.AIOROS_AT,
+				refresh_token: process.env.AIOROS_RT
+			};
+			await fs.promises.writeFile("./data/token.json", JSON.stringify(token));
+		}
+		return this.getData(
+			apiConfig.baseUrl + "/Destiny2/2/Profile/" + aiorosMembership
+				+ "/Character/" + aiorosWarlock + "/Vendors/?components=402",
+			token
+		).then(info => info.Response);
 	},
 
 	getProfileInfo: async function(user) {

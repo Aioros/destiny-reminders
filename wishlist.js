@@ -2,6 +2,14 @@ const helpers = require("./helpers.js");
 
 module.exports = () => ({
 
+	banshee: {
+		vendor: true,
+		description: "banshee-44",
+		frequency: "daily",
+		values: [],
+		setNeeded: function() {}
+	},
+
 	dailyMissions: {
 		description: "daily heroic story mission",
 		frequency: "daily",

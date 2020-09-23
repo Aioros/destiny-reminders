@@ -6,10 +6,11 @@ const apiConfig = require("./apiConfig.js");
 async function getActivityInfo(user) {
 	var wishlist = require("./wishlist.js")();
 
-	var [definitions, avActivityInfo, milestoneInfo, profileInfo] = await Promise.all([
+	var [definitions, avActivityInfo, milestoneInfo, vendorInfo, profileInfo] = await Promise.all([
 		helpers.getDefinitions(),
 		helpers.getActivityInfo(),
 		helpers.getMilestoneInfo(),
+		helpers.getVendorInfo(),
 		user ? helpers.getProfileInfo(user) : {}
 	]);
 
@@ -18,6 +19,24 @@ async function getActivityInfo(user) {
 		var activityTypeDefinition = definitions.activityType[activityDefinition.activityTypeHash];
 		activityDefinition.activityTypeName = activityTypeDefinition.displayProperties.name;
 		return activityDefinition;
+	});
+
+	var banshee = Object.values(definitions.vendor).find(v => v.displayProperties.name == "Banshee-44");
+	var bansheeAllItems = banshee.itemList;
+	Object.values(bansheeAllItems).forEach(bItem => {
+		var item = definitions.item[bItem.itemHash];
+		if (item && item.itemTypeDisplayName.toLowerCase().endsWith(" mod")) {
+			wishlist.banshee.values.push({name: item.displayProperties.name, neededFor: [{value: false}]});
+		}
+	});
+	wishlist.banshee.values.sort((a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
+	var bansheeSales = vendorInfo.sales.data[banshee.hash].saleItems;
+	var availableBanshee = [];
+	Object.values(bansheeSales).forEach(sale => {
+		var item = definitions.item[sale.itemHash];
+		if (item && item.itemTypeDisplayName.toLowerCase().endsWith(" mod")) {
+			availableBanshee.push(item.displayProperties.name);
+		}
 	});
 
 	var dailyHeroicMissions = availableActivities.filter(a => a.displayProperties.name.toLowerCase().includes("story mission"));
@@ -45,6 +64,7 @@ async function getActivityInfo(user) {
 
 	var activityInfo = {
 		current: {
+			banshee: availableBanshee,
 			dailyMissions: dailyHeroicMissions.map(s => s.displayProperties.name),
 			forges: dailyForge[0].displayProperties.name,
 			nightmareHunts: [...new Set(weeklyNightmareHunts.map(n => n.displayProperties.description))],
