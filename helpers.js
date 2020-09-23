@@ -74,6 +74,7 @@ module.exports = {
 			this.getData(apiConfig.baseUrl + "/Destiny2/Manifest").then(result => result.Response),
 			fs.promises.readFile("./data/manifest.json").then(JSON.parse).catch(() => ({version: 0}))
 		]);
+		console.log(oldManifest.version);
 		if (newManifest.version != oldManifest.version || force) {
 			await fs.promises.writeFile("./data/manifest.json", JSON.stringify(newManifest));
 			await this.updateDefinitions(newManifest);
