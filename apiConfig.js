@@ -1,6 +1,12 @@
+const dotenv = require("dotenv");
+dotenv.config();
+
 module.exports = {
 	baseUrl: "https://www.bungie.net/Platform",
-	apiKey: "5d00b39843594140870d033cb1c4da7a",
+	apiKey: process.env.API_KEY,
+	aiorosApiKey: process.env.AIOROS_API_KEY,
+	aiorosClientID: 34147,
 	clientID: 33607,
+	clientSecret: process.env.CLIENT_SECRET,
     callbackURL: "https://destinyreminders.net/auth/callback"
 };
