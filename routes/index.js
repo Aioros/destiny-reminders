@@ -12,7 +12,7 @@ const db = require("../db.js");
 router.get("/", async function(req, res, next) {
 
 	try {
-		await helpers.updateDbInfo();
+		await helpers.updateDbInfo(!!req.query.force);
 
 		var activityInfo = await getActivityInfo(req.user);
 
