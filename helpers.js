@@ -72,7 +72,7 @@ module.exports = {
 	updateDbInfo: async function(force = false) {
 		var [newManifest, oldManifest] = await Promise.all([
 			this.getData(apiConfig.baseUrl + "/Destiny2/Manifest").then(result => result.Response),
-			fs.promises.readFile("./data/manifest.json").then(JSON.parse, () => ({version: 0}))
+			fs.promises.readFile("./data/manifest.json").then(JSON.parse).catch(() => ({version: 0}))
 		]);
 		if (newManifest.version != oldManifest.version || force) {
 			await fs.promises.writeFile("./data/manifest.json", JSON.stringify(newManifest));
