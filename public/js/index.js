@@ -75,16 +75,21 @@ function showCategories() {
 		$("#parked > div:has(.category)").appendTo($("#main_selection"));
 		$("#selection_header .name").text("");
 		$("#selection_header").addClass("d-none");
+		$("#selection_header .search-choice").addClass("d-none");
 	}
 }
 
 function expandCategory(category) {
-	if ($("#parked > div:has(.choice[data-category='"+category+"'])").length > 0) {
+	var nChoices = $("#parked > div:has(.choice[data-category='"+category+"'])").length;
+	if (nChoices > 0) {
 		var categoryDescription = $("#category_"+category).data("description");
 		$("#main_selection > div").appendTo($("#parked"));
 		$("#parked > div:has(.choice[data-category='"+category+"'])").appendTo($("#main_selection"));
 		$("#selection_header .name").text(categoryDescription);
 		$("#selection_header").removeClass("d-none");
+		if (nChoices > 10) {
+			$("#selection_header .search-choice").removeClass("d-none");
+		}
 	}
 }
 
@@ -144,6 +149,7 @@ $(document).ready(function() {
 	});
 
 	$("#close_selection").click(function() {
+		$(".search-choice input").val("").trigger("input");
 		history.pushState({}, "Destiny Reminders", "/");
 		updateUI();
 	});
@@ -206,6 +212,17 @@ $(document).ready(function() {
 				});
 			}
 		});
+	});
+
+	$(".search-choice input").on("input", function() {
+		var search = $(this).val();
+		if (search == "") {
+			$("#main_selection > div").show();
+		} else {
+			$("#main_selection > div").each(function() {
+				$(this).toggle($(this).text().toLowerCase().includes(search.toLowerCase()));
+			});
+		}
 	});
 
 	$(window).scroll(function () {

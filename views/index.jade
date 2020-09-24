@@ -4,8 +4,10 @@ block content
 	main.text-light
 		div.container
 			div#selection_header.row.d-none
-				div.col-6.name
-				div.col-6
+				div.col-6.pt-2.name
+				div.col-5.d-none.search-choice
+					input.form-control.border-right-0(type="search", placeholder="Search", id="search")
+				div.col-1.pt-2.ml-auto
 					button#close_selection.close(type="button", aria-label="Close")
 						span &times;
 			div#main_selection.row
