@@ -10,6 +10,50 @@ module.exports = () => ({
 		setNeeded: function() {}
 	},
 
+	contact: {
+		description: "contact boss",
+		frequency: "weekly",
+		values: [
+			{name: "taken howler", neededFor: [{type: "objective", name: "contact: heavy hitters", value: false}]},
+			{name: "taken pyromaster", neededFor: [{type: "objective", name: "contact: heavy hitters", value: false}]},
+			{name: "taken monstrosity", neededFor: [{type: "objective", name: "contact: heavy hitters", value: false}]}
+		],
+		setNeeded: async function(value, profileInfo, definitions) {
+			definitions = definitions || await helpers.getDefinitions();
+			value.neededFor.forEach(f => {
+				var hhRecord = Object.values(definitions.record).find(
+					r => r.displayProperties.name.toLowerCase() == f.name.toLowerCase()
+				).hash;
+				var hhObjective = Object.values(definitions.objective).find(
+					o => o.progressDescription.toLowerCase().includes(value.name)
+				).hash;
+				f.value = !(profileInfo.records[hhRecord].objectives.find(o => o.objectiveHash == hhObjective).complete);
+			});
+		}
+	},
+
+	interference: {
+		description: "interference",
+		frequency: "weekly",
+		values: [
+			{name: "crystal encounter", neededFor: [{type: "objective", name: "interference: loop", value: false}]},
+			{name: "ritual encounter", neededFor: [{type: "objective", name: "interference: loop", value: false}]},
+			{name: "relic encounter", neededFor: [{type: "objective", name: "interference: loop", value: false}]}
+		],
+		setNeeded: async function(value, profileInfo, definitions) {
+			definitions = definitions || await helpers.getDefinitions();
+			value.neededFor.forEach(f => {
+				var ilRecord = Object.values(definitions.record).find(
+					r => r.displayProperties.name.toLowerCase() == f.name.toLowerCase()
+				).hash;
+				var ilObjective = Object.values(definitions.objective).find(
+					o => o.progressDescription.toLowerCase().includes(value.name)
+				).hash;
+				f.value = !(profileInfo.records[ilRecord].objectives.find(o => o.objectiveHash == ilObjective).complete);
+			});
+		}
+	},
+
 	dailyMissions: {
 		description: "daily heroic story mission",
 		frequency: "daily",

@@ -65,6 +65,8 @@ async function getActivityInfo(user) {
 	var activityInfo = {
 		current: {
 			banshee: availableBanshee,
+			contact: wishlist.contact.values[weekDiff % wishlist.contact.values.length].name,
+			interference: wishlist.interference.values[weekDiff % wishlist.interference.values.length].name,
 			dailyMissions: dailyHeroicMissions.map(s => s.displayProperties.name),
 			forges: dailyForge[0].displayProperties.name,
 			nightmareHunts: [...new Set(weeklyNightmareHunts.map(n => n.displayProperties.description))],
