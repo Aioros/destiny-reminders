@@ -837,9 +837,9 @@ module.exports = () => ({
 		description: "the whisper (heroic)",
 		frequency: "weekly",
 		values: [
+			{name: "arc singe", neededFor: [{value: false}]},
 			{name: "solar singe", neededFor: [{value: false}]},
-			{name: "void singe", neededFor: [{value: false}]},
-			{name: "arc singe", neededFor: [{value: false}]}
+			{name: "void singe", neededFor: [{value: false}]}
 		],
 		setNeeded: function() {}
 	},
