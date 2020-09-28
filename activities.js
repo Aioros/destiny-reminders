@@ -6,38 +6,45 @@ const apiConfig = require("./apiConfig.js");
 async function getActivityInfo(user) {
 	var wishlist = require("./wishlist.js")();
 
-	var [definitions, avActivityInfo, milestoneInfo, vendorInfo, profileInfo] = await Promise.all([
-		helpers.getDefinitions(),
-		helpers.getActivityInfo(),
+	var vendorInfo;
+	var banshee, bansheeAllItems, mods, bansheeSales, availableBanshee;
+	var [
+		activityData,
+		milestoneInfo,
+		vendorStuff,
+		flashpointMilestone,
+		profileNeededStuff
+	] = await Promise.all([
+		helpers.getActivityInfo()
+			.then(avActivityInfo => avActivityInfo.map(a => a.activityHash))
+			.then(helpers.getActivityData),
 		helpers.getMilestoneInfo(),
-		helpers.getVendorInfo(),
-		user ? helpers.getProfileInfo(user) : {}
+
+		Promise.all([
+				helpers.getVendorInfo(),
+				helpers.getDefinitionByName("vendor", "Banshee-44")
+			]).then(result => {
+				vendorInfo = result[0];
+				banshee = result[1];
+				bansheeAllItems = banshee.itemList;
+				bansheeSales = vendorInfo.sales.data[banshee.hash].saleItems;
+			}).then(() => Promise.all([
+				helpers.getItems(bansheeAllItems.map(i => i.itemHash), '% mod\"'),
+				helpers.getItems(Object.values(bansheeSales).map(s => s.itemHash), '% mod\"')
+			])).then(result => {
+				mods = result[0];
+				availableBanshee = result[1].map(m => m.name);
+				wishlist.banshee.values = mods.map(m => ({name: m.name, neededFor: [{value: false}]}));
+				wishlist.banshee.values.sort((a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
+			}),
+		helpers.getDefinitionByField("milestone", "$.friendlyName", "Hotspot"),
+		!user ? {} : helpers.getProfileInfo(user)
+			.then(profileInfo => Promise.all(Object.values(wishlist).map(c => c.setNeeded(profileInfo))))
 	]);
 
-	var availableActivities = avActivityInfo.map(avActivity => {
-		var activityDefinition = definitions.activity[avActivity.activityHash];
-		var activityTypeDefinition = definitions.activityType[activityDefinition.activityTypeHash];
-		activityDefinition.activityTypeName = activityTypeDefinition.displayProperties.name;
-		return activityDefinition;
-	});
-
-	var banshee = Object.values(definitions.vendor).find(v => v.displayProperties.name == "Banshee-44");
-	var bansheeAllItems = banshee.itemList;
-	Object.values(bansheeAllItems).forEach(bItem => {
-		var item = definitions.item[bItem.itemHash];
-		if (item && item.itemTypeDisplayName.toLowerCase().endsWith(" mod")) {
-			wishlist.banshee.values.push({name: item.displayProperties.name, neededFor: [{value: false}]});
-		}
-	});
-	wishlist.banshee.values.sort((a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
-	var bansheeSales = vendorInfo.sales.data[banshee.hash].saleItems;
-	var availableBanshee = [];
-	Object.values(bansheeSales).forEach(sale => {
-		var item = definitions.item[sale.itemHash];
-		if (item && item.itemTypeDisplayName.toLowerCase().endsWith(" mod")) {
-			availableBanshee.push(item.displayProperties.name);
-		}
-	});
+	var availableActivities = activityData.map(data => 
+		Object.assign(data.activityData, {activityTypeName: data.activityTypeData.displayProperties.name})
+	);
 
 	var dailyHeroicMissions = availableActivities.filter(a => a.displayProperties.name.toLowerCase().includes("story mission"));
 
@@ -51,11 +58,10 @@ async function getActivityInfo(user) {
 
 	var weeklyOrdeals = weeklyNightfalls.filter(a => a.displayProperties.name.toLowerCase().includes("ordeal"));
 
-	var flashpointMilestone = Object.values(definitions.milestone).filter(md => md.friendlyName == "Hotspot")[0];
 	var flashpointQuest = milestoneInfo[flashpointMilestone.hash].availableQuests[0].questItemHash;
-	var flashpoint = definitions.milestone[flashpointMilestone.hash].quests[flashpointQuest];
+	var flashpoint = flashpointMilestone.quests[flashpointQuest];
 
-	// TODO: crucible rotators, zero hour, whisper, vendors (xur, spider)
+	// TODO: crucible rotators, vendors (xur, spider)
 
 	var today = moment();
 	var start = moment("2020-07-14 17Z");
@@ -85,17 +91,7 @@ async function getActivityInfo(user) {
 			zeroHour: wishlist.zeroHour.values[dayDiff % wishlist.zeroHour.values.length].name
 		}
 	};
-
-	if (user) {
-		for (let category in wishlist) {
-			let values = wishlist[category].values;
-			for (let v in wishlist[category].values) {
-				await wishlist[category].setNeeded(values[v], profileInfo, definitions);
-				//debugger;
-			}
-		}
-	}
-
+	
 	activityInfo.wishlist = wishlist;
 
 	return activityInfo;

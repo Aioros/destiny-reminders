@@ -18,16 +18,17 @@ module.exports = () => ({
 			{name: "taken pyromaster", neededFor: [{type: "objective", name: "contact: heavy hitters", value: false}]},
 			{name: "taken monstrosity", neededFor: [{type: "objective", name: "contact: heavy hitters", value: false}]}
 		],
-		setNeeded: async function(value, profileInfo, definitions) {
-			definitions = definitions || await helpers.getDefinitions();
-			value.neededFor.forEach(f => {
-				var hhRecord = Object.values(definitions.record).find(
-					r => r.displayProperties.name.toLowerCase() == f.name.toLowerCase()
-				).hash;
-				var hhObjective = Object.values(definitions.objective).find(
-					o => o.progressDescription.toLowerCase().includes(value.name)
-				).hash;
-				f.value = !(profileInfo.records[hhRecord].objectives.find(o => o.objectiveHash == hhObjective).complete);
+		setNeeded: async function(profileInfo) {
+			var hhRecord = await helpers.getDefinitionByName("record", this.values[0].neededFor[0].name);
+			var hhObjectives = await Promise.all(this.values.map(value => 
+				helpers.getDefinitionByField("objective", "$.progressDescription", value.name)
+			));
+			hhObjectives.forEach((hhObjective, i) => {
+				this.values[i].neededFor[0].value = !(
+					profileInfo.records[hhRecord.hash].objectives.find(
+						o => o.objectiveHash == hhObjective.hash
+					).complete
+				);
 			});
 		}
 	},
@@ -40,16 +41,17 @@ module.exports = () => ({
 			{name: "ritual encounter", neededFor: [{type: "objective", name: "interference: loop", value: false}]},
 			{name: "relic encounter", neededFor: [{type: "objective", name: "interference: loop", value: false}]}
 		],
-		setNeeded: async function(value, profileInfo, definitions) {
-			definitions = definitions || await helpers.getDefinitions();
-			value.neededFor.forEach(f => {
-				var ilRecord = Object.values(definitions.record).find(
-					r => r.displayProperties.name.toLowerCase() == f.name.toLowerCase()
-				).hash;
-				var ilObjective = Object.values(definitions.objective).find(
-					o => o.progressDescription.toLowerCase().includes(value.name)
-				).hash;
-				f.value = !(profileInfo.records[ilRecord].objectives.find(o => o.objectiveHash == ilObjective).complete);
+		setNeeded: async function(profileInfo) {
+			var ilRecord = await helpers.getDefinitionByName("record", this.values[0].neededFor[0].name);
+			var ilObjectives = await Promise.all(this.values.map(value => 
+				helpers.getDefinitionByField("objective", "$.progressDescription", value.name)
+			));
+			ilObjectives.forEach((ilObjective, i) => {
+				this.values[i].neededFor[0].value = !(
+					profileInfo.records[ilRecord.hash].objectives.find(
+						o => o.objectiveHash == ilObjective.hash
+					).complete
+				);
 			});
 		}
 	},
@@ -99,13 +101,10 @@ module.exports = () => ({
 				}]
 			}
 		],
-		setNeeded: async function(value, profileInfo, definitions) {
-			definitions = definitions || await helpers.getDefinitions();
-			value.neededFor.forEach(f => {
-				var record = Object.values(definitions.record).find(
-					r => r.displayProperties.name.toLowerCase() == f.name.toLowerCase()
-				).hash;
-				f.value = profileInfo.records[record].state % 4 == 0;
+		setNeeded: async function(profileInfo) {
+			var records = await Promise.all(this.values.map(value => helpers.getDefinitionByName("record", value.neededFor[0].name)));
+			records.forEach((record, i) => {
+				this.values[i].neededFor[0].value = profileInfo.records[record.hash].state % 4 == 0;
 			});
 		}
 	},
@@ -193,13 +192,10 @@ module.exports = () => ({
 				}]
 			}
 		],
-		setNeeded: async function(value, profileInfo, definitions) {
-			definitions = definitions || await helpers.getDefinitions();
-			value.neededFor.forEach(f => {
-				var record = Object.values(definitions.record).find(
-					r => r.displayProperties.name.toLowerCase() == f.name.toLowerCase()
-				).hash;
-				f.value = profileInfo.records[record].state % 4 == 0;
+		setNeeded: async function(profileInfo) {
+			var records = await Promise.all(this.values.map(value => helpers.getDefinitionByName("record", value.neededFor[0].name)));
+			records.forEach((record, i) => {
+				this.values[i].neededFor[0].value = profileInfo.records[record.hash].state % 4 == 0;
 			});
 		}
 	},
@@ -345,17 +341,12 @@ module.exports = () => ({
 				}]
 			}
 		],
-		setNeeded: async function(value, profileInfo, definitions) {
-			definitions = definitions || await helpers.getDefinitions();
-			value.neededFor.forEach(f => {
-				if (!f.name) {
-					f.value = false;
-				} else {
-					var collectible = Object.values(definitions.collectible).find(
-						c => c.displayProperties.name.toLowerCase() == f.name.toLowerCase()
-					).hash;
-					f.value = profileInfo.collectibles[collectible].state % 2 != 0;
-				}
+		setNeeded: async function(profileInfo) {
+			var collectibles = await Promise.all(this.values.map(value => 
+				!value.neededFor[0].name ? null : helpers.getDefinitionByName("collectible", value.neededFor[0].name)
+			));
+			collectibles.forEach((collectible, i) => {
+				this.values[i].neededFor[0].value = !this.values[i].neededFor[0].name ? false : profileInfo.collectibles[collectible.hash].state % 2 != 0;
 			});
 		}
 	},
@@ -484,16 +475,13 @@ module.exports = () => ({
 				}]
 			}
 		],
-		setNeeded: async function(value, profileInfo, definitions) {
-			definitions = definitions || await helpers.getDefinitions();
-			value.neededFor.forEach(f => {
-				var record = Object.values(definitions.record).find(
-					r => r.displayProperties.name.toLowerCase() == f.name.toLowerCase()
-				);
+		setNeeded: async function(profileInfo) {
+			var records = await Promise.all(this.values.map(value => helpers.getDefinitionByName("record", value.neededFor[0].name)));
+			records.forEach((record, i) => {
 				if (!record) {
-					f.value = false;
+					this.values[i].neededFor[0].value = false;
 				} else {
-					f.value = profileInfo.records[record.hash].state % 4 == 0;
+					this.values[i].neededFor[0].value = profileInfo.records[record.hash].state % 4 == 0;
 				}
 			});
 		}
@@ -515,18 +503,10 @@ module.exports = () => ({
 			{name: "titan", neededFor: [{value: false}]},
 			{name: "mars", neededFor: [{value: false}]}
 		],
-		setNeeded: async function(value, profileInfo, definitions) {
-			definitions = definitions || await helpers.getDefinitions();
-			value.neededFor.forEach(f => {
-				if (value.name != "tangled shore") {
-					f.value = false;
-				} else {
-					var ttsRecord = Object.values(definitions.record).find(
-						r => r.displayProperties.name.toLowerCase() == f.name.toLowerCase()
-					).hash;
-					f.value = profileInfo.records[ttsRecord].state % 4 == 0;
-				}
-			});
+		setNeeded: async function(profileInfo) {
+			var value = this.values.find(v => v.name == "tangled shore");
+			var ttsRecord = await helpers.getDefinitionByName("record", value.neededFor[0].name);
+			value.neededFor[0].value = profileInfo.records[ttsRecord.hash].state % 4 == 0;
 		}
 	},
 
@@ -545,18 +525,10 @@ module.exports = () => ({
 				}]
 			}
 		],
-		setNeeded: async function(value, profileInfo, definitions) {
-			definitions = definitions || await helpers.getDefinitions();
-			value.neededFor.forEach(f => {
-				if (value.name != "strong") {
-					f.value = false;
-				} else {
-					var ttpRecord = Object.values(definitions.record).find(
-						r => r.displayProperties.name.toLowerCase() == "truth to power"
-					).hash;
-					f.value = profileInfo.records[ttpRecord].state % 4 == 0;
-				}
-			});
+		setNeeded: async function(profileInfo) {
+			var value = this.values.find(v => v.name == "strong");
+			var ttpRecord = await helpers.getDefinitionByName("record", value.neededFor[0].name);
+			value.neededFor[0].value = profileInfo.records[ttpRecord.hash].state % 4 == 0;
 		}
 	},
 
@@ -634,26 +606,22 @@ module.exports = () => ({
 				]
 			}
 		],
-		setNeeded: async function(value, profileInfo, definitions) {
-			definitions = definitions || await helpers.getDefinitions();
-			value.neededFor.forEach(f => {
-				if (f.type == "lore") {
-					var record = Object.values(definitions.record).find(
-						r => r.displayProperties.name.toLowerCase() == f.name.toLowerCase()
-					);
-					if (!record) {
-						f.value = false;
-					} else {
-						f.value = profileInfo.records[record.hash].state % 4 == 0;
-					}
-				} else if (f.type == "eggs") {
-					var eggsChecklistHash = Object.values(definitions.checklist).find(
-						c => c.displayProperties.name.toLowerCase() == "corrupted eggs"
-					).hash;
-					var missingEggs = f.checklist.filter(egg => !profileInfo.checklists[eggsChecklistHash][egg]);
-					f.value = missingEggs.length > 0;
-					f.name = "corrupted eggs (" + missingEggs.length + ")";
-				}
+		setNeeded: async function(profileInfo) {
+			var [triumphs, lores, eggsChecklist] = await Promise.all([
+				Promise.all(this.values.map(value => 
+					helpers.getDefinitionByName("record", value.neededFor[0].name)
+				)),
+				Promise.all(this.values.map(value => 
+					helpers.getDefinitionByName("record", value.neededFor[1].name)
+				)),
+				helpers.getDefinitionByName("checklist", "corrupted eggs")
+			]);
+			this.values.forEach((value, i) => {
+				value.neededFor[0].value = profileInfo.records[triumphs[i].hash].state % 4 == 0;
+				value.neededFor[1].value = profileInfo.records[lores[i].hash].state % 4 == 0;
+				var missingEggs = value.neededFor[2].checklist.filter(egg => !profileInfo.checklists[eggsChecklist.hash][egg]);
+				value.neededFor[2].value = missingEggs.length > 0;
+				value.neededFor[2].name = "corrupted eggs (" + missingEggs.length + ")";
 			});
 		}
 	},
@@ -678,17 +646,10 @@ module.exports = () => ({
 				value: false
 			}]}
 		],
-		setNeeded: async function(value, profileInfo, definitions) {
-			definitions = definitions || await helpers.getDefinitions();
-			value.neededFor.forEach(f => {
-				var record = Object.values(definitions.record).find(
-					r => r.displayProperties.name.toLowerCase() == f.name.toLowerCase()
-				);
-				if (!record) {
-					f.value = false;
-				} else {
-					f.value = profileInfo.records[record.hash].state % 4 == 0;
-				}
+		setNeeded: async function(profileInfo) {
+			var records = await Promise.all(this.values.map(value => helpers.getDefinitionByName("record", value.neededFor[0].name)));
+			records.forEach((record, i) => {
+				this.values[i].neededFor[0].value = profileInfo.records[record.hash].state % 4 == 0;
 			});
 		}
 	},
@@ -723,17 +684,12 @@ module.exports = () => ({
 				value: false
 			}]},
 		],
-		setNeeded: async function(value, profileInfo, definitions) {
-			definitions = definitions || await helpers.getDefinitions();
-			value.neededFor.forEach(f => {
-				if (!f.name) {
-					f.value = false;
-				} else {
-					var collectible = Object.values(definitions.collectible).find(
-						c => c.displayProperties.name.toLowerCase() == f.name.toLowerCase()
-					).hash;
-					f.value = profileInfo.collectibles[collectible].state % 2 != 0;
-				}
+		setNeeded: async function(profileInfo) {
+			var collectibles = await Promise.all(this.values.map(value => 
+				!value.neededFor[0].name ? null : helpers.getDefinitionByName("collectible", value.neededFor[0].name)
+			));
+			collectibles.forEach((collectible, i) => {
+				this.values[i].neededFor[0].value = !this.values[i].neededFor[0].name ? false : profileInfo.collectibles[collectible.hash].state % 2 != 0;
 			});
 		}
 	},
@@ -750,29 +706,18 @@ module.exports = () => ({
 				[{type: "objective", name: "one skip ahead", value: false}]
 			}
 		],
-		setNeeded: async function(value, profileInfo, definitions) {
-			//debugger;
-			definitions = definitions || await helpers.getDefinitions();
-			value.neededFor.forEach(f => {
-				if (f.type == "objective") {
-					var record = Object.values(definitions.record).find(
-						r => r.displayProperties.name.toLowerCase() == f.name.toLowerCase()
-					).hash;
-					var objective = Object.values(definitions.objective).find(
-						o => o.progressDescription.toLowerCase().includes(value.name + " defeated")
-					).hash;
-					f.value = !(profileInfo.records[record].objectives.find(o => o.objectiveHash == objective).complete);
-				} else if (f.type == "triumph") {
-					var record = Object.values(definitions.record).find(
-						r => r.displayProperties.name.toLowerCase() == f.name.toLowerCase()
-					);
-					if (!record) {
-						f.value = false;
-					} else {
-						f.value = profileInfo.records[record.hash].state % 4 == 0;
-					}
-				}
+		setNeeded: async function(profileInfo) {
+			var [oneSkipAhead, isntHeDead] = await Promise.all([
+				helpers.getDefinitionByName("record", "one skip ahead"),
+				helpers.getDefinitionByName("record", "isn't he dead?")
+			]);
+			var objectives = await Promise.all(this.values.map(value =>
+				helpers.getDefinitionByField("objective", "$.progressDescription", value.name + " defeated", false)
+			));
+			objectives.forEach((objective, i) => {
+				this.values[i].neededFor[0].value = !(profileInfo.records[oneSkipAhead.hash].objectives.find(o => o.objectiveHash == objective.hash).complete);
 			});
+			this.values[0].neededFor[1].value = profileInfo.records[isntHeDead.hash].state % 4 == 0;
 		}
 	},
 
@@ -797,25 +742,20 @@ module.exports = () => ({
 				{type: "triumph", name: "divided we conquer", value: false}
 			]}
 		],
-		setNeeded: async function(value, profileInfo, definitions) {
-			definitions = definitions || await helpers.getDefinitions();
-			value.neededFor.forEach(f => {
-				if (f.type == "triumph") {
-					var record = Object.values(definitions.record).find(
-						r => r.displayProperties.name.toLowerCase() == f.name.toLowerCase()
-					);
-					if (!record) {
-						f.value = false;
-					} else {
-						f.value = profileInfo.records[record.hash].state % 4 == 0;
-					}
-				} else if (f.type == "item") {
-					var collectible = Object.values(definitions.collectible).find(
-						c => c.displayProperties.name.toLowerCase() == f.name.toLowerCase()
-					).hash;
-					f.value = profileInfo.collectibles[collectible].state % 2 != 0;
-				}
+		setNeeded: async function(profileInfo) {
+			var triumphs = this.values.reduce((acc, cur) => {
+				return acc.concat(cur.neededFor.filter(f => f.type == "triumph").map(t => t.name))
+			}, []);
+			var [triumphs, truth] = await Promise.all([
+				Promise.all(triumphs.map(t => helpers.getDefinitionByName("record", t))),
+				helpers.getDefinitionByName("collectible", "truth")
+			]);
+			this.values.forEach(value => {
+				value.neededFor.filter(f => f.type == "triumph").forEach(f => {
+					f.value = profileInfo.records[triumphs.find(t => t.displayProperties.name.toLowerCase() == f.name).hash].state % 4 == 0;
+				});
 			});
+			this.values[0].neededFor[3].value = profileInfo.collectibles[truth.hash].state % 2 != 0;
 		}
 	},
 
@@ -839,17 +779,12 @@ module.exports = () => ({
 				value: false
 			}]},
 		],
-		setNeeded: async function(value, profileInfo, definitions) {
-			definitions = definitions || await helpers.getDefinitions();
-			value.neededFor.forEach(f => {
-				if (!f.name) {
-					f.value = false;
-				} else {
-					var collectible = Object.values(definitions.collectible).find(
-						c => c.displayProperties.name.toLowerCase() == f.name.toLowerCase()
-					).hash;
-					f.value = profileInfo.collectibles[collectible].state % 2 != 0;
-				}
+		setNeeded: async function(profileInfo) {
+			var collectibles = await Promise.all(this.values.map(value => 
+				helpers.getDefinitionByName("collectible", value.neededFor[0].name)
+			));
+			collectibles.forEach((collectible, i) => {
+				this.values[i].neededFor[0].value = profileInfo.collectibles[collectible.hash].state % 2 != 0;
 			});
 		}
 	},
@@ -863,16 +798,17 @@ module.exports = () => ({
 			{name: "fallen council", neededFor: [{type: "objective", name: "wandering nightmares", value: false}]},
 			{name: "xortal", neededFor: [{type: "objective", name: "wandering nightmares", value: false}]}
 		],
-		setNeeded: async function(value, profileInfo, definitions) {
-			definitions = definitions || await helpers.getDefinitions();
-			value.neededFor.forEach(f => {
-				var wnRecord = Object.values(definitions.record).find(
-					r => r.displayProperties.name.toLowerCase() == f.name.toLowerCase()
-				).hash;
-				var wnObjective = Object.values(definitions.objective).find(
-					o => o.progressDescription.toLowerCase().includes(value.name)
-				).hash;
-				f.value = !(profileInfo.records[wnRecord].objectives.find(o => o.objectiveHash == wnObjective).complete);
+		setNeeded: async function(profileInfo) {
+			var wnRecord = await helpers.getDefinitionByName("record", this.values[0].neededFor[0].name);
+			var wnObjectives = await Promise.all(this.values.map(value => 
+				helpers.getDefinitionByField("objective", "$.progressDescription", value.name, false)
+			));
+			wnObjectives.forEach((wnObjective, i) => {
+				this.values[i].neededFor[0].value = !(
+					profileInfo.records[wnRecord.hash].objectives.find(
+						o => o.objectiveHash == wnObjective.hash
+					).complete
+				);
 			});
 		}
 	},

@@ -16,6 +16,10 @@ function BungieAPIException(status, message) {
 	this.name = "BungieAPIException";
 }
 
+function tableName(name) {
+	return name.split(/(?=[A-Z])/).join('_').toLowerCase()
+}
+
 module.exports = {
 	capitalize: function(str) {
 		return str
@@ -71,22 +75,41 @@ module.exports = {
 	},
 
 	updateDbInfo: async function(force = false) {
-		var [newManifest, oldManifest] = await Promise.all([
-			this.getData(apiConfig.baseUrl + "/Destiny2/Manifest").then(result => result.Response),
-			fs.promises.readFile("./data/manifest.json").then(JSON.parse).catch(() => ({version: 0}))
-		]);
-		if (oldManifest.version === 0) {
-			try {
-				await fs.promises.mkdir("./data");
-			} catch (ex) {console.error(ex);}
-		}
-		if (newManifest.version != oldManifest.version || force) {
-			await fs.promises.writeFile("./data/manifest.json", JSON.stringify(newManifest));
-			await this.updateDefinitions(newManifest);
+		//console.log("start updateDbInfo");
+		const dbUpdateConnection = await db.getConnection();
+		try {
+			var oldManifestVersion = 0;
+			var [newManifest,] = await Promise.all([
+				this.getData(apiConfig.baseUrl + "/Destiny2/Manifest").then(result => result.Response),
+				dbUpdateConnection.query("START TRANSACTION")
+					.then(() => {
+						//console.log("started transaction, trying to select/lock manifest table");
+						return dbUpdateConnection.query("SELECT version FROM manifest_version FOR UPDATE")
+					}).then(result => {
+						oldManifestVersion = result[0][0].version;
+						//console.log("oldversion="+result[0][0].version+", sleeping for 20");
+						//return dbUpdateConnection.query("SELECT SLEEP(20)");
+					})
+			]);
+			if (newManifest.version != oldManifestVersion || force) {
+				//console.log("starting updateDefinitions");
+				await Promise.all([
+					dbUpdateConnection.query("UPDATE manifest_version SET version = ?, manifest = ? WHERE version = ?", [newManifest.version, JSON.stringify(newManifest), oldManifestVersion]),
+					this.updateDefinitions(newManifest, dbUpdateConnection)
+				]);
+			}
+			//console.log("commit");
+			await dbUpdateConnection.query("COMMIT");
+			await dbUpdateConnection.release();
+		} catch (ex) {
+			console.error(ex);
+			//console.log("rollback");
+			await dbUpdateConnection.query("ROLLBACK");
+			await dbUpdateConnection.release();
 		}
 	},
 
-	updateDefinitions: function(manifest) {
+	updateDefinitions: function(manifest, connection) {
 		var definitions = {
 			vendor: "Vendor",
 			item: "InventoryItemLite",
@@ -98,20 +121,88 @@ module.exports = {
 			collectible: "Collectible",
 			checklist: "Checklist"
 		};
-		var outputDefs = {};
 
+		var insertValues = [];
 		for (let d in definitions) {
 			definitions[d] = this.getData("https://www.bungie.net" + manifest.jsonWorldComponentContentPaths.en["Destiny" + definitions[d] + "Definition"])
-				.then(data => { outputDefs[d] = data; });
+				.then(data => Object.entries(data).map(entry => [entry[0], JSON.stringify(entry[1])]))
+				.then(values =>
+					connection.query("DELETE FROM " + tableName(d))
+						.then(() => {
+							return connection.query("INSERT INTO " + tableName(d) + " (hash, data) VALUES ?", [values])
+						})
+				);
 		}
-
-		return Promise.all(Object.values(definitions)).then(() => {
-			return fs.promises.writeFile("./data/definitions.json", JSON.stringify(outputDefs));
-		});
+		return Promise.all(Object.values(definitions));
 	},
 
-	getDefinitions: function() {
-		return fs.promises.readFile("./data/definitions.json").then(JSON.parse);
+	getDefinition: async function(category, hash) {
+		try {
+			var [result,] = await db.query("SELECT data " +
+					"FROM " + tableName(category) + " WHERE hash = ?", hash);
+			return result[0].data;
+		} catch (ex) {
+			console.log("error: ", ex);
+			return null;
+		}
+	},
+
+	getDefinitionByName: async function(category, name) {
+		return this.getDefinitionByField(category, "$.displayProperties.name", name);
+	},
+
+	getDefinitionByField: async function(category, field, value, exact = true) {
+		try {
+			var query = "SELECT data " +
+					"FROM " + tableName(category) +
+					" WHERE LOWER(data->>?)";
+			var params = [field];
+			if (exact) {
+				query += " = ?";
+				params.push(value.toLowerCase());
+			} else {
+				query += " LIKE ?";
+				params.push("%"+value.toLowerCase()+"%");
+			}
+			//console.log(db.format(query, params));
+			var [result,] = await db.query(query, params);
+			if (result.length == 0) return null;
+			return result[0].data;
+		} catch (ex) {
+			console.log("error: ", ex);
+			return null;
+		}
+	},
+
+	getActivityData: async function(activityHashes) {
+		try {
+			var [result,] = await db.query("SELECT a.data activityData, at.data activityTypeData " +
+					"FROM activity a " + 
+					"INNER JOIN activity_type at ON JSON_EXTRACT(a.data, '$.activityTypeHash') = at.hash " +
+					"WHERE a.hash IN (?)", [activityHashes]);
+			return result;
+		} catch (ex) {
+			console.log("error: ", ex);
+			return null;
+		}
+	},
+
+	getItems: async function(itemHashes, typeFilter = null) {
+		var query = "SELECT i.hash, JSON_EXTRACT(i.data, '$.displayProperties.name') name " +
+					"FROM item i " +
+					"WHERE i.hash IN (?) ";
+		var params = [itemHashes];
+		if (typeFilter) {
+			query += "AND LOWER(JSON_EXTRACT(i.data, '$.itemTypeDisplayName')) LIKE ?"; //% mod\"
+			params.push(typeFilter);
+		}
+		try {
+			var [result,] = await db.query(query, params);
+			return result;
+		} catch (ex) {
+			console.log("error: ", ex);
+			return null;
+		}
 	},
 
 	getActivityInfo: async function() {
