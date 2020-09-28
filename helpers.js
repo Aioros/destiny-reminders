@@ -20,6 +20,11 @@ function tableName(name) {
 	return name.split(/(?=[A-Z])/).join('_').toLowerCase()
 }
 
+async function writeFile(filePath, content) {
+	return fs.promises.mkdir(path.dirname(filePath), {recursive: true})
+		.then(() => fs.promises.writeFile(filePath, content));
+}
+
 module.exports = {
 	capitalize: function(str) {
 		return str
@@ -54,7 +59,7 @@ module.exports = {
 					body: "client_id="+apiConfig.aiorosClientID+"&client_secret="+apiConfig.clientSecret+"&grant_type=refresh_token&refresh_token="+token.refresh_token
 				});
 				var newToken = await response.json();
-				await fs.promises.writeFile("./data/token.json", JSON.stringify({access_token: newToken.access_token, refresh_token: newToken.refresh_token}));
+				await writeFile("./data/token.json", JSON.stringify({access_token: newToken.access_token, refresh_token: newToken.refresh_token}));
 				headers["Authorization"] = "Bearer " + newToken.access_token;
 				response = await fetch(url, {headers: headers});
 			}
@@ -232,7 +237,7 @@ module.exports = {
 				access_token: process.env.AIOROS_AT,
 				refresh_token: process.env.AIOROS_RT
 			};
-			await fs.promises.writeFile("./data/token.json", JSON.stringify(token));
+			await writeFile("./data/token.json", JSON.stringify(token));
 		}
 		return this.getData(
 			apiConfig.baseUrl + "/Destiny2/2/Profile/" + aiorosMembership
