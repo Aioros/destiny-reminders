@@ -817,9 +817,9 @@ module.exports = () => ({
 		description: "the whisper (heroic)",
 		frequency: "weekly",
 		values: [
+			{name: "solar singe", neededFor: [{value: false}]},
 			{name: "void singe", neededFor: [{value: false}]},
-			{name: "arc singe", neededFor: [{value: false}]},
-			{name: "solar singe", neededFor: [{value: false}]}
+			{name: "arc singe", neededFor: [{value: false}]}
 		],
 		setNeeded: function() {}
 	},
@@ -828,9 +828,9 @@ module.exports = () => ({
 		description: "zero hour (heroic)",
 		frequency: "weekly",
 		values: [
+			{name: "solar singe", neededFor: [{value: false}]},
 			{name: "void singe", neededFor: [{value: false}]},
-			{name: "arc singe", neededFor: [{value: false}]},
-			{name: "solar singe", neededFor: [{value: false}]}
+			{name: "arc singe", neededFor: [{value: false}]}
 		],
 		setNeeded: function() {}
 	}
