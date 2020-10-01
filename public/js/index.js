@@ -172,7 +172,8 @@ $(document).ready(function() {
 		$(this).attr("href", $(this).attr("href") + "?returnTo=/"+encodeURIComponent(window.location.hash));
 	});
 
-	$("#reminder_modal form").submit(function() {
+	$("#reminder_modal form").submit(function(e) {
+		e.preventDefault();
 		$("#set_reminder")
 			.prop("disabled", true)
 			.find(".spinner")
