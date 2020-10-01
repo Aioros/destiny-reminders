@@ -119,7 +119,12 @@ $(document).ready(function() {
 		var choiceName = locationInfo[1];
 		if (choiceName) {
 			choiceName = decodeURIComponent(choiceName);
-			var choiceData = $(".choice[data-choice='"+capitalize(choiceName)+"']").data();
+			var choiceData;
+			$(".choice").each(function() {
+				if ($(this).attr("data-choice") == capitalize(choiceName)) {
+					choiceData = $(this).data();
+				}
+			});
 		}
 		history.replaceState({
 			category: category,
