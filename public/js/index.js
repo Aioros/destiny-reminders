@@ -119,7 +119,7 @@ $(document).ready(function() {
 	$(".category").click(function() {
 		var category = $(this).data("category");
 		var categoryDescription = $(this).data("description");
-		history.pushState({category}, categoryDescription, "/#"+category);
+		history.pushState({category: category}, categoryDescription, "/#"+category);
 		updateUI();
 	});
 
@@ -159,7 +159,7 @@ $(document).ready(function() {
 		ajax({
 			url: "/api/reminders/",
 			method: "POST",
-			data: JSON.stringify({category, choice, email}),
+			data: JSON.stringify({category: category, choice: choice, email: email}),
 			headers: {"Content-Type": "application/json"},
 			callback: function() {
 			    //var data = JSON.parse(this.responseText);
