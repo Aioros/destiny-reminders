@@ -102,7 +102,9 @@ function updateUI() {
 $(document).ready(function() {
 
 	if (window.location.hash) {
-		var [category, choiceName] = window.location.hash.substring(1).split("/");
+		var locationInfo = window.location.hash.substring(1).split("/");
+		var category = locationInfo[0];
+		var choiceName = locationInfo[1];
 		if (choiceName) {
 			choiceName = decodeURIComponent(choiceName);
 			var choiceData = $(".choice[data-choice='"+capitalize(choiceName)+"']").data();
