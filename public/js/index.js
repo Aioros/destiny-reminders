@@ -1,3 +1,15 @@
+if (!String.prototype.includes) {
+  String.prototype.includes = function(search, start) {
+    'use strict';
+
+    if (search instanceof RegExp) {
+      throw TypeError('first argument must not be a RegExp');
+    } 
+    if (start === undefined) { start = 0; }
+    return this.indexOf(search, start) !== -1;
+  };
+}
+
 function joinCommaAnd(arr) {
 	if (arr.length === 1) return arr[0];
 	if (arr.length === 2) return arr[0] + " and " + arr[1];
