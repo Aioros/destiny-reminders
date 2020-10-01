@@ -86,8 +86,8 @@ async function getActivityInfo(user) {
 			menagerie: wishlist.menagerie.values[weekDiff % wishlist.menagerie.values.length].name,
 			altars: wishlist.altars.values[dayDiff % wishlist.altars.values.length].name,
 			wanderingNightmares: wishlist.wanderingNightmares.values[weekDiff % wishlist.wanderingNightmares.values.length].name,
-			whisper: wishlist.whisper.values[dayDiff % wishlist.whisper.values.length].name,
-			zeroHour: wishlist.zeroHour.values[dayDiff % wishlist.zeroHour.values.length].name
+			whisper: wishlist.whisper.values[weekDiff % wishlist.whisper.values.length].name,
+			zeroHour: wishlist.zeroHour.values[weekDiff % wishlist.zeroHour.values.length].name
 		}
 	};
 
