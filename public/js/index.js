@@ -9,13 +9,17 @@ function joinCommaAnd(arr) {
 function capitalize(str) {
 	return str
 		.split(" ")
-		.map(word => word
+		.map(function(word) {
+			return word
 			.split("(")
-            .map(w2 => w2
+            .map(function(w2) {
+            	return w2
                 .split("\"")
-			    .map(w => w.substring(0, 1).toUpperCase() + w.substring(1))
-                .join("\""))
-			.join("("))
+			    .map(function(w) { return w.substring(0, 1).toUpperCase() + w.substring(1);})
+                .join("\"");
+           	})
+			.join("(");
+		})
 		.join(" ");
 }
 
@@ -36,37 +40,6 @@ function ajax(options) {
 
 function getCurrentUser() {
 	return document.body.dataset.user ? document.body.dataset.user : null;
-}
-
-function updateUserRemindersTable() {
-	ajax({
-		url: "/reminders/",
-		callback: function() {
-			var reminders = JSON.parse(this.responseText);
-			var table = document.querySelector("#user_reminders tbody");
-			[...table.querySelectorAll(".reminder:not(.placeholder)")].forEach(row => { row.remove(); });
-			var placeholder = table.querySelector(".placeholder");
-			reminders.forEach(reminder => {
-				var newReminderRow = placeholder.cloneNode(true);
-				newReminderRow.classList.remove("placeholder");
-				newReminderRow.dataset.id = reminder.id;
-				newReminderRow.querySelector(".category").innerHTML = reminder.category;
-				newReminderRow.querySelector(".choice").innerHTML = reminder.choice;
-				newReminderRow.querySelector(".email").innerHTML = reminder.email;
-				newReminderRow.querySelector(".delete").addEventListener("click", function() {
-					var id = this.closest(".reminder").dataset.id;
-					ajax({
-						url: "/reminders/" + id,
-						method: "DELETE",
-						callback: function() {
-							updateUserRemindersTable();
-						}
-					});
-				});
-				table.appendChild(newReminderRow);
-			});
-		}
-	});
 }
 
 function showCategories() {
@@ -99,7 +72,7 @@ function expandChoice(choice) {
 	$("#reminder_needed")
 		.toggleClass("d-none", choice.data.needed === undefined)
 		.html("You might need this activity for "
-			+ joinCommaAnd(choice.data.neededFor.map(n => {
+			+ joinCommaAnd(choice.data.neededFor.map(function(n) {
 				var str;
 				switch (n.type) {
 					case "triumph": str = "the triumph <em>" + capitalize(n.name) + "</em>"; break;
