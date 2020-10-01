@@ -1,8 +1,6 @@
 var express = require('express');
 var router = express.Router();
 var createError = require('http-errors');
-const passport = require("passport");
-const fetch = require("node-fetch");
 
 var helpers = require("../helpers.js");
 var getActivityInfo = require("../activities.js");

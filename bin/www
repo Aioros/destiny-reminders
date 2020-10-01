@@ -7,9 +7,9 @@
 const dotenv = require("dotenv");
 dotenv.config();
 
-var app = require('../app');
-var debug = require('debug')('destiny-reminders:server');
-var http = require('http');
+var app = require("../app");
+var debug = require("debug")("destiny-reminders:server");
+var http = require("http");
 
 /**
  * Get port from environment and store in Express.

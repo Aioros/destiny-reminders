@@ -19,7 +19,6 @@ async function getActivityInfo(user) {
 			.then(avActivityInfo => avActivityInfo.map(a => a.activityHash))
 			.then(helpers.getActivityData),
 		helpers.getMilestoneInfo(),
-
 		Promise.all([
 				helpers.getVendorInfo(),
 				helpers.getDefinitionByName("vendor", "Banshee-44")
@@ -91,7 +90,7 @@ async function getActivityInfo(user) {
 			zeroHour: wishlist.zeroHour.values[dayDiff % wishlist.zeroHour.values.length].name
 		}
 	};
-	
+
 	activityInfo.wishlist = wishlist;
 
 	return activityInfo;
