@@ -2,6 +2,9 @@ var express = require('express');
 var router = express.Router();
 var createError = require('http-errors');
 
+var JL = require('jsnlog').JL;
+var jsnlog_nodejs = require('jsnlog-nodejs').jsnlog_nodejs;
+
 var helpers = require("../helpers.js");
 var getActivityInfo = require("../activities.js");
 
@@ -134,6 +137,11 @@ router.get("/run/:action", async function(req, res, next) {
 			res.sendStatus(401);
 		}
 	}
+});
+
+router.post('*.logger', function (req, res) { 
+    jsnlog_nodejs(JL, req.body);
+    res.send(''); 
 });
 
 module.exports = router;
