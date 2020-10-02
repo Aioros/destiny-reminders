@@ -106,12 +106,14 @@ module.exports = {
 			}
 			//console.log("commit");
 			await dbUpdateConnection.query("COMMIT");
-			await dbUpdateConnection.release();
+			//await dbUpdateConnection.release();
+			await db.release(dbUpdateConnection);
 		} catch (ex) {
 			console.error(ex);
 			//console.log("rollback");
 			await dbUpdateConnection.query("ROLLBACK");
-			await dbUpdateConnection.release();
+			//await dbUpdateConnection.release();
+			await db.release(dbUpdateConnection);
 		}
 	},
 
