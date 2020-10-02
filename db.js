@@ -20,7 +20,7 @@ if (process.env.ENVIRONMENT == "local") {
 const pool = genericPool.createPool({
 	create: () => {
 		const conn = mysql.createConnection(config);
-		console.log('Connection %d made', conn.threadId);
+		//console.log('Connection %d made', conn.threadId);
 		return conn;
 	},
 	destroy: (connection) => connection.end(),
@@ -33,7 +33,7 @@ const pool = genericPool.createPool({
 
 const db = {
 	release: async (conn) => pool.release(conn),
-	format: (query, params) => pool.format(query, params),
+	format: (query, params) => mysql.format(query, params),
 	query: async (sql, values) => {
 		let conn;
 		try {
