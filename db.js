@@ -33,6 +33,7 @@ const pool = genericPool.createPool({
 
 const db = {
 	release: async (conn) => pool.release(conn),
+	format: (query, params) => pool.format(query, params),
 	query: async (sql, values) => {
 		let conn;
 		try {
