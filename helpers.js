@@ -40,29 +40,48 @@ module.exports = {
 			.join(" ");
 	},
 
-	getData: async (url, token = null) => {
+	getData: async function(url, options, attempt=0) {
+		if (attempt > 0) {
+			var waitTimeMs = attempt == 0 ? 0 : Math.pow(2, attempt-1) * 1000;
+			await (new Promise(resolve => setTimeout(resolve, waitTimeMs)));
+		}
+		var defaultOpts = {};
+		options = Object.assign({}, defaultOpts, options);
+		options.headers = Object.assign({
+			"X-API-Key": options.withToken ? apiConfig.aiorosApiKey : apiConfig.apiKey
+		}, options.headers);
+
+		var token;
+		if (options.withToken) {
+			try {
+				token = await fs.promises.readFile("./data/token.json").then(JSON.parse);
+			} catch (ex) {
+				token = {
+					access_token: process.env.AIOROS_AT,
+					refresh_token: process.env.AIOROS_RT
+				};
+				await writeFile("./data/token.json", JSON.stringify(token));
+				token = await fs.promises.readFile("./data/token.json").then(JSON.parse);
+			}
+			options.headers["Authorization"] = "Bearer " + token.access_token;
+		}
+
 		try {
 			var start = moment();
 			var log = start.format("HH:mm:ss:SSS") + "; GET " + url + "; ";
-			var headers = {
-				"X-API-Key": token ? apiConfig.aiorosApiKey : apiConfig.apiKey
-			};
-			if (token) {
-				headers["Authorization"] = "Bearer " + token.access_token;
-			}
 			var response = await fetch(url, {
-				headers: headers
+				headers: options.headers
 			});
-			if (token && response.status == 401) {
+			if (options.withToken && response.status == 401) {
 				response = await fetch(apiConfig.baseUrl + "/app/oauth/token/", {
 					method: "POST",
 					headers: {"Content-Type": "application/x-www-form-urlencoded"},
 					body: "client_id="+apiConfig.aiorosClientID+"&client_secret="+apiConfig.clientSecret+"&grant_type=refresh_token&refresh_token="+token.refresh_token
 				});
 				var newToken = await response.json();
-				await writeFile("./data/token.json", JSON.stringify({access_token: newToken.access_token, refresh_token: newToken.refresh_token}));
-				headers["Authorization"] = "Bearer " + newToken.access_token;
-				response = await fetch(url, {headers: headers});
+				newToken = {access_token: newToken.access_token, refresh_token: newToken.refresh_token};
+				await writeFile("./data/token.json", JSON.stringify(newToken));
+				return this.getData(url, options);
 			}
 			var end = moment();//.diff(start);
 			log += end.format("HH:mm:ss:SSS") + "; " + end.diff(start) + "ms";
@@ -76,7 +95,9 @@ module.exports = {
 			return json;
 		} catch (error) {
 			console.error(error);
-			throw error;
+			if (attempt > 4) throw error;
+			console.log("Retrying getData");
+			return this.getData(url, options, attempt+1);
 		}
 	},
 
@@ -182,6 +203,22 @@ module.exports = {
 		}
 	},
 
+	getDefinitionsByNames: async function(category, field, values) {
+		try {
+			var query = "SELECT data->>? name, data " +
+					"FROM " + tableName(category) +
+					" WHERE LOWER(data->>?) IN (?)";
+			var params = [field, field, values];
+			//console.log(db.format(query, params));
+			var [result,] = await db.query(query, params);
+			if (result.length == 0) return null;
+			return result[0].data;
+		} catch (ex) {
+			console.log("error: ", ex);
+			return null;
+		}
+	},
+
 	getActivityData: async function(activityHashes) {
 		try {
 			var [result,] = await db.query("SELECT a.data activityData, at.data activityTypeData " +
@@ -232,20 +269,10 @@ module.exports = {
 	},
 
 	getVendorInfo: async function() {
-		var token;
-		try {
-			token = await fs.promises.readFile("./data/token.json").then(JSON.parse);
-		} catch (ex) {
-			token = {
-				access_token: process.env.AIOROS_AT,
-				refresh_token: process.env.AIOROS_RT
-			};
-			await writeFile("./data/token.json", JSON.stringify(token));
-		}
 		return this.getData(
 			apiConfig.baseUrl + "/Destiny2/2/Profile/" + aiorosMembership
 				+ "/Character/" + aiorosWarlock + "/Vendors/?components=402",
-			token
+			{withToken: true}
 		).then(info => info.Response);
 	},
 
