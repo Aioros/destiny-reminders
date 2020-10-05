@@ -10,6 +10,14 @@ module.exports = () => ({
 		setNeeded: function() {}
 	},
 
+	spider: {
+		vendor: true,
+		description: "spider",
+		frequency: "daily",
+		values: [],
+		setNeeded: function() {}
+	},
+
 	contact: {
 		description: "contact boss",
 		frequency: "weekly",

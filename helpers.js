@@ -203,16 +203,16 @@ module.exports = {
 		}
 	},
 
-	getDefinitionsByNames: async function(category, field, values) {
+	getDefinitionsByField: async function(category, field, values) {
 		try {
+			values = values.map(v => v.toLowerCase());
 			var query = "SELECT data->>? name, data " +
 					"FROM " + tableName(category) +
-					" WHERE LOWER(data->>?) IN (?)";
+					" WHERE LOWER(data->>?) IN (?) ";
 			var params = [field, field, values];
 			//console.log(db.format(query, params));
 			var [result,] = await db.query(query, params);
-			if (result.length == 0) return null;
-			return result[0].data;
+			return result;
 		} catch (ex) {
 			console.log("error: ", ex);
 			return null;

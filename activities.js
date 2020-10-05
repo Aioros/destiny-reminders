@@ -7,7 +7,8 @@ async function getActivityInfo(user) {
 	var wishlist = require("./wishlist.js")();
 
 	var vendorInfo;
-	var banshee, bansheeAllItems, mods, bansheeSales, availableBanshee;
+	var banshee, bansheeAllItems, bansheeMods, bansheeSales, availableBanshee;
+	var spider, spiderAllItems, spiderBounties, spiderSales, availableSpider;
 	var [
 		activityData,
 		milestoneInfo,
@@ -21,20 +22,35 @@ async function getActivityInfo(user) {
 		helpers.getMilestoneInfo(),
 		Promise.all([
 				helpers.getVendorInfo(),
-				helpers.getDefinitionByName("vendor", "Banshee-44")
+				helpers.getDefinitionsByField("vendor", "$.displayProperties.name", ["Banshee-44", "Spider"])
 			]).then(result => {
 				vendorInfo = result[0];
-				banshee = result[1];
+				banshee = result[1].find(v => v.name == "Banshee-44").data;
 				bansheeAllItems = banshee.itemList;
 				bansheeSales = vendorInfo.sales.data[banshee.hash].saleItems;
+				spider = result[1].find(v => v.name == "Spider").data;
+				spiderAllItems = spider.itemList;
+				spiderSales = vendorInfo.sales.data[spider.hash].saleItems;
 			}).then(() => Promise.all([
 				helpers.getItems(bansheeAllItems.map(i => i.itemHash), '% mod\"'),
-				helpers.getItems(Object.values(bansheeSales).map(s => s.itemHash), '% mod\"')
+				helpers.getItems(
+					spiderAllItems
+						.filter(i => ["Wanted Bounties", "Material Exchange"].includes(i.displayCategory))
+						.map(i => i.itemHash)
+				)
 			])).then(result => {
-				mods = result[0];
-				availableBanshee = result[1].map(m => m.name);
-				wishlist.banshee.values = mods.map(m => ({name: m.name, neededFor: [{value: false}]}));
+				bansheeMods = result[0];
+				availableBanshee = bansheeMods
+					.filter(mod => Object.values(bansheeSales).find(s => s.itemHash == mod.hash))
+					.map(m => m.name);
+				wishlist.banshee.values = bansheeMods.map(m => ({name: m.name, neededFor: [{value: false}]}));
 				wishlist.banshee.values.sort((a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
+				spiderMatsAndBounties = result[1];
+				availableSpider = spiderMatsAndBounties
+					.filter(mb => Object.values(spiderSales).find(s => s.itemHash == mb.hash))
+					.map(m => m.name);
+				wishlist.spider.values = spiderMatsAndBounties.map(m => ({name: m.name, neededFor: [{value: false}]}));
+				wishlist.spider.values.sort((a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
 			}),
 		helpers.getDefinitionByField("milestone", "$.friendlyName", "Hotspot"),
 		!user ? {} : helpers.getProfileInfo(user)
@@ -70,6 +86,7 @@ async function getActivityInfo(user) {
 	var activityInfo = {
 		current: {
 			banshee: availableBanshee,
+			spider: availableSpider,
 			contact: wishlist.contact.values[weekDiff % wishlist.contact.values.length].name,
 			interference: wishlist.interference.values[weekDiff % wishlist.interference.values.length].name,
 			dailyMissions: dailyHeroicMissions.map(s => s.displayProperties.name),
