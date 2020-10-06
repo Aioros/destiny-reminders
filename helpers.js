@@ -278,8 +278,15 @@ module.exports = {
 
 	getProfileInfo: async function(user) {
 		console.log("getProfileInfo", user);
-		var membershipId = user.primaryMembershipId || user.destinyMemberships[0].membershipId;
-		var profileUrl = apiConfig.baseUrl + "/Destiny2/2/Profile/" + membershipId + "/?components=104,800,900";
+		var primaryMembership, membershipType, membershipId;
+		if (user.destinyMemberships.length == 1) {
+			primaryMembership = user.destinyMemberships[0];
+		} else {
+			primaryMembership = user.destinyMemberships.find(m => m.membershipId = user.primaryMembershipId);
+		}
+		membershipType = primaryMembership.membershipType;
+		membershipId = primaryMembership.membershipId;
+		var profileUrl = apiConfig.baseUrl + "/Destiny2/" + membershipType + "/Profile/" + membershipId + "/?components=104,800,900";
 		var profileInfo = {};
 		await this.getData(profileUrl).then(info => {
 			profileInfo.collectibles = info.Response.profileCollectibles.data.collectibles;
