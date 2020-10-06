@@ -94,7 +94,7 @@ module.exports = {
 			}
 			return json;
 		} catch (error) {
-			console.error(error);
+			console.log("error", url, options, attempt);
 			if (attempt > 4) throw error;
 			console.log("Retrying getData");
 			return this.getData(url, options, attempt+1);
