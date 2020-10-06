@@ -89,7 +89,7 @@ module.exports = {
 			const json = await response.json();
 			//console.log(json);
 			if (json.ErrorCode > 1) {
-				console.error("Bungie API error", {url, headers});
+				console.error("Bungie API error", {url, options.headers});
 				throw new BungieAPIException(json.ErrorStatus, json.Message);
 			}
 			return json;
