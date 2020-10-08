@@ -47,7 +47,8 @@ module.exports = () => ({
 		values: [
 			{name: "crystal encounter", neededFor: [{type: "objective", name: "interference: loop", value: false}]},
 			{name: "ritual encounter", neededFor: [{type: "objective", name: "interference: loop", value: false}]},
-			{name: "relic encounter", neededFor: [{type: "objective", name: "interference: loop", value: false}]}
+			{name: "relic encounter", neededFor: [{type: "objective", name: "interference: loop", value: false}]},
+			{name: "final encounter", neededFor: [{type: "objective", name: "interference: loop", value: false}]}
 		],
 		setNeeded: async function(profileInfo) {
 			var ilRecord = await helpers.getDefinitionByName("record", this.values[0].neededFor[0].name);
