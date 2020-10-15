@@ -56,11 +56,15 @@ module.exports = () => ({
 				helpers.getDefinitionByField("objective", "$.progressDescription", value.name)
 			));
 			ilObjectives.forEach((ilObjective, i) => {
-				this.values[i].neededFor[0].value = !(
-					profileInfo.records[ilRecord.hash].objectives.find(
-						o => o.objectiveHash == ilObjective.hash
-					).complete
-				);
+				if (!ilObjective) {
+					this.values[i].neededFor[0].value = false;
+				} else {
+					this.values[i].neededFor[0].value = !(
+						profileInfo.records[ilRecord.hash].objectives.find(
+							o => o.objectiveHash == ilObjective.hash
+						).complete
+					);
+				}
 			});
 		}
 	},
