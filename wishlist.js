@@ -18,7 +18,7 @@ module.exports = () => ({
 		setNeeded: function() {}
 	},
 
-	contact: {
+	/*contact: {
 		description: "contact boss",
 		frequency: "weekly",
 		values: [
@@ -134,7 +134,7 @@ module.exports = () => ({
 		setNeeded: function() {
 			return false;
 		}
-	},
+	},*/
 
 	nightmareHunts: {
 		description: "nightmare hunt",
@@ -213,7 +213,7 @@ module.exports = () => ({
 		}
 	},
 
-	nightfalls: {
+	/*nightfalls: {
 		description: "nightfall",
 		frequency: "weekly",
 		values: [
@@ -362,7 +362,7 @@ module.exports = () => ({
 				this.values[i].neededFor[0].value = !this.values[i].neededFor[0].name ? false : profileInfo.collectibles[collectible.hash].state % 2 != 0;
 			});
 		}
-	},
+	},*/
 
 	ordeals: {
 		description: "nightfall: the ordeal",
@@ -500,7 +500,7 @@ module.exports = () => ({
 		}
 	},
 
-	flashpoints: {
+	/*flashpoints: {
 		description: "flashpoint",
 		frequency: "weekly",
 		values: [
@@ -510,18 +510,18 @@ module.exports = () => ({
 				type: "book",
 				name: "the tangled shore",
 				value: false
-			}]},
-			{name: "io", neededFor: [{value: false}]},
-			{name: "mercury", neededFor: [{value: false}]},
-			{name: "titan", neededFor: [{value: false}]},
-			{name: "mars", neededFor: [{value: false}]}
+			}]}
+			//{name: "io", neededFor: [{value: false}]},
+			//{name: "mercury", neededFor: [{value: false}]},
+			//{name: "titan", neededFor: [{value: false}]},
+			//{name: "mars", neededFor: [{value: false}]}
 		],
 		setNeeded: async function(profileInfo) {
 			var value = this.values.find(v => v.name == "tangled shore");
 			var ttsRecord = await helpers.getDefinitionByName("record", value.neededFor[0].name);
 			value.neededFor[0].value = profileInfo.records[ttsRecord.hash].state % 4 == 0;
 		}
-	},
+	},*/
 
 	curses: {
 		description: "dreaming city's curse",
@@ -667,7 +667,7 @@ module.exports = () => ({
 		}
 	},
 
-	escalationProtocol: {
+	/*escalationProtocol: {
 		description: "escalation protocol",
 		frequency: "weekly",
 		values: [
@@ -770,7 +770,7 @@ module.exports = () => ({
 			});
 			this.values[0].neededFor[3].value = profileInfo.collectibles[truth.hash].state % 2 != 0;
 		}
-	},
+	},*/
 
 	altars: {
 		description: "altars of sorrow weapon",
@@ -824,9 +824,9 @@ module.exports = () => ({
 				);
 			});
 		}
-	},
+	}
 
-	whisper: {
+	/*whisper: {
 		description: "the whisper (heroic)",
 		frequency: "weekly",
 		values: [
@@ -846,5 +846,5 @@ module.exports = () => ({
 			{name: "arc singe", neededFor: [{value: false}]}
 		],
 		setNeeded: function() {}
-	}
+	}*/
 });
