@@ -13,7 +13,7 @@ async function getActivityInfo(user) {
 		activityData,
 		milestoneInfo,
 		vendorStuff,
-		flashpointMilestone,
+		//flashpointMilestone,
 		profileNeededStuff
 	] = await Promise.all([
 		helpers.getActivityInfo()
@@ -61,20 +61,20 @@ async function getActivityInfo(user) {
 		Object.assign(data.activityData, {activityTypeName: data.activityTypeData.displayProperties.name})
 	);
 
-	var dailyHeroicMissions = availableActivities.filter(a => a.displayProperties.name.toLowerCase().includes("story mission"));
+	//var dailyHeroicMissions = availableActivities.filter(a => a.displayProperties.name.toLowerCase().includes("story mission"));
 
-	var dailyForge = availableActivities.filter(a => a.displayProperties.name.toLowerCase().includes("forge"));
+	//var dailyForge = availableActivities.filter(a => a.displayProperties.name.toLowerCase().includes("forge"));
 	
 	var weeklyNightmareHunts = availableActivities.filter(a => a.displayProperties.name.toLowerCase().includes("nightmare hunt"));
 
 	var weeklyNightfalls = availableActivities.filter(a => a.displayProperties.name.toLowerCase().includes("nightfall"));
 
-	var weeklyLegacyNFs = weeklyNightfalls.filter(a => !a.displayProperties.name.toLowerCase().includes("ordeal"));
+	//var weeklyLegacyNFs = weeklyNightfalls.filter(a => !a.displayProperties.name.toLowerCase().includes("ordeal"));
 
 	var weeklyOrdeals = weeklyNightfalls.filter(a => a.displayProperties.name.toLowerCase().includes("ordeal"));
 
-	var flashpointQuest = milestoneInfo[flashpointMilestone.hash].availableQuests[0].questItemHash;
-	var flashpoint = flashpointMilestone.quests[flashpointQuest];
+	//var flashpointQuest = milestoneInfo[flashpointMilestone.hash].availableQuests[0].questItemHash;
+	//var flashpoint = flashpointMilestone.quests[flashpointQuest];
 
 	// TODO: crucible rotators, vendors (xur, spider)
 
@@ -87,24 +87,24 @@ async function getActivityInfo(user) {
 		current: {
 			banshee: availableBanshee,
 			spider: availableSpider,
-			contact: wishlist.contact.values[weekDiff % wishlist.contact.values.length].name,
-			interference: 'final encounter',//wishlist.interference.values[weekDiff % wishlist.interference.values.length].name,
-			dailyMissions: dailyHeroicMissions.map(s => s.displayProperties.name),
-			forges: dailyForge[0].displayProperties.name,
+			//contact: wishlist.contact.values[weekDiff % wishlist.contact.values.length].name,
+			//interference: 'final encounter',//wishlist.interference.values[weekDiff % wishlist.interference.values.length].name,
+			//dailyMissions: dailyHeroicMissions.map(s => s.displayProperties.name),
+			//forges: dailyForge[0].displayProperties.name,
 			nightmareHunts: [...new Set(weeklyNightmareHunts.map(n => n.displayProperties.description))],
-			nightfalls: weeklyLegacyNFs.map(n => n.displayProperties.name),
+			//nightfalls: weeklyLegacyNFs.map(n => n.displayProperties.name),
 			ordeals: weeklyOrdeals[0].displayProperties.description,
-			flashpoints: flashpoint.displayProperties.name,
+			//flashpoints: flashpoint.displayProperties.name,
 			curses: wishlist.curses.values[weekDiff % wishlist.curses.values.length].name,
 			ascendantChallenges: wishlist.ascendantChallenges.values[weekDiff % wishlist.ascendantChallenges.values.length].name,
 			blindWell: wishlist.blindWell.values[weekDiff % wishlist.blindWell.values.length].name,
-			escalationProtocol: wishlist.escalationProtocol.values[weekDiff % wishlist.escalationProtocol.values.length].name,
-			reckoning: wishlist.reckoning.values[weekDiff % wishlist.reckoning.values.length].name,
-			menagerie: wishlist.menagerie.values[weekDiff % wishlist.menagerie.values.length].name,
+			//escalationProtocol: wishlist.escalationProtocol.values[weekDiff % wishlist.escalationProtocol.values.length].name,
+			//reckoning: wishlist.reckoning.values[weekDiff % wishlist.reckoning.values.length].name,
+			//menagerie: wishlist.menagerie.values[weekDiff % wishlist.menagerie.values.length].name,
 			altars: wishlist.altars.values[dayDiff % wishlist.altars.values.length].name,
 			wanderingNightmares: wishlist.wanderingNightmares.values[weekDiff % wishlist.wanderingNightmares.values.length].name,
-			whisper: wishlist.whisper.values[weekDiff % wishlist.whisper.values.length].name,
-			zeroHour: wishlist.zeroHour.values[weekDiff % wishlist.zeroHour.values.length].name
+			//whisper: wishlist.whisper.values[weekDiff % wishlist.whisper.values.length].name,
+			//zeroHour: wishlist.zeroHour.values[weekDiff % wishlist.zeroHour.values.length].name
 		}
 	};
 
