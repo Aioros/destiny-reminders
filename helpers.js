@@ -279,7 +279,7 @@ module.exports = {
 	getProfileInfo: async function(user) {
 		console.log("getProfileInfo", user);
 		var primaryMembership, membershipType, membershipId;
-		primaryMembership = user.destinyMemberships.find(m => m.membershipId = user.primaryMembershipId);
+		primaryMembership = user.destinyMemberships.find(m => m.membershipId == user.primaryMembershipId);
 		if (!primaryMembership) {
 			primaryMembership = user.destinyMemberships[0];
 		}
