@@ -17,6 +17,12 @@ function BungieAPIException(status, message) {
 	this.name = "BungieAPIException";
 }
 
+function DRMembershipException(status, message) {
+	this.status = status;
+	this.message = message;
+	this.name = "DRMembershipException";
+}
+
 function tableName(name) {
 	return name.split(/(?=[A-Z])/).join('_').toLowerCase()
 }
@@ -282,6 +288,10 @@ module.exports = {
 		primaryMembership = user.destinyMemberships.find(m => m.membershipId == user.primaryMembershipId);
 		if (!primaryMembership) {
 			primaryMembership = user.destinyMemberships[0];
+		}
+		if (!primaryMembership) {
+			console.error("Bungie API error", {url, options});
+			throw new DRMembershipException(null, null);
 		}
 		membershipType = primaryMembership.membershipType;
 		membershipId = primaryMembership.membershipId;

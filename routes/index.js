@@ -28,6 +28,8 @@ router.get("/", async function(req, res, next) {
 		console.error(ex);
 		if (ex.name == "BungieAPIException") {
 			next(createError(503, "Bungie APIs are currently unavailable, please retry later", {expose: true}));
+		} else if (ex.name == "DRMembershipException") {
+			next(createError(503, "There was an error retrieving your Destiny membership information, please retry later", {expose: true}));
 		}
 		next(createError());
 	}
