@@ -11,7 +11,7 @@ async function getActivityInfo(user) {
 	var spider, spiderAllItems, spiderBounties, spiderSales, availableSpider;
 	var [
 		activityData,
-		milestoneInfo,
+		//milestoneInfo,
 		vendorStuff,
 		//flashpointMilestone,
 		profileNeededStuff
@@ -19,7 +19,7 @@ async function getActivityInfo(user) {
 		helpers.getActivityInfo()
 			.then(avActivityInfo => avActivityInfo.map(a => a.activityHash))
 			.then(helpers.getActivityData),
-		helpers.getMilestoneInfo(),
+		//helpers.getMilestoneInfo(),
 		Promise.all([
 				helpers.getVendorInfo(),
 				helpers.getDefinitionsByField("vendor", "$.displayProperties.name", ["Banshee-44", "Spider"])
@@ -52,7 +52,7 @@ async function getActivityInfo(user) {
 				wishlist.spider.values = spiderMatsAndBounties.map(m => ({name: m.name, neededFor: [{value: false}]}));
 				wishlist.spider.values.sort((a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
 			}),
-		helpers.getDefinitionByField("milestone", "$.friendlyName", "Hotspot"),
+		//helpers.getDefinitionByField("milestone", "$.friendlyName", "Hotspot"),
 		!user ? {} : helpers.getProfileInfo(user)
 			.then(profileInfo => Promise.all(Object.values(wishlist).map(c => c.setNeeded(profileInfo))))
 	]);
@@ -75,6 +75,10 @@ async function getActivityInfo(user) {
 
 	//var flashpointQuest = milestoneInfo[flashpointMilestone.hash].availableQuests[0].questItemHash;
 	//var flashpoint = flashpointMilestone.quests[flashpointQuest];
+
+	var weeklyEmpireHunts = availableActivities.filter(a => a.displayProperties.name.toLowerCase().includes("empire hunt"));
+
+	var weeklyExoChallenges = availableActivities.filter(a => a.displayProperties.name.toLowerCase().includes("simulation:"));
 
 	// TODO: crucible rotators, vendors (xur, spider)
 
@@ -105,6 +109,9 @@ async function getActivityInfo(user) {
 			wanderingNightmares: wishlist.wanderingNightmares.values[weekDiff % wishlist.wanderingNightmares.values.length].name,
 			//whisper: wishlist.whisper.values[weekDiff % wishlist.whisper.values.length].name,
 			//zeroHour: wishlist.zeroHour.values[weekDiff % wishlist.zeroHour.values.length].name
+			empireHunts: weeklyEmpireHunts[0].displayProperties.description,
+			exoChallenges: weeklyExoChallenges[0].displayProperties.name,
+			augments: wishlist.augments.values[weekDiff % wishlist.augments.values.length].name
 		}
 	};
 

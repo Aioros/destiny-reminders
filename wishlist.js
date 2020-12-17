@@ -18,6 +18,556 @@ module.exports = () => ({
 		setNeeded: function() {}
 	},
 
+	empireHunts: {
+		description: "empire hunt",
+		frequency: "weekly",
+		values: [
+			{
+				name: "the warrior",
+				neededFor: [{
+					type: "triumph",
+					name: "the warrior",
+					value: false
+				}]
+			},
+			{
+				name: "the technocrat",
+				neededFor: [{
+					type: "triumph",
+					name: "the technocrat",
+					value: false
+				}]
+			},
+			{
+				name: "the dark priestess",
+				neededFor: [{
+					type: "triumph",
+					name: "the dark priestess",
+					value: false
+				}]
+			}
+		],
+		setNeeded: async function(profileInfo) {
+			var records = await Promise.all(this.values.map(value => helpers.getDefinitionByName("record", value.neededFor[0].name)));
+			records.forEach((record, i) => {
+				this.values[i].neededFor[0].value = profileInfo.records[record.hash].state % 4 == 0;
+			});
+		}
+	},
+
+	exoChallenges: {
+		description: "exo challenge",
+		frequency: "weekly",
+		values: [
+			{
+				name: "simulation: agility",
+				neededFor: [{type: "objective", name: "training complete", value: false}]
+			},
+			{
+				name: "simulation: safeguard",
+				neededFor: [{type: "objective", name: "training complete", value: false}]
+			},
+			{
+				name: "simulation: survival",
+				neededFor: [{type: "objective", name: "training complete", value: false}]
+			}
+		],
+		setNeeded: async function(profileInfo) {
+			var tcRecord = await helpers.getDefinitionByName("record", this.values[0].neededFor[0].name);
+			var tcObjectives = await Promise.all(this.values.map(value => 
+				helpers.getDefinitionByField("objective", "$.progressDescription", value.name, false)
+			));
+			tcObjectives.forEach((tcObjective, i) => {
+				this.values[i].neededFor[0].value = !(
+					profileInfo.records[tcRecord.hash].objectives.find(
+						o => o.objectiveHash == tcObjective.hash
+					).complete
+				);
+			});
+		}
+	},
+
+	augments: {
+		description: "scanner augment",
+		frequency: "weekly",
+		values: [
+			{
+				name: "riis-reborn sectors",
+				neededFor: [
+					{
+						type: "triumph",
+						name: "augment: riis-reborn approach",
+						value: false
+					},
+					{
+						type: "triumph",
+						name: "augment: technocrat's iron",
+						value: false
+					},
+					{
+						type: "triumph",
+						name: "augment: kell's rising",
+						value: false
+					}
+				]
+			},
+			{
+				name: "vex sectors",
+				neededFor: [
+					{
+						type: "triumph",
+						name: "augment: nexus",
+						value: false
+					},
+					{
+						type: "triumph",
+						name: "augment: well of infinitude",
+						value: false
+					}
+				]
+			},
+			{
+				name: "bray sectors",
+				neededFor: [
+					{
+						type: "triumph",
+						name: "augment: bray exoscience",
+						value: false
+					},
+					{
+						type: "triumph",
+						name: "augment: eternity",
+						value: false
+					},
+					{
+						type: "triumph",
+						name: "augment: creation",
+						value: false
+					}
+				]
+			}
+		],
+		setNeeded: async function(profileInfo) {
+			for (var value of this.values) {
+				for (var nf of value.neededFor) {
+					var record = await helpers.getDefinitionByName("record", nf.name);
+					nf.value = profileInfo.records[record.hash].state % 4 == 0;
+				}
+			};
+		}
+	},
+
+	nightmareHunts: {
+		description: "nightmare hunt",
+		frequency: "weekly",
+		values: [
+			{
+				name: "crota",
+				neededFor: [{
+					type: "triumph",
+					name: "time trial: despair",
+					value: false
+				}]
+			},
+			{
+				name: "zydron",
+				neededFor: [{
+					type: "triumph",
+					name: "time trial: servitude",
+					value: false
+				}]
+			},
+			{
+				name: "phogoth",
+				neededFor: [{
+					type: "triumph",
+					name: "time trial: fear",
+					value: false
+				}]
+			},
+			{
+				name: "skolas",
+				neededFor: [{
+					type: "triumph",
+					name: "time trial: pride",
+					value: false
+				}]
+			},
+			{
+				name: "omnigul",
+				neededFor: [{
+					type: "triumph",
+					name: "time trial: anguish",
+					value: false
+				}]
+			},
+			{
+				name: "ghaul",
+				neededFor: [{
+					type: "triumph",
+					name: "time trial: rage",
+					value: false
+				}]
+			},
+			{
+				name: "the fanatic",
+				neededFor: [{
+					type: "triumph",
+					name: "time trial: insanity",
+					value: false
+				}]
+			},
+			{
+				name: "taniks",
+				neededFor: [{
+					type: "triumph",
+					name: "time trial: isolation",
+					value: false
+				}]
+			}
+		],
+		setNeeded: async function(profileInfo) {
+			var records = await Promise.all(this.values.map(value => helpers.getDefinitionByName("record", value.neededFor[0].name)));
+			records.forEach((record, i) => {
+				this.values[i].neededFor[0].value = profileInfo.records[record.hash].state % 4 == 0;
+			});
+		}
+	},
+
+	ordeals: {
+		description: "nightfall: the ordeal",
+		frequency: "weekly",
+		values: [
+			{
+				name: "the arms dealer",
+				neededFor: [{
+					type: "triumph",
+					name: "grandmaster: the arms dealer",
+					value: false
+				}]
+			},
+			{
+				name: "lake of shadows",
+				neededFor: [{
+					type: "triumph",
+					name: "grandmaster: lake of shadows",
+					value: false
+				}]
+			},
+			{
+				name: "savathûn's song",
+				neededFor: [{
+					type: "triumph",
+					name: "grandmaster: savathûn's song",
+					value: false
+				}]
+			},
+			{
+				name: "exodus crash",
+				neededFor: [{
+					type: "triumph",
+					name: "grandmaster: exodus crash",
+					value: false
+				}]
+			},
+			{
+				name: "the inverted spire",
+				neededFor: [{
+					type: "triumph",
+					name: "grandmaster: the inverted spire",
+					value: false
+				}]
+			},
+			{
+				name: "the pyramidion",
+				neededFor: [{
+					type: "triumph",
+					name: "grandmaster: the pyramidion",
+					value: false
+				}]
+			},
+			{
+				name: "tree of probabilities",
+				neededFor: [{
+					type: "triumph",
+					name: "grandmaster: tree of probabilities",
+					value: false
+				}]
+			},
+			{
+				name: "a garden world",
+				neededFor: [{
+					type: "triumph",
+					name: "grandmaster: a garden world",
+					value: false
+				}]
+			},
+			{
+				name: "strange terrain",
+				neededFor: [{
+					type: "triumph",
+					name: "grandmaster: strange terrain",
+					value: false
+				}]
+			},
+			{
+				name: "the insight terminus",
+				neededFor: [{
+					type: "triumph",
+					name: "grandmaster: the insight terminus",
+					value: false
+				}]
+			},
+			{
+				name: "warden of nothing",
+				neededFor: [{
+					type: "triumph",
+					name: "grandmaster: warden of nothing",
+					value: false
+				}]
+			},
+			{
+				name: "broodhold",
+				neededFor: [{
+					type: "triumph",
+					name: "grandmaster: broodhold",
+					value: false
+				}]
+			},
+			{
+				name: "the corrupted",
+				neededFor: [{
+					type: "triumph",
+					name: "grandmaster: the corrupted",
+					value: false
+				}]
+			},
+			{
+				name: "the scarlet keep",
+				neededFor: [{
+					type: "triumph",
+					name: "grandmaster: the scarlet keep"
+				}]
+			},
+			{
+				name: "the festering core",
+				neededFor: [{
+					type: "triumph",
+					name: "grandmaster: the festering core",
+					value: false
+				}]
+			}
+		],
+		setNeeded: async function(profileInfo) {
+			var records = await Promise.all(this.values.map(value => helpers.getDefinitionByName("record", value.neededFor[0].name)));
+			records.forEach((record, i) => {
+				if (!record) {
+					this.values[i].neededFor[0].value = false;
+				} else {
+					this.values[i].neededFor[0].value = profileInfo.records[record.hash].state % 4 == 0;
+				}
+			});
+		}
+	},
+
+	curses: {
+		description: "dreaming city's curse",
+		frequency: "weekly",
+		values: [
+			{name: "weak", neededFor: [{value: false}]},
+			{name: "growing", neededFor: [{value: false}]},
+			{
+				name: "strong",
+				neededFor: [{
+					type: "book",
+					name: "truth to power",
+					value: false
+				}]
+			}
+		],
+		setNeeded: async function(profileInfo) {
+			var value = this.values.find(v => v.name == "strong");
+			var ttpRecord = await helpers.getDefinitionByName("record", value.neededFor[0].name);
+			value.neededFor[0].value = profileInfo.records[ttpRecord.hash].state % 4 == 0;
+		}
+	},
+
+	ascendantChallenges: {
+		description: "ascendant challenge",
+		frequency: "weekly",
+		values: [
+			{
+				name: "forfeit shrine (gardens of esila)",
+				neededFor: [
+					{type: "triumph", name: "never forfeit", value: false},
+					{type: "lore", name: "heresiology", value: false},
+					{type: "eggs", name: "corrupted eggs", value: false, checklist: [
+						1084474590,
+						1034141726
+					]}
+				]
+			},
+			{
+				name: "shattered ruins (spine of keres)",
+				neededFor: [
+					{type: "triumph", name: "shatter that record", value: false},
+					{type: "lore", name: "ecstasiate I", value: false},
+					{type: "eggs", name: "corrupted eggs", value: false, checklist: [
+						1084474583,
+						1067697005
+					]}
+				]
+			},
+			{
+				name: "keep of honed edges (harbinger's seclude)",
+				neededFor: [
+					{type: "triumph", name: "honed for speed", value: false},
+					{type: "lore", name: "ecstasiate II", value: false},
+					{type: "eggs", name: "corrupted eggs", value: false, checklist: [
+						1084474579,
+						1084474578
+					]}
+				]
+			},
+			{
+				name: "agonarch abyss (bay of drowned wishes)",
+				neededFor: [
+					{type: "triumph", name: "agonarch agony", value: false},
+					{type: "lore", name: "cosmogyre IV", value: false},
+					{type: "eggs", name: "corrupted eggs", value: false, checklist: [
+						1084474580,
+						1084474582,
+						1084474581
+					]}
+				]
+			},
+			{
+				name: "cimmerian garrison (chamber of starlight)",
+				neededFor: [
+					{type: "triumph", name: "run the gauntlet", value: false},
+					{type: "lore", name: "brephos III", value: false},
+					{type: "eggs", name: "corrupted eggs", value: false, checklist: [
+						1067696994,
+						1067697004,
+						1067696995
+					]}
+				]
+			},
+			{
+				name: "ouroborea (aphelion's rest)",
+				neededFor: [
+					{type: "triumph", name: "eating your own tail", value: false},
+					{type: "lore", name: "imponent I", value: false},
+					{type: "eggs", name: "corrupted eggs", value: false, checklist: [
+						1084474577,
+						1084474591,
+						1084474576
+					]}
+				]
+			}
+		],
+		setNeeded: async function(profileInfo) {
+			var [triumphs, lores, eggsChecklist] = await Promise.all([
+				Promise.all(this.values.map(value => 
+					helpers.getDefinitionByName("record", value.neededFor[0].name)
+				)),
+				Promise.all(this.values.map(value => 
+					helpers.getDefinitionByName("record", value.neededFor[1].name)
+				)),
+				helpers.getDefinitionByName("checklist", "corrupted eggs")
+			]);
+			this.values.forEach((value, i) => {
+				value.neededFor[0].value = profileInfo.records[triumphs[i].hash].state % 4 == 0;
+				value.neededFor[1].value = profileInfo.records[lores[i].hash].state % 4 == 0;
+				var missingEggs = value.neededFor[2].checklist.filter(egg => !profileInfo.checklists[eggsChecklist.hash][egg]);
+				value.neededFor[2].value = missingEggs.length > 0;
+				value.neededFor[2].name = "corrupted eggs (" + missingEggs.length + ")";
+			});
+		}
+	},
+	
+	blindWell: {
+		description: "blind well boss",
+		frequency: "weekly",
+		values: [
+			{name: "sikariis and varkuuriis", neededFor: [{
+				type: "triumph",
+				name: "the scorn champion",
+				value: false
+			}]},
+			{name: "cragur", neededFor: [{
+				type: "triumph",
+				name: "the hive champion",
+				value: false
+			}]},
+			{name: "inomina", neededFor: [{
+				type: "triumph",
+				name: "the taken champion",
+				value: false
+			}]}
+		],
+		setNeeded: async function(profileInfo) {
+			var records = await Promise.all(this.values.map(value => helpers.getDefinitionByName("record", value.neededFor[0].name)));
+			records.forEach((record, i) => {
+				this.values[i].neededFor[0].value = profileInfo.records[record.hash].state % 4 == 0;
+			});
+		}
+	},
+
+	altars: {
+		description: "altars of sorrow weapon",
+		frequency: "daily",
+		values: [
+			{name: "apostate", neededFor: [{
+				type: "item",
+				name: "apostate",
+				value: false
+			}]},
+			{name: "heretic", neededFor: [{
+				type: "item",
+				name: "heretic",
+				value: false
+			}]},
+			{name: "blasphemer", neededFor: [{
+				type: "item",
+				name: "blasphemer",
+				value: false
+			}]},
+		],
+		setNeeded: async function(profileInfo) {
+			var collectibles = await Promise.all(this.values.map(value => 
+				helpers.getDefinitionByName("collectible", value.neededFor[0].name)
+			));
+			collectibles.forEach((collectible, i) => {
+				this.values[i].neededFor[0].value = profileInfo.collectibles[collectible.hash].state % 2 != 0;
+			});
+		}
+	},
+
+	wanderingNightmares: {
+		description: "wandering nightmare",
+		frequency: "weekly",
+		values: [
+			{name: "horkis", neededFor: [{type: "objective", name: "wandering nightmares", value: false}]},
+			{name: "jaxx", neededFor: [{type: "objective", name: "wandering nightmares", value: false}]},
+			{name: "fallen council", neededFor: [{type: "objective", name: "wandering nightmares", value: false}]},
+			{name: "xortal", neededFor: [{type: "objective", name: "wandering nightmares", value: false}]}
+		],
+		setNeeded: async function(profileInfo) {
+			var wnRecord = await helpers.getDefinitionByName("record", this.values[0].neededFor[0].name);
+			var wnObjectives = await Promise.all(this.values.map(value => 
+				helpers.getDefinitionByField("objective", "$.progressDescription", value.name, false)
+			));
+			wnObjectives.forEach((wnObjective, i) => {
+				this.values[i].neededFor[0].value = !(
+					profileInfo.records[wnRecord.hash].objectives.find(
+						o => o.objectiveHash == wnObjective.hash
+					).complete
+				);
+			});
+		}
+	}
+
 	/*contact: {
 		description: "contact boss",
 		frequency: "weekly",
@@ -134,86 +684,9 @@ module.exports = () => ({
 		setNeeded: function() {
 			return false;
 		}
-	},*/
-
-	nightmareHunts: {
-		description: "nightmare hunt",
-		frequency: "weekly",
-		values: [
-			{
-				name: "crota",
-				neededFor: [{
-					type: "triumph",
-					name: "time trial: despair",
-					value: false
-				}]
-			},
-			{
-				name: "zydron",
-				neededFor: [{
-					type: "triumph",
-					name: "time trial: servitude",
-					value: false
-				}]
-			},
-			{
-				name: "phogoth",
-				neededFor: [{
-					type: "triumph",
-					name: "time trial: fear",
-					value: false
-				}]
-			},
-			{
-				name: "skolas",
-				neededFor: [{
-					type: "triumph",
-					name: "time trial: pride",
-					value: false
-				}]
-			},
-			{
-				name: "omnigul",
-				neededFor: [{
-					type: "triumph",
-					name: "time trial: anguish",
-					value: false
-				}]
-			},
-			{
-				name: "ghaul",
-				neededFor: [{
-					type: "triumph",
-					name: "time trial: rage",
-					value: false
-				}]
-			},
-			{
-				name: "the fanatic",
-				neededFor: [{
-					type: "triumph",
-					name: "time trial: insanity",
-					value: false
-				}]
-			},
-			{
-				name: "taniks",
-				neededFor: [{
-					type: "triumph",
-					name: "time trial: isolation",
-					value: false
-				}]
-			}
-		],
-		setNeeded: async function(profileInfo) {
-			var records = await Promise.all(this.values.map(value => helpers.getDefinitionByName("record", value.neededFor[0].name)));
-			records.forEach((record, i) => {
-				this.values[i].neededFor[0].value = profileInfo.records[record.hash].state % 4 == 0;
-			});
-		}
 	},
 
-	/*nightfalls: {
+	nightfalls: {
 		description: "nightfall",
 		frequency: "weekly",
 		values: [
@@ -362,145 +835,9 @@ module.exports = () => ({
 				this.values[i].neededFor[0].value = !this.values[i].neededFor[0].name ? false : profileInfo.collectibles[collectible.hash].state % 2 != 0;
 			});
 		}
-	},*/
-
-	ordeals: {
-		description: "nightfall: the ordeal",
-		frequency: "weekly",
-		values: [
-			{
-				name: "the arms dealer",
-				neededFor: [{
-					type: "triumph",
-					name: "grandmaster: the arms dealer",
-					value: false
-				}]
-			},
-			{
-				name: "lake of shadows",
-				neededFor: [{
-					type: "triumph",
-					name: "grandmaster: lake of shadows",
-					value: false
-				}]
-			},
-			{
-				name: "savathûn's song",
-				neededFor: [{
-					type: "triumph",
-					name: "grandmaster: savathûn's song",
-					value: false
-				}]
-			},
-			{
-				name: "exodus crash",
-				neededFor: [{
-					type: "triumph",
-					name: "grandmaster: exodus crash",
-					value: false
-				}]
-			},
-			{
-				name: "the inverted spire",
-				neededFor: [{
-					type: "triumph",
-					name: "grandmaster: the inverted spire",
-					value: false
-				}]
-			},
-			{
-				name: "the pyramidion",
-				neededFor: [{
-					type: "triumph",
-					name: "grandmaster: the pyramidion",
-					value: false
-				}]
-			},
-			{
-				name: "tree of probabilities",
-				neededFor: [{
-					type: "triumph",
-					name: "grandmaster: tree of probabilities",
-					value: false
-				}]
-			},
-			{
-				name: "a garden world",
-				neededFor: [{
-					type: "triumph",
-					name: "grandmaster: a garden world",
-					value: false
-				}]
-			},
-			{
-				name: "strange terrain",
-				neededFor: [{
-					type: "triumph",
-					name: "grandmaster: strange terrain",
-					value: false
-				}]
-			},
-			{
-				name: "the insight terminus",
-				neededFor: [{
-					type: "triumph",
-					name: "grandmaster: the insight terminus",
-					value: false
-				}]
-			},
-			{
-				name: "warden of nothing",
-				neededFor: [{
-					type: "triumph",
-					name: "grandmaster: warden of nothing",
-					value: false
-				}]
-			},
-			{
-				name: "broodhold",
-				neededFor: [{
-					type: "triumph",
-					name: "grandmaster: broodhold",
-					value: false
-				}]
-			},
-			{
-				name: "the corrupted",
-				neededFor: [{
-					type: "triumph",
-					name: "grandmaster: the corrupted",
-					value: false
-				}]
-			},
-			{
-				name: "the scarlet keep",
-				neededFor: [{
-					type: "triumph",
-					name: "grandmaster: the scarlet keep"
-				}]
-			},
-			{
-				name: "the festering core",
-				neededFor: [{
-					type: "triumph",
-					name: "grandmaster: the festering core",
-					value: false
-				}]
-			}
-		],
-		setNeeded: async function(profileInfo) {
-			var records = await Promise.all(this.values.map(value => helpers.getDefinitionByName("record", value.neededFor[0].name)));
-			records.forEach((record, i) => {
-				if (!record) {
-					this.values[i].neededFor[0].value = false;
-				} else {
-					this.values[i].neededFor[0].value = profileInfo.records[record.hash].state % 4 == 0;
-				}
-			});
-		}
 	},
 
-	/*flashpoints: {
+	flashpoints: {
 		description: "flashpoint",
 		frequency: "weekly",
 		values: [
@@ -521,153 +858,9 @@ module.exports = () => ({
 			var ttsRecord = await helpers.getDefinitionByName("record", value.neededFor[0].name);
 			value.neededFor[0].value = profileInfo.records[ttsRecord.hash].state % 4 == 0;
 		}
-	},*/
-
-	curses: {
-		description: "dreaming city's curse",
-		frequency: "weekly",
-		values: [
-			{name: "weak", neededFor: [{value: false}]},
-			{name: "growing", neededFor: [{value: false}]},
-			{
-				name: "strong",
-				neededFor: [{
-					type: "book",
-					name: "truth to power",
-					value: false
-				}]
-			}
-		],
-		setNeeded: async function(profileInfo) {
-			var value = this.values.find(v => v.name == "strong");
-			var ttpRecord = await helpers.getDefinitionByName("record", value.neededFor[0].name);
-			value.neededFor[0].value = profileInfo.records[ttpRecord.hash].state % 4 == 0;
-		}
 	},
 
-	ascendantChallenges: {
-		description: "ascendant challenge",
-		frequency: "weekly",
-		values: [
-			{
-				name: "forfeit shrine (gardens of esila)",
-				neededFor: [
-					{type: "triumph", name: "never forfeit", value: false},
-					{type: "lore", name: "heresiology", value: false},
-					{type: "eggs", name: "corrupted eggs", value: false, checklist: [
-						1084474590,
-						1034141726
-					]}
-				]
-			},
-			{
-				name: "shattered ruins (spine of keres)",
-				neededFor: [
-					{type: "triumph", name: "shatter that record", value: false},
-					{type: "lore", name: "ecstasiate I", value: false},
-					{type: "eggs", name: "corrupted eggs", value: false, checklist: [
-						1084474583,
-						1067697005
-					]}
-				]
-			},
-			{
-				name: "keep of honed edges (harbinger's seclude)",
-				neededFor: [
-					{type: "triumph", name: "honed for speed", value: false},
-					{type: "lore", name: "ecstasiate II", value: false},
-					{type: "eggs", name: "corrupted eggs", value: false, checklist: [
-						1084474579,
-						1084474578
-					]}
-				]
-			},
-			{
-				name: "agonarch abyss (bay of drowned wishes)",
-				neededFor: [
-					{type: "triumph", name: "agonarch agony", value: false},
-					{type: "lore", name: "cosmogyre IV", value: false},
-					{type: "eggs", name: "corrupted eggs", value: false, checklist: [
-						1084474580,
-						1084474582,
-						1084474581
-					]}
-				]
-			},
-			{
-				name: "cimmerian garrison (chamber of starlight)",
-				neededFor: [
-					{type: "triumph", name: "run the gauntlet", value: false},
-					{type: "lore", name: "brephos III", value: false},
-					{type: "eggs", name: "corrupted eggs", value: false, checklist: [
-						1067696994,
-						1067697004,
-						1067696995
-					]}
-				]
-			},
-			{
-				name: "ouroborea (aphelion's rest)",
-				neededFor: [
-					{type: "triumph", name: "eating your own tail", value: false},
-					{type: "lore", name: "imponent I", value: false},
-					{type: "eggs", name: "corrupted eggs", value: false, checklist: [
-						1084474577,
-						1084474591,
-						1084474576
-					]}
-				]
-			}
-		],
-		setNeeded: async function(profileInfo) {
-			var [triumphs, lores, eggsChecklist] = await Promise.all([
-				Promise.all(this.values.map(value => 
-					helpers.getDefinitionByName("record", value.neededFor[0].name)
-				)),
-				Promise.all(this.values.map(value => 
-					helpers.getDefinitionByName("record", value.neededFor[1].name)
-				)),
-				helpers.getDefinitionByName("checklist", "corrupted eggs")
-			]);
-			this.values.forEach((value, i) => {
-				value.neededFor[0].value = profileInfo.records[triumphs[i].hash].state % 4 == 0;
-				value.neededFor[1].value = profileInfo.records[lores[i].hash].state % 4 == 0;
-				var missingEggs = value.neededFor[2].checklist.filter(egg => !profileInfo.checklists[eggsChecklist.hash][egg]);
-				value.neededFor[2].value = missingEggs.length > 0;
-				value.neededFor[2].name = "corrupted eggs (" + missingEggs.length + ")";
-			});
-		}
-	},
-	
-	blindWell: {
-		description: "blind well boss",
-		frequency: "weekly",
-		values: [
-			{name: "sikariis and varkuuriis", neededFor: [{
-				type: "triumph",
-				name: "the scorn champion",
-				value: false
-			}]},
-			{name: "cragur", neededFor: [{
-				type: "triumph",
-				name: "the hive champion",
-				value: false
-			}]},
-			{name: "inomina", neededFor: [{
-				type: "triumph",
-				name: "the taken champion",
-				value: false
-			}]}
-		],
-		setNeeded: async function(profileInfo) {
-			var records = await Promise.all(this.values.map(value => helpers.getDefinitionByName("record", value.neededFor[0].name)));
-			records.forEach((record, i) => {
-				this.values[i].neededFor[0].value = profileInfo.records[record.hash].state % 4 == 0;
-			});
-		}
-	},
-
-	/*escalationProtocol: {
+	escalationProtocol: {
 		description: "escalation protocol",
 		frequency: "weekly",
 		values: [
@@ -770,63 +963,9 @@ module.exports = () => ({
 			});
 			this.values[0].neededFor[3].value = profileInfo.collectibles[truth.hash].state % 2 != 0;
 		}
-	},*/
-
-	altars: {
-		description: "altars of sorrow weapon",
-		frequency: "daily",
-		values: [
-			{name: "apostate", neededFor: [{
-				type: "item",
-				name: "apostate",
-				value: false
-			}]},
-			{name: "heretic", neededFor: [{
-				type: "item",
-				name: "heretic",
-				value: false
-			}]},
-			{name: "blasphemer", neededFor: [{
-				type: "item",
-				name: "blasphemer",
-				value: false
-			}]},
-		],
-		setNeeded: async function(profileInfo) {
-			var collectibles = await Promise.all(this.values.map(value => 
-				helpers.getDefinitionByName("collectible", value.neededFor[0].name)
-			));
-			collectibles.forEach((collectible, i) => {
-				this.values[i].neededFor[0].value = profileInfo.collectibles[collectible.hash].state % 2 != 0;
-			});
-		}
 	},
 
-	wanderingNightmares: {
-		description: "wandering nightmare",
-		frequency: "weekly",
-		values: [
-			{name: "horkis", neededFor: [{type: "objective", name: "wandering nightmares", value: false}]},
-			{name: "jaxx", neededFor: [{type: "objective", name: "wandering nightmares", value: false}]},
-			{name: "fallen council", neededFor: [{type: "objective", name: "wandering nightmares", value: false}]},
-			{name: "xortal", neededFor: [{type: "objective", name: "wandering nightmares", value: false}]}
-		],
-		setNeeded: async function(profileInfo) {
-			var wnRecord = await helpers.getDefinitionByName("record", this.values[0].neededFor[0].name);
-			var wnObjectives = await Promise.all(this.values.map(value => 
-				helpers.getDefinitionByField("objective", "$.progressDescription", value.name, false)
-			));
-			wnObjectives.forEach((wnObjective, i) => {
-				this.values[i].neededFor[0].value = !(
-					profileInfo.records[wnRecord.hash].objectives.find(
-						o => o.objectiveHash == wnObjective.hash
-					).complete
-				);
-			});
-		}
-	}
-
-	/*whisper: {
+	whisper: {
 		description: "the whisper (heroic)",
 		frequency: "weekly",
 		values: [
@@ -847,4 +986,5 @@ module.exports = () => ({
 		],
 		setNeeded: function() {}
 	}*/
+
 });
