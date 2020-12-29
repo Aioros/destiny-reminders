@@ -46,6 +46,28 @@ module.exports = {
 			.join(" ");
 	},
 
+	readToken: async function() {
+		try {
+			var [token,] = await db.query("SELECT access_token, refresh_token FROM token WHERE id = 1");
+			console.log(token);
+			if (token.length == 0 || token[0].access_token == "" || token[0].refresh_token == "") return null;
+			return token[0];
+		} catch (ex) {
+			console.log("error: ", ex);
+			return null;
+		}
+	},
+
+	writeToken: async function(token) {
+		try {
+			var [token,] = await db.query("UPDATE token SET " +
+				"access_token = ?, " +
+				"refresh_token = ? WHERE id = 1", [token.access_token, token.refresh_token]);
+		} catch (ex) {
+			console.log("error: ", ex);
+		}
+	},
+
 	getData: async function(url, options, attempt=0) {
 		if (attempt > 0) {
 			var waitTimeMs = attempt == 0 ? 0 : Math.pow(2, attempt-1) * 1000;
@@ -60,14 +82,14 @@ module.exports = {
 		var token;
 		if (options.withToken) {
 			try {
-				token = await fs.promises.readFile("./data/token.json").then(JSON.parse);
+				token = await this.readToken();
+				if (!token) throw new Error("Token read error");
 			} catch (ex) {
 				token = {
 					access_token: process.env.AIOROS_AT,
 					refresh_token: process.env.AIOROS_RT
 				};
-				await writeFile("./data/token.json", JSON.stringify(token));
-				token = await fs.promises.readFile("./data/token.json").then(JSON.parse);
+				await this.writeToken(token);
 			}
 			options.headers["Authorization"] = "Bearer " + token.access_token;
 		}
@@ -86,7 +108,7 @@ module.exports = {
 				});
 				var newToken = await response.json();
 				newToken = {access_token: newToken.access_token, refresh_token: newToken.refresh_token};
-				await writeFile("./data/token.json", JSON.stringify(newToken));
+				await this.writeToken(newToken);
 				return this.getData(url, options);
 			}
 			var end = moment();//.diff(start);
