@@ -12,6 +12,15 @@ const db = require("../db.js");
 
 router.get("/", async function(req, res, next) {
 
+	if (req.query.pm) {
+		if (!req.user) {
+			res.redirect("/");
+		} else {
+			req.session.passport.user.primaryMembershipId = req.query.pm;
+			res.redirect("/");
+		}
+	}
+
 	try {
 		await helpers.updateDbInfo(!!req.query.force);
 

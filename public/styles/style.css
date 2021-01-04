@@ -49,6 +49,28 @@ body {
 	padding: .25rem .25rem;
 }
 
+#navbar_content .dropdown-menu {
+	background-color: #343a40;
+}
+
+#navbar_content .dropdown-menu a {
+	color: rgba(255,255,255,.5);
+	padding: .25rem .75rem;
+}
+
+#navbar_content .dropdown-menu a:hover {
+	color: rgba(255,255,255,.75);
+	background-color: #1d1d1d;
+}
+
+#navbar_content .dropdown-menu .active a {
+	color: #fff;
+}
+
+#navbar_content .dropdown-menu a .platform-icon {
+	margin-right: .5rem;
+}
+
 main {
 	padding-top: 12px;
 }

@@ -49,7 +49,7 @@ module.exports = {
 	readToken: async function() {
 		try {
 			var [token,] = await db.query("SELECT access_token, refresh_token FROM token WHERE id = 1");
-			console.log(token);
+			//console.log(token);
 			if (token.length == 0 || token[0].access_token == "" || token[0].refresh_token == "") return null;
 			return token[0];
 		} catch (ex) {
@@ -304,17 +304,18 @@ module.exports = {
 		).then(info => info.Response);
 	},
 
+	isMultiPlatform: function(user) {
+		return user.destinyMemberships.filter(m => m.isValidMembership).length > 1;
+	},
+
+	getPrimaryPlatformIcon: function(user) {
+		return user.destinyMemberships.find(m => m.membershipId == user.primaryMembershipId).iconPath;
+	},
+
 	getProfileInfo: async function(user) {
 		console.log("getProfileInfo", user);
 		var primaryMembership, membershipType, membershipId;
 		primaryMembership = user.destinyMemberships.find(m => m.membershipId == user.primaryMembershipId);
-		if (!primaryMembership) {
-			primaryMembership = user.destinyMemberships[0];
-		}
-		if (!primaryMembership) {
-			console.error("Bungie API error", {url, options});
-			throw new DRMembershipException(null, null);
-		}
 		membershipType = primaryMembership.membershipType;
 		membershipId = primaryMembership.membershipId;
 		var profileUrl = apiConfig.baseUrl + "/Destiny2/" + membershipType + "/Profile/" + membershipId + "/?components=104,800,900";
@@ -345,7 +346,38 @@ module.exports = {
 		var userInfo = await this.getData(
 			apiConfig.baseUrl + "/User/GetMembershipsById/"+membershipId+"/0/"
 		);
-		return userInfo.Response;
+		userInfo = userInfo.Response;
+
+
+	    var primaryMembership;
+	    if (!userInfo.destinyMemberships || userInfo.destinyMemberships.length == 0) {
+	        console.error("Bungie Membership error", {user: userInfo});
+	        throw new DRMembershipException(null, null);
+	    }
+	    primaryMembership = userInfo.destinyMemberships.find(m => m.membershipId == userInfo.primaryMembershipId);
+	    if (!primaryMembership) {
+	        var checkValidMemberships = userInfo.destinyMemberships.map(m => {
+	            var profileUrl = apiConfig.baseUrl + "/Destiny2/" + m.membershipType + "/Profile/" + m.membershipId + "/?components=0";
+	            return fetch(profileUrl, {headers: {"X-API-Key": apiConfig.apiKey}})
+	                .then(response => response.json())
+	                .then(json => {
+	                    m.isValidMembership = json.ErrorCode == 1;
+	                })
+	                .catch(() => { m.isValidMembership = false; });
+	        });
+	        await Promise.all(checkValidMemberships);
+
+	        primaryMembership = userInfo.destinyMemberships.find(m => m.isValidMembership);
+	        userInfo.primaryMembershipId = primaryMembership.membershipId;
+	    } else {
+	        primaryMembership.isValidMembership = true;
+	    }
+	    if (!primaryMembership) {
+	        console.error("Bungie Membership error", {user: userInfo});
+	        throw new DRMembershipException(null, null);
+	    }
+
+		return userInfo;
 	},
 
 	getUserReminders: async function(userId) {

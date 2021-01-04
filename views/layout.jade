@@ -38,6 +38,21 @@ html(lang="en")
 											a.nav-link(href="/reminders")= user.bungieNetUser.displayName + "'s Reminders"
 										li.nav-item
 											a.nav-link(href="https://github.com/Aioros/destiny-reminders/issues") Support
+										if (helpers.isMultiPlatform(user))
+											li.nav-item.dropdown
+												a#platformDropdown.nav-link.dropdown-toggle(
+													href="#",
+													role="button",
+													data-toggle="dropdown",
+													aria-haspopup="true",
+													aria-expanded="false"
+												) Platform
+												ul.dropdown-menu(aria-labelledby="platformDropdown")
+													each membership in user.destinyMemberships.filter(m => m.isValidMembership)
+														li(class=(membership.membershipId == user.primaryMembershipId ? "active" : ""))
+															a.dropdown-item(href="/?pm="+membership.membershipId)
+																img.platform-icon(src="//bungie.net/" + membership.iconPath, width=30)
+																span= membership.displayName
 										li.nav-item
 											a.nav-link(href="/auth/logout", aria-label="Logout")
 												| Logout
