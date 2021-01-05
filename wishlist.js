@@ -255,14 +255,6 @@ module.exports = () => ({
 				}]
 			},
 			{
-				name: "savathûn's song",
-				neededFor: [{
-					type: "triumph",
-					name: "grandmaster: savathûn's song",
-					value: false
-				}]
-			},
-			{
 				name: "exodus crash",
 				neededFor: [{
 					type: "triumph",
@@ -275,38 +267,6 @@ module.exports = () => ({
 				neededFor: [{
 					type: "triumph",
 					name: "grandmaster: the inverted spire",
-					value: false
-				}]
-			},
-			{
-				name: "the pyramidion",
-				neededFor: [{
-					type: "triumph",
-					name: "grandmaster: the pyramidion",
-					value: false
-				}]
-			},
-			{
-				name: "tree of probabilities",
-				neededFor: [{
-					type: "triumph",
-					name: "grandmaster: tree of probabilities",
-					value: false
-				}]
-			},
-			{
-				name: "a garden world",
-				neededFor: [{
-					type: "triumph",
-					name: "grandmaster: a garden world",
-					value: false
-				}]
-			},
-			{
-				name: "strange terrain",
-				neededFor: [{
-					type: "triumph",
-					name: "grandmaster: strange terrain",
 					value: false
 				}]
 			},
@@ -348,6 +308,46 @@ module.exports = () => ({
 					type: "triumph",
 					name: "grandmaster: the scarlet keep"
 				}]
+			}
+			/*{
+				name: "savathûn's song",
+				neededFor: [{
+					type: "triumph",
+					name: "grandmaster: savathûn's song",
+					value: false
+				}]
+			},
+			{
+				name: "the pyramidion",
+				neededFor: [{
+					type: "triumph",
+					name: "grandmaster: the pyramidion",
+					value: false
+				}]
+			},
+			{
+				name: "tree of probabilities",
+				neededFor: [{
+					type: "triumph",
+					name: "grandmaster: tree of probabilities",
+					value: false
+				}]
+			},
+			{
+				name: "a garden world",
+				neededFor: [{
+					type: "triumph",
+					name: "grandmaster: a garden world",
+					value: false
+				}]
+			},
+			{
+				name: "strange terrain",
+				neededFor: [{
+					type: "triumph",
+					name: "grandmaster: strange terrain",
+					value: false
+				}]
 			},
 			{
 				name: "the festering core",
@@ -356,7 +356,7 @@ module.exports = () => ({
 					name: "grandmaster: the festering core",
 					value: false
 				}]
-			}
+			}*/
 		],
 		setNeeded: async function(profileInfo) {
 			var records = await Promise.all(this.values.map(value => helpers.getDefinitionByName("record", value.neededFor[0].name)));
