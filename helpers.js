@@ -321,8 +321,8 @@ module.exports = {
 		var profileUrl = apiConfig.baseUrl + "/Destiny2/" + membershipType + "/Profile/" + membershipId + "/?components=104,800,900";
 		var profileInfo = {};
 		await this.getData(profileUrl).then(info => {
-			profileInfo.collectibles = info.Response.profileCollectibles.data.collectibles;
-			profileInfo.records = info.Response.profileRecords.data.records;
+			profileInfo.collectibles = info.Response.profileCollectibles.data?.collectibles || {};
+			profileInfo.records = info.Response.profileRecords.data?.records;
 			for (let c in info.Response.characterRecords.data) {
 				Object.assign(
 					profileInfo.records,
