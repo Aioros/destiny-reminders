@@ -3,6 +3,10 @@ const moment = require("moment");
 const helpers = require("./helpers.js");
 const apiConfig = require("./apiConfig.js");
 
+function pickByDateDiff(arr, diff) {
+	return arr[diff % arr.length];
+}
+
 async function getActivityInfo(user) {
 	var wishlist = require("./wishlist.js")();
 
@@ -91,27 +95,27 @@ async function getActivityInfo(user) {
 		current: {
 			banshee: availableBanshee,
 			spider: availableSpider,
+			nightmareHunts: [...new Set(weeklyNightmareHunts.map(n => n.displayProperties.description))],
+			ordeals: weeklyOrdeals[0].displayProperties.description,
+			curses: pickByDateDiff(wishlist.curses.values, weekDiff).name,
+			ascendantChallenges: pickByDateDiff(wishlist.ascendantChallenges.values, weekDiff).name,
+			blindWell: pickByDateDiff(wishlist.blindWell.values, weekDiff).name,
+			altars: pickByDateDiff(wishlist.altars.values, dayDiff).name,
+			wanderingNightmares: pickByDateDiff(wishlist.wanderingNightmares.values, weekDiff).name,
+			empireHunts: weeklyEmpireHunts[0].displayProperties.description,
+			exoChallenges: weeklyExoChallenges[0].displayProperties.name,
+			augments: pickByDateDiff(wishlist.augments.values, weekDiff).name
 			//contact: wishlist.contact.values[weekDiff % wishlist.contact.values.length].name,
 			//interference: 'final encounter',//wishlist.interference.values[weekDiff % wishlist.interference.values.length].name,
 			//dailyMissions: dailyHeroicMissions.map(s => s.displayProperties.name),
 			//forges: dailyForge[0].displayProperties.name,
-			nightmareHunts: [...new Set(weeklyNightmareHunts.map(n => n.displayProperties.description))],
 			//nightfalls: weeklyLegacyNFs.map(n => n.displayProperties.name),
-			ordeals: weeklyOrdeals[0].displayProperties.description,
 			//flashpoints: flashpoint.displayProperties.name,
-			curses: wishlist.curses.values[weekDiff % wishlist.curses.values.length].name,
-			ascendantChallenges: wishlist.ascendantChallenges.values[weekDiff % wishlist.ascendantChallenges.values.length].name,
-			blindWell: wishlist.blindWell.values[weekDiff % wishlist.blindWell.values.length].name,
 			//escalationProtocol: wishlist.escalationProtocol.values[weekDiff % wishlist.escalationProtocol.values.length].name,
 			//reckoning: wishlist.reckoning.values[weekDiff % wishlist.reckoning.values.length].name,
 			//menagerie: wishlist.menagerie.values[weekDiff % wishlist.menagerie.values.length].name,
-			altars: wishlist.altars.values[dayDiff % wishlist.altars.values.length].name,
-			wanderingNightmares: wishlist.wanderingNightmares.values[weekDiff % wishlist.wanderingNightmares.values.length].name,
 			//whisper: wishlist.whisper.values[weekDiff % wishlist.whisper.values.length].name,
 			//zeroHour: wishlist.zeroHour.values[weekDiff % wishlist.zeroHour.values.length].name
-			empireHunts: weeklyEmpireHunts[0].displayProperties.description,
-			exoChallenges: weeklyExoChallenges[0].displayProperties.name,
-			augments: wishlist.augments.values[weekDiff % wishlist.augments.values.length].name
 		}
 	};
 
