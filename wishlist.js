@@ -3,24 +3,97 @@ const helpers = require("./helpers.js");
 module.exports = () => ({
 
 	banshee: {
-		vendor: true,
+		//vendor: true,
 		description: "banshee-44",
 		frequency: "daily",
+		type: "vendor",
 		values: [],
 		setNeeded: function() {}
 	},
 
 	spider: {
-		vendor: true,
+		//vendor: true,
 		description: "spider",
 		frequency: "daily",
+		type: "vendor",
 		values: [],
 		setNeeded: function() {}
+	},
+
+	lostSectors: {
+		description: "lost sector",
+		frequency: "daily",
+		type: "combo",
+		values: {
+			level: [
+				{name: "legend"},
+				{name: "master", neededFor: [
+					{type: "triumph", name: "Lost Sector Mastery", value: false},
+					{type: "triumph", name: "Solo Lost Sector Mastery", value: false}
+				]}
+			],
+			sector: [
+				{name: "exodus garden 2A", neededFor: []},
+				{name: "veles labyrinth", neededFor: []},
+				{name: "concealed void", neededFor: [{type: "objective", name: "Europa Lost Sectors", value: false}]},
+				{name: "bunker E15", neededFor: [{type: "objective", name: "Europa Lost Sectors", value: false}]},
+				{name: "perdition", neededFor: [{type: "objective", name: "Europa Lost Sectors", value: false}]}
+			],
+			reward: [
+				{name: "head", neededFor: [
+					{type: "item", name: "dawn chorus", value: false},
+					{type: "item", name: "precious scars", value: false},
+					{type: "item", name: "mask of bakris", value: false}
+				]},
+				{name: "legs"},
+				{name: "arms", neededFor: [
+					{type: "item", name: "necrotic grip", value: false},
+					{type: "item", name: "icefall mantle", value: false},
+					{type: "item", name: "athrys's embrace", value: false}
+				]},
+				{name: "chest"}
+			]
+		},
+		setNeeded: async function(profileInfo) {
+			/*var promises = [];
+			Object.entries(this.values).forEach(entry => {
+				let [type, values] = entry;
+				values.forEach(value => {
+					if (value.neededFor) {
+						value.neededFor.forEach(nf => {
+							if (nf.type == "triumph") {
+								promises.push(helpers.getDefinitionByName("record", nf.name).then(record => {
+									nf.value = profileInfo.records[record.hash].state % 4 == 0;
+								}));
+							} else if (nf.type == "objective") {
+								promises.push(Promise.all([
+									helpers.getDefinitionByName("record", nf.name),
+									helpers.getDefinitionByField("objective", "$.progressDescription", "sector " + value.name, false)
+								]).then(result => {
+									let [record, objective] = result;
+									nf.value = !(
+										profileInfo.records[record.hash].objectives.find(
+											o => o.objectiveHash == objective.hash
+										).complete
+									);
+								}));
+							} else if (nf.type == "item") {
+								promises.push(helpers.getDefinitionByName("collectible", nf.name).then(item => {
+									nf.value = profileInfo.collectibles[item.hash].state % 2 != 0;
+								}));
+							}
+						});
+					}
+				});
+			});
+			await Promise.all(promises);*/
+		}
 	},
 
 	empireHunts: {
 		description: "empire hunt",
 		frequency: "weekly",
+		type: "list",
 		values: [
 			{
 				name: "the warrior",
@@ -58,6 +131,7 @@ module.exports = () => ({
 	exoChallenges: {
 		description: "exo challenge",
 		frequency: "weekly",
+		type: "list",
 		values: [
 			{
 				name: "simulation: agility",
@@ -90,6 +164,7 @@ module.exports = () => ({
 	augments: {
 		description: "scanner augment",
 		frequency: "weekly",
+		type: "list",
 		values: [
 			{
 				name: "riis-reborn sectors",
@@ -160,6 +235,7 @@ module.exports = () => ({
 	nightmareHunts: {
 		description: "nightmare hunt",
 		frequency: "weekly",
+		type: "list",
 		values: [
 			{
 				name: "crota",
@@ -237,6 +313,7 @@ module.exports = () => ({
 	ordeals: {
 		description: "nightfall: the ordeal",
 		frequency: "weekly",
+		type: "list",
 		values: [
 			{
 				name: "the arms dealer",
@@ -373,6 +450,7 @@ module.exports = () => ({
 	curses: {
 		description: "dreaming city's curse",
 		frequency: "weekly",
+		type: "list",
 		values: [
 			{name: "weak", neededFor: [{value: false}]},
 			{name: "growing", neededFor: [{value: false}]},
@@ -395,6 +473,7 @@ module.exports = () => ({
 	ascendantChallenges: {
 		description: "ascendant challenge",
 		frequency: "weekly",
+		type: "list",
 		values: [
 			{
 				name: "forfeit shrine (gardens of esila)",
@@ -489,6 +568,7 @@ module.exports = () => ({
 	blindWell: {
 		description: "blind well boss",
 		frequency: "weekly",
+		type: "list",
 		values: [
 			{name: "sikariis and varkuuriis", neededFor: [{
 				type: "triumph",
@@ -517,6 +597,7 @@ module.exports = () => ({
 	altars: {
 		description: "altars of sorrow weapon",
 		frequency: "daily",
+		type: "list",
 		values: [
 			{name: "apostate", neededFor: [{
 				type: "item",
@@ -547,6 +628,7 @@ module.exports = () => ({
 	wanderingNightmares: {
 		description: "wandering nightmare",
 		frequency: "weekly",
+		type: "list",
 		values: [
 			{name: "horkis", neededFor: [{type: "objective", name: "wandering nightmares", value: false}]},
 			{name: "jaxx", neededFor: [{type: "objective", name: "wandering nightmares", value: false}]},

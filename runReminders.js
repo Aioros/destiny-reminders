@@ -27,6 +27,11 @@ async function main() {
 		lastReset.daily = lastReset.daily.add(-1, 'day');
 	}
 
+	var baseSelectQuery = "SELECT id, user, category, choice, email, sent_date, keep " +
+					"FROM " + helpers.getReminderTable() + " " +
+					"WHERE category = ? ";
+	var selectQuery, selectParams;
+
 	for (let category in wishlist) {
 
 		var current = currentActivities[category];
@@ -34,28 +39,47 @@ async function main() {
 			current = [current];
 		}
 
-		var currentValid = [];
-		current.forEach(c => {
-			var valid = wishlist[category].values.find(
-				v => c.toLowerCase().includes(v.name.toLowerCase())
-			);
-			if (valid) {
-				currentValid.push(valid.name);
-			}
-		});
+		if (["list", "vendor"].includes(wishlist[category].type)) {
 
-		if (currentValid.length == 0) {
-			continue;
+			var currentValid = [];
+			current.forEach(c => {
+				var valid = wishlist[category].values.find(
+					v => c.toLowerCase().includes(v.name.toLowerCase())
+				);
+				if (valid) {
+					currentValid.push(valid.name);
+				}
+			});
+
+			if (currentValid.length == 0) {
+				continue;
+			}
+
+			selectQuery = baseSelectQuery + "AND choice IN (?)";
+			selectParams = [category, currentValid];
+
+		} else if (wishlist[category].type == "combo") {
+
+			if (current.length == 0) continue;
+
+			selectQuery = baseSelectQuery + "AND (";
+			selectParams = [category];
+			selectQuery += current.map(c => 
+				"(" + Object.entries(c).map(entry => {
+					var [type, value] = entry;
+					selectParams.push(value);
+					return "JSON_UNQUOTE(JSON_EXTRACT(CAST(choice AS JSON), '$."+type+"')) IN (?, '')";
+				}).join(" AND ") + ")"
+			).join(" OR ");
+
+			selectQuery += ")";
+
 		}
 		
 		try {
-			var selectQuery = "SELECT id, user, category, choice, email, sent_date, keep " +
-					"FROM reminder " +
-					"WHERE category = ? " +
-					"AND choice IN (?)";
-			const sql = db.format(selectQuery, [category, currentValid]);
+			const sql = db.format(selectQuery, selectParams);
 			console.log(sql);
-			var [result,] = await db.query(selectQuery,	[category, currentValid]);
+			var [result,] = await db.query(selectQuery,	selectParams);
 			
 			for (let row of result) {
 				let sentDate = moment(row.sent_date || "1970-01-01");
@@ -83,7 +107,7 @@ async function main() {
 						locals: {
 							userName: userName,
 							category: helpers.capitalize(wishlist[category].description),
-							choice: helpers.capitalize(row.choice),
+							choice: helpers.capitalize(helpers.getChoiceDescription(category, row.choice)),
 							frequency: wishlist[category].frequency,
 							when: wishlist[category].frequency == "weekly" ? "this week" : "today",
 							id: row.id,
@@ -93,7 +117,7 @@ async function main() {
 					console.log("Email sent: %s", info.messageId);
 					
 					await db.query(
-						"UPDATE reminder " +
+						"UPDATE " + helpers.getReminderTable() + " " +
 						"SET sent_date = UTC_TIMESTAMP(), " +
 						"keep = 0, " +
 						"hash = ? " +

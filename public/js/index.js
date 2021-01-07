@@ -86,7 +86,7 @@ function getCurrentUser() {
 
 function showCategories() {
 	if ($("#parked > div:has(.category)").length > 0) {
-		$("#main_selection > div").appendTo($("#parked"));
+		$("#main_selection > *").appendTo($("#parked"));
 		$("#parked > div:has(.category)").appendTo($("#main_selection"));
 		$("#selection_header .name").text("");
 		$("#selection_header").addClass("d-none");
@@ -95,13 +95,14 @@ function showCategories() {
 }
 
 function expandCategory(category) {
-	var nChoices = $("#parked > div:has(.choice[data-category='"+category+"'])").length;
-	if (nChoices > 0) {
-		var categoryDescription = $("#category_"+category).data("description");
-		$("#main_selection > div").appendTo($("#parked"));
-		$("#parked > div:has(.choice[data-category='"+category+"'])").appendTo($("#main_selection"));
-		$("#selection_header .name").text(categoryDescription);
-		$("#selection_header").removeClass("d-none");
+	var categoryType = $("#category_"+category).data("type");
+	var categoryDescription = $("#category_"+category).data("description");
+	$("#main_selection > div").appendTo($("#parked"));
+	$("#selection_header .name").text(categoryDescription);
+	$("#selection_header").removeClass("d-none");
+	$("#parked > div."+category+"-container").appendTo($("#main_selection"))
+	if (["vendor", "list"].includes(categoryType)) {
+		var nChoices = $("div."+category+"-container > div:has(.choice[data-category='"+category+"'])").length;
 		if (nChoices > 10) {
 			$("#selection_header .search-choice").removeClass("d-none");
 		}
@@ -109,7 +110,15 @@ function expandCategory(category) {
 }
 
 function expandChoice(choice) {
-	$("#reminder_modal .modal-title").text("Reminder for: " + choice.name);
+	var categoryType = $("#category_"+history.state.category).data("type");
+	if (categoryType == "combo") {
+		Object.entries(JSON.parse(choice.data.id)).forEach(entry => {
+			var [type, value] = entry;
+			$("#"+history.state.category+"_"+type).val(value);
+		});
+		$("#combo_choose").prop("disabled", false);
+	}
+	$("#reminder_modal .modal-title").text("Reminder for: " + capitalize(choice.name));
 	$("#reminder_current").toggleClass("d-none", choice.data.current === undefined);
 	$("#reminder_needed")
 		.toggleClass("d-none", choice.data.needed === undefined)
@@ -146,19 +155,29 @@ $(document).ready(function() {
 	if (window.location.hash) {
 		var locationInfo = window.location.hash.substring(1).split("/");
 		var category = locationInfo[0];
-		var choiceName = locationInfo[1];
-		if (choiceName) {
-			choiceName = decodeURIComponent(choiceName);
-			var choiceData;
-			$(".choice").each(function() {
-				if ($(this).attr("data-choice") == capitalize(choiceName)) {
-					choiceData = $(this).data();
+		var choiceId = locationInfo[1];
+		if (choiceId) {
+			choiceId = decodeURIComponent(choiceId);
+			var choiceName, choiceData;
+			var categoryType = $("#category_"+category).data("type");
+			if (["list", "vendor"].includes(categoryType)) {
+				$(".choice").each(function() {
+					if ($(this).attr("data-id") == choiceId) {
+						choiceName = $(this).data("id");
+						choiceData = $(this).data();
+					}
+				});
+			} else if (categoryType == "combo") {
+				choiceName = Object.values(JSON.parse(choiceId)).map(capitalize).join(" - ");
+				choiceData = {
+					neededFor: [],
+					id: choiceId
 				}
-			});
+			}
 		}
 		history.replaceState({
 			category: category,
-			choice: choiceName ? {name: choiceName, data: choiceData} : null
+			choice: choiceId ? {name: choiceName, data: choiceData} : null
 		}, "");
 		updateUI();
 	}
@@ -177,11 +196,33 @@ $(document).ready(function() {
 	});
 
 	$(".choice").click(function() {
-		var choice = {name: $(this).text(), data: $(this).data()};
+		var choice = {name: $(this).data("id"), data: $(this).data()};
 		history.pushState({
 			category: history.state.category,
 			choice: choice
-		}, "Set Reminder", "#"+history.state.category+"/"+encodeURIComponent(choice.name));
+		}, "Set Reminder", "#"+history.state.category+"/"+encodeURIComponent(choice.data.id));
+		updateUI();
+	});
+
+	$("#combo_form").submit(function(e) {
+		e.preventDefault();
+		var choice = {
+			name: $("#main_selection select").map((i, s) => capitalize($(s).val())).get().filter(c => c).join(" - "),
+			data: {
+				neededFor: [],
+			}
+		};
+		choice.data.id = {};
+		$("#main_selection select").each((i, s) => {
+			var type = s.id.split("_")[1];
+			var value = $(s).val();
+			choice.data.id[type] = value;
+		});
+		choice.data.id = JSON.stringify(choice.data.id);
+		history.pushState({
+			category: history.state.category,
+			choice: choice
+		}, "Set Reminder", "#"+history.state.category+"/"+encodeURIComponent(choice.data.id));
 		updateUI();
 	});
 
@@ -201,7 +242,7 @@ $(document).ready(function() {
 			.find(".spinner")
 			.addClass(["spinner-border", "spinner-border-sm"]);
 		var category = history.state.category;
-		var choice = history.state.choice.name;
+		var choice = history.state.choice.data.id;
 		var email = $("#reminder_email").val();
 		ajax({
 			url: "/api/reminders/",
@@ -240,12 +281,22 @@ $(document).ready(function() {
 	$(".search-choice input").on("input", function() {
 		var search = $(this).val();
 		if (search == "") {
-			$("#main_selection > div").show();
+			$("#main_selection > .cat-container > div").show();
 		} else {
-			$("#main_selection > div").each(function() {
+			$("#main_selection > .cat-container > div").each(function() {
 				$(this).toggle($(this).text().toLowerCase().includes(search.toLowerCase()));
 			});
 		}
+	});
+
+	$("#combo_form select").change(function() {
+		var empty = true;
+		$("#combo_form select").each(function(i, s) {
+			if ($(this).val()) {
+				empty = false;
+			}
+		});
+		$("#combo_choose").prop("disabled", empty);
 	});
 
 	$(window).scroll(function () {

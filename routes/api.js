@@ -24,7 +24,8 @@ router.post("/reminders/", isLoggedIn, async function(req, res, next) {
         email: req.body.email
     };
     try {
-        var [result,] = await db.query("INSERT INTO reminder SET ? ON DUPLICATE KEY UPDATE id=id, keep=1", newReminder);
+        var [result,] = await db.query("INSERT INTO " + helpers.getReminderTable() +
+            " SET ? ON DUPLICATE KEY UPDATE id=id, keep=1", newReminder);
         res.json({status: "ok", reminder: {id: result.insertId, ...newReminder}});
     } catch (ex) {
         console.log("error: ", ex);
@@ -34,7 +35,8 @@ router.post("/reminders/", isLoggedIn, async function(req, res, next) {
 
 router.delete("/reminders/:id", isLoggedIn, async function(req, res, next) {
     try {
-        await db.query("DELETE FROM reminder WHERE id = ? AND user = ?", [req.params.id, req.user.bungieNetUser.membershipId]);
+        await db.query("DELETE FROM " + helpers.getReminderTable() +
+            " WHERE id = ? AND user = ?", [req.params.id, req.user.bungieNetUser.membershipId]);
         res.json({status: "ok"});
     } catch (ex) {
         console.log("error: ", ex);

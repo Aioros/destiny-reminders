@@ -93,6 +93,18 @@ async function getActivityInfo(user) {
 
 	var activityInfo = {
 		current: {
+			lostSectors: [
+				{
+					level: "legend",
+					sector: pickByDateDiff(wishlist.lostSectors.values.sector, dayDiff).name,
+					reward: pickByDateDiff(wishlist.lostSectors.values.reward, dayDiff).name
+				},
+				{
+					level: "master",
+					sector: pickByDateDiff(wishlist.lostSectors.values.sector, dayDiff-1).name,
+					reward: pickByDateDiff(wishlist.lostSectors.values.reward, dayDiff-1).name
+				}
+			],
 			banshee: availableBanshee,
 			spider: availableSpider,
 			nightmareHunts: [...new Set(weeklyNightmareHunts.map(n => n.displayProperties.description))],

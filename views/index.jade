@@ -12,12 +12,13 @@ block content
 						span &times;
 			div#main_selection.row
 				each category, key in wishlist
-					- var isNeeded = category.values.some(choice => choice.neededFor.some(f => f.value));
+					- var isNeeded = helpers.isCategoryNeeded(category);
 					div.col-12.col-sm-6.col-md-4.col-lg-3
 						div.container.category(
 							id="category_" + key,
 							class=isNeeded ? "needed" : "",
 							data-category=key,
+							data-type=category.type,
 							data-needed=isNeeded,
 							data-description=helpers.capitalize(category.description)
 						)
@@ -27,21 +28,56 @@ block content
 								div.col-9.pl-2= helpers.capitalize(category.description)
 			div#parked.d-none
 				each category, key in wishlist
-					each choice in category.values
-						-
-							var isCurrent = helpers.isCurrent(key, choice.name, current);
-							var neededFor = choice.neededFor.filter(f => f.value);
-						div.col-12
-							div.choice(
-								class=isCurrent ? "current" : "",
-								class=neededFor.length > 0 ? "needed" : "",
-								data-category=key,
-								data-choice=helpers.capitalize(choice.name)
-								data-needed=neededFor.length > 0,
-								data-needed-for=JSON.stringify(neededFor),
-								data-current=isCurrent
-							)= helpers.capitalize(choice.name)
-			
+					div.col-12(class=key+"-container cat-container")
+						if (["list", "vendor"].includes(category.type))
+							each choice in category.values
+								-
+									var isCurrent = helpers.isCurrent(key, choice.name, current);
+									var neededFor = helpers.choiceNeededFor(choice);
+								div.col-12
+									div.choice(
+										class=isCurrent ? "current" : "",
+										class=neededFor.length > 0 ? "needed" : "",
+										data-category=key,
+										//data-choice=helpers.capitalize(choice.name)
+										data-id=choice.name,
+										data-needed=neededFor.length > 0,
+										data-needed-for=JSON.stringify(neededFor),
+										data-current=isCurrent
+									)= helpers.capitalize(choice.name)
+						else if (category.type == "combo")
+							-
+								var headers = Object.keys(category.values);
+								var w = Math.round(12 / headers.length);
+							form#combo_form
+								div.form-row Available today:
+									table.table.table-dark
+										thead
+											tr
+											each header in headers
+												th(scope="col")= helpers.capitalize(header)
+										tbody
+											each curr in current[key]
+												tr
+													each header in headers
+														td= helpers.capitalize(curr[header])
+								div.form-row Set reminder for:
+								div.row.form-group
+									each values, type in category.values
+										div(class="col-md-"+w)
+											select.form-control(
+												id=key+"_"+type
+											)
+												option(value="")= "Any " + helpers.capitalize(type)
+												each value in values
+													option(
+														value=value.name
+													)= helpers.capitalize(value.name)
+								div.row
+									button#combo_choose.btn.btn-light(
+										type="submit",
+										disabled=true
+									) Proceed
 			div#reminder_modal.modal(tabindex="-1")
 				div.modal-dialog
 					div.modal-content
