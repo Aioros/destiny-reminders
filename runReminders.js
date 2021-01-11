@@ -53,7 +53,7 @@ async function main() {
 					"FROM reminder " +
 					"WHERE category = ? " +
 					"AND choice IN (?) " +
-					"AND sent_date IS NULL OR keep = 1";
+					"AND (sent_date IS NULL OR keep = 1)";
 			const sql = db.format(selectQuery, [category, currentValid]);
 			console.log(sql);
 			var [result,] = await db.query(selectQuery, [category, currentValid]);
