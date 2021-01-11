@@ -323,13 +323,19 @@ module.exports = {
 		await this.getData(profileUrl).then(info => {
 			profileInfo.collectibles = info.Response.profileCollectibles.data?.collectibles || {};
 			profileInfo.records = info.Response.profileRecords.data?.records;
+			for (let c in info.Response.characterCollectibles.data) {
+				Object.assign(
+					profileInfo.collectibles,
+					info.Response.characterCollectibles.data[c].collectibles
+				);
+			}
 			for (let c in info.Response.characterRecords.data) {
 				Object.assign(
 					profileInfo.records,
 					info.Response.characterRecords.data[c].records
 				);
 			}
-			profileInfo.checklists = info.Response.profileProgression.data.checklists;
+			profileInfo.checklists = info.Response.profileProgression.data?.checklists || {};
 		});
 		return profileInfo;
 	},
