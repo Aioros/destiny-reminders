@@ -52,11 +52,12 @@ async function main() {
 			var selectQuery = "SELECT id, user, category, choice, email, sent_date, keep " +
 					"FROM reminder " +
 					"WHERE category = ? " +
-					"AND choice IN (?)";
+					"AND choice IN (?) " +
+					"AND sent_date IS NULL OR keep = 1";
 			const sql = db.format(selectQuery, [category, currentValid]);
 			console.log(sql);
-			var [result,] = await db.query(selectQuery,	[category, currentValid]);
-			
+			var [result,] = await db.query(selectQuery, [category, currentValid]);
+			console.log(result.length + " rows");
 			for (let row of result) {
 				let sentDate = moment(row.sent_date || "1970-01-01");
 
