@@ -17,9 +17,9 @@ function BungieAPIException(status, message) {
 	this.name = "BungieAPIException";
 }
 
-function DRMembershipException(status, message) {
-	this.status = status;
-	this.message = message;
+function DRMembershipException() {
+	this.status = 401;
+	this.message = "There was an error retrieving your Destiny membership information. Make sure you have an active Destiny account.";
 	this.name = "DRMembershipException";
 }
 
@@ -354,11 +354,10 @@ module.exports = {
 		);
 		userInfo = userInfo.Response;
 
-
 	    var primaryMembership;
 	    if (!userInfo.destinyMemberships || userInfo.destinyMemberships.length == 0) {
 	        console.error("Bungie Membership error", {user: userInfo});
-	        throw new DRMembershipException(null, null);
+	        throw new DRMembershipException();
 	    }
 	    primaryMembership = userInfo.destinyMemberships.find(m => m.membershipId == userInfo.primaryMembershipId);
 	    if (!primaryMembership) {
@@ -380,7 +379,7 @@ module.exports = {
 	    }
 	    if (!primaryMembership) {
 	        console.error("Bungie Membership error", {user: userInfo});
-	        throw new DRMembershipException(null, null);
+	        throw new DRMembershipException();
 	    }
 
 		return userInfo;

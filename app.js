@@ -25,7 +25,10 @@ passport.use(new BungieOAuth2Strategy({
 	function(accessToken, refreshToken, profile, done) {
 		helpers.getUserInfo(profile.membershipId).then(user => {
 			return done(null, user);
-		});
+		}).catch((ex) => {
+      console.log(ex);
+      return done(null, false, {error: ex});
+    });
 	})
 );
 
