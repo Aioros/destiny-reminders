@@ -4,6 +4,7 @@ dotenv.config();
 var moment = require("moment");
 var db = require("./db.js");
 var wishlist = require("./wishlist.js")();
+var helpers = require("./helpers.js");
 
 async function main() {
 	
@@ -23,7 +24,7 @@ async function main() {
 		categories[wishlist[category].frequency].push(category);
 	}
 
-	var deleteQuery = "DELETE FROM reminder " +
+	var deleteQuery = "DELETE FROM " + helpers.getReminderTable() + " " +
 				"WHERE keep = 0 AND (" +
 					"category IN (?) AND sent_date < ? OR " +
 					"category IN (?) AND sent_date < ?" +

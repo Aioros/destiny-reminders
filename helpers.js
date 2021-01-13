@@ -46,6 +46,14 @@ module.exports = {
 			.join(" ");
 	},
 
+	getReminderTable: function() {
+		var mainName = "reminder";
+		if (process.env.ENVIRONMENT == "local") {
+			mainName += "_dev";
+		}
+		return mainName;
+	},
+
 	readToken: async function() {
 		try {
 			var [token,] = await db.query("SELECT access_token, refresh_token FROM token WHERE id = 1");
@@ -340,12 +348,49 @@ module.exports = {
 		return profileInfo;
 	},
 
-	isCurrent(category, choice, current) {
-		if (Array.isArray(current[category])) {
-			return current[category].some(c => c.toLowerCase().includes(choice.toLowerCase()));
+	isCategoryNeeded(category) {
+		var isNeeded = false;
+		if (category.type == "combo") {
+			isNeeded = Object.values(category.values).some(subCategory => this.isCategoryNeeded({values: subCategory}));
 		} else {
-			return current[category].toLowerCase().includes(choice.toLowerCase());
+			isNeeded = category.values.some(choice => this.choiceNeededFor(choice).length > 0);
 		}
+		return isNeeded;
+	},
+
+	choiceNeededFor(choice) {
+		if (!choice.neededFor) return [];
+		return choice.neededFor.filter(f => f.value);
+	},
+
+	isCurrent(category, choice, current) {
+		var currentArray = current[category];
+		if (!Array.isArray(currentArray))
+			currentArray = [currentArray];
+
+		//if (Array.isArray(current[category])) {
+			//return current[category].some(c => c.toLowerCase().includes(choice.toLowerCase()));
+			return currentArray.some(c => c.toLowerCase().includes(choice.toLowerCase()));
+		//} else {
+		//	return current[category].toLowerCase().includes(choice.toLowerCase());
+		//}
+	},
+
+	/*isCurrentCombo(category, type, choice, current) {
+		var currentArray = current[category];
+		if (!Array.isArray(currentArray))
+			currentArray = [currentArray];
+		return currentArray.some(c => c[type].toLowerCase().includes(choice.toLowerCase()));
+	},*/
+
+	getChoiceDescription(category, choice) {
+		if (["list", "vendor"].includes((require("./wishlist.js")())[category].type)) {
+			return choice;
+		}
+		if (typeof choice == "string") {
+			choice = JSON.parse(choice);
+		}
+		return Object.values(choice).filter(c => c).join(" - ");
 	},
 
 	getUserInfo: async function(membershipId) {
@@ -388,7 +433,7 @@ module.exports = {
 	getUserReminders: async function(userId) {
 		try {
 			var [result,] = await db.query("SELECT id, user, category, choice, email " +
-					"FROM reminder WHERE user = ?", userId);
+					"FROM " + this.getReminderTable() + " WHERE user = ?", userId);
 			return result;
 		} catch (ex) {
 			console.log("error: ", ex);

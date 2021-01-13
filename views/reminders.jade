@@ -16,7 +16,7 @@ block content
 							each reminder in reminders
 								tr(data-id=reminder.id)
 									td.reminder-category= helpers.capitalize(wishlist[reminder.category].description)
-									td.reminder-choice= helpers.capitalize(reminder.choice)
+									td.reminder-choice= helpers.capitalize(helpers.getChoiceDescription(reminder.category, reminder.choice))
 									td.reminder-email= reminder.email
 									td.reminder-delete
 										a(href="#", title="Delete")
