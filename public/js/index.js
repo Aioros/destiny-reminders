@@ -119,9 +119,9 @@ function expandChoice(choice) {
 		$("#combo_choose").prop("disabled", false);
 	}
 	$("#reminder_modal .modal-title").text("Reminder for: " + capitalize(choice.name));
-	$("#reminder_current").toggleClass("d-none", choice.data.current === undefined);
+	$("#reminder_current").toggleClass("d-none", (!choice.data || !choice.data.current));
 	$("#reminder_needed")
-		.toggleClass("d-none", choice.data.needed === undefined)
+		.toggleClass("d-none", (!choice.data || !choice.data.needed))
 		.html("You might need this activity for "
 			+ joinCommaAnd(choice.data.neededFor.map(function(n) {
 				var str;

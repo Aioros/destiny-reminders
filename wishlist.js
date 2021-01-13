@@ -121,7 +121,7 @@ module.exports = () => ({
 		setNeeded: async function(profileInfo) {
 			var records = await Promise.all(this.values.map(value => helpers.getDefinitionByName("record", value.neededFor[0].name)));
 			records.forEach((record, i) => {
-				this.values[i].neededFor[0].value = profileInfo.records[record.hash]?.state % 4 == 0;
+				this.values[i].neededFor[0].value = profileInfo.records?.[record.hash]?.state % 4 == 0;
 			});
 		}
 	},
@@ -151,7 +151,7 @@ module.exports = () => ({
 			));
 			tcObjectives.forEach((tcObjective, i) => {
 				this.values[i].neededFor[0].value = !(
-					profileInfo.records[tcRecord.hash]?.objectives.find(
+					profileInfo.records?.[tcRecord.hash]?.objectives.find(
 						o => o.objectiveHash == tcObjective.hash
 					).complete
 				);
@@ -224,7 +224,7 @@ module.exports = () => ({
 			for (var value of this.values) {
 				for (var nf of value.neededFor) {
 					var record = await helpers.getDefinitionByName("record", nf.name);
-					nf.value = profileInfo.records[record.hash]?.state % 4 == 0;
+					nf.value = profileInfo.records?.[record.hash]?.state % 4 == 0;
 				}
 			};
 		}
@@ -303,7 +303,7 @@ module.exports = () => ({
 		setNeeded: async function(profileInfo) {
 			var records = await Promise.all(this.values.map(value => helpers.getDefinitionByName("record", value.neededFor[0].name)));
 			records.forEach((record, i) => {
-				this.values[i].neededFor[0].value = profileInfo.records[record.hash]?.state % 4 == 0;
+				this.values[i].neededFor[0].value = profileInfo.records?.[record.hash]?.state % 4 == 0;
 			});
 		}
 	},
@@ -439,7 +439,7 @@ module.exports = () => ({
 				if (!record) {
 					this.values[i].neededFor[0].value = false;
 				} else {
-					this.values[i].neededFor[0].value = profileInfo.records[record.hash]?.state % 4 == 0;
+					this.values[i].neededFor[0].value = profileInfo.records?.[record.hash]?.state % 4 == 0;
 				}
 			});
 		}
@@ -464,7 +464,7 @@ module.exports = () => ({
 		setNeeded: async function(profileInfo) {
 			var value = this.values.find(v => v.name == "strong");
 			var ttpRecord = await helpers.getDefinitionByName("record", value.neededFor[0].name);
-			value.neededFor[0].value = profileInfo.records[ttpRecord.hash]?.state % 4 == 0;
+			value.neededFor[0].value = profileInfo.records?.[ttpRecord.hash]?.state % 4 == 0;
 		}
 	},
 
@@ -554,9 +554,9 @@ module.exports = () => ({
 				helpers.getDefinitionByName("checklist", "corrupted eggs")
 			]);
 			this.values.forEach((value, i) => {
-				value.neededFor[0].value = profileInfo.records[triumphs[i].hash]?.state % 4 == 0;
-				value.neededFor[1].value = profileInfo.records[lores[i].hash]?.state % 4 == 0;
-				var missingEggs = value.neededFor[2].checklist.filter(egg => !profileInfo.checklists[eggsChecklist.hash][egg]);
+				value.neededFor[0].value = profileInfo.records?.[triumphs[i].hash]?.state % 4 == 0;
+				value.neededFor[1].value = profileInfo.records?.[lores[i].hash]?.state % 4 == 0;
+				var missingEggs = value.neededFor[2].checklist.filter(egg => !profileInfo.checklists?.[eggsChecklist.hash][egg]);
 				value.neededFor[2].value = missingEggs.length > 0;
 				value.neededFor[2].name = "corrupted eggs (" + missingEggs.length + ")";
 			});
@@ -587,7 +587,7 @@ module.exports = () => ({
 		setNeeded: async function(profileInfo) {
 			var records = await Promise.all(this.values.map(value => helpers.getDefinitionByName("record", value.neededFor[0].name)));
 			records.forEach((record, i) => {
-				this.values[i].neededFor[0].value = profileInfo.records[record.hash]?.state % 4 == 0;
+				this.values[i].neededFor[0].value = profileInfo.records?.[record.hash]?.state % 4 == 0;
 			});
 		}
 	},
@@ -618,7 +618,7 @@ module.exports = () => ({
 				helpers.getDefinitionByName("collectible", value.neededFor[0].name)
 			));
 			collectibles.forEach((collectible, i) => {
-				this.values[i].neededFor[0].value = profileInfo.collectibles[collectible.hash]?.state % 2 != 0;
+				this.values[i].neededFor[0].value = profileInfo.collectibles?.[collectible.hash]?.state % 2 != 0;
 			});
 		}
 	},
@@ -640,7 +640,7 @@ module.exports = () => ({
 			));
 			wnObjectives.forEach((wnObjective, i) => {
 				this.values[i].neededFor[0].value = !(
-					profileInfo.records[wnRecord.hash]?.objectives.find(
+					profileInfo.records?.[wnRecord.hash]?.objectives.find(
 						o => o.objectiveHash == wnObjective.hash
 					).complete
 				);
