@@ -367,13 +367,7 @@ module.exports = {
 		var currentArray = current[category];
 		if (!Array.isArray(currentArray))
 			currentArray = [currentArray];
-
-		//if (Array.isArray(current[category])) {
-			//return current[category].some(c => c.toLowerCase().includes(choice.toLowerCase()));
-			return currentArray.some(c => c.toLowerCase().includes(choice.toLowerCase()));
-		//} else {
-		//	return current[category].toLowerCase().includes(choice.toLowerCase());
-		//}
+		return currentArray.some(c => c.toLowerCase().includes(choice.toLowerCase()));
 	},
 
 	/*isCurrentCombo(category, type, choice, current) {

@@ -3,7 +3,6 @@ const helpers = require("./helpers.js");
 module.exports = () => ({
 
 	banshee: {
-		//vendor: true,
 		description: "banshee-44",
 		frequency: "daily",
 		type: "vendor",
@@ -12,7 +11,6 @@ module.exports = () => ({
 	},
 
 	spider: {
-		//vendor: true,
 		description: "spider",
 		frequency: "daily",
 		type: "vendor",

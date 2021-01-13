@@ -7,3 +7,6 @@ npm-debug.log
 data
 testmail.js
 triumph.txt
+apiTestCall.js
+runCustom.js
+bin/custom.js
