@@ -556,7 +556,7 @@ module.exports = () => ({
 			this.values.forEach((value, i) => {
 				value.neededFor[0].value = profileInfo.records?.[triumphs[i].hash]?.state % 4 == 0;
 				value.neededFor[1].value = profileInfo.records?.[lores[i].hash]?.state % 4 == 0;
-				var missingEggs = value.neededFor[2].checklist.filter(egg => !profileInfo.checklists?.[eggsChecklist.hash][egg]);
+				var missingEggs = value.neededFor[2].checklist.filter(egg => !profileInfo.checklists?.[eggsChecklist.hash]?.[egg]);
 				value.neededFor[2].value = missingEggs.length > 0;
 				value.neededFor[2].name = "corrupted eggs (" + missingEggs.length + ")";
 			});

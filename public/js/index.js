@@ -49,20 +49,25 @@ function joinCommaAnd(arr) {
 }
 
 function capitalize(str) {
-	return str
-		.split(" ")
-		.map(function(word) {
-			return word
-			.split("(")
-            .map(function(w2) {
-            	return w2
-                .split("\"")
-			    .map(function(w) { return w.substring(0, 1).toUpperCase() + w.substring(1);})
-                .join("\"");
-           	})
-			.join("(");
-		})
-		.join(" ");
+	try {
+		return str
+			.split(" ")
+			.map(function(word) {
+				return word
+				.split("(")
+	            .map(function(w2) {
+	            	return w2
+	                .split("\"")
+				    .map(function(w) { return w.substring(0, 1).toUpperCase() + w.substring(1);})
+	                .join("\"");
+	           	})
+				.join("(");
+			})
+			.join(" ");
+	} catch(ex) {
+		console.log(ex);
+		return "";
+	}
 }
 
 function ajax(options) {
