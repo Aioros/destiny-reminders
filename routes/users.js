@@ -33,7 +33,7 @@ router.get("/logout", function(req, res){
 
 router.get("/callback", function(req, res, next) {
     passport.authenticate('bungie-oauth2', function(err, user, info) {
-        if (info.error) {
+        if (info?.error) {
             return next(createError(info.error.status, info.error.message, {expose: true}));
         }
         req.logIn(user, function(err) {
