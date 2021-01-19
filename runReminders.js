@@ -92,11 +92,11 @@ async function main() {
 				var newHash = crypto.randomBytes(16).toString("hex");
 
 				console.log("Send reminder to user " + row.user + " at " + row.email + " for " + row.choice);
-				if (row.user) {
+				/*if (row.user) {
 					userName = (await helpers.getUserInfo(row.user)).bungieNetUser.displayName;
 				} else {
 					userName = "";
-				}
+				}*/
 				
 				try {
 					let info = await mailer.send({
@@ -106,7 +106,7 @@ async function main() {
 							to: row.email
 						},
 						locals: {
-							userName: userName,
+							//userName: userName,
 							category: helpers.capitalize(wishlist[category].description),
 							choice: helpers.capitalize(helpers.getChoiceDescription(category, row.choice)),
 							frequency: wishlist[category].frequency,
