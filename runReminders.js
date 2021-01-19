@@ -86,7 +86,7 @@ async function main() {
 				let sentDate = moment(row.sent_date || "1970-01-01");
 
 				if (sentDate.isAfter(lastReset[wishlist[category].frequency])) {
-					break;
+					continue;
 				}
 
 				var newHash = crypto.randomBytes(16).toString("hex");
