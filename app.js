@@ -23,7 +23,7 @@ passport.use(new BungieOAuth2Strategy({
     authorizationURL: "https://www.bungie.net/en/OAuth/Authorize?reauth=true"
 	},
 	function(accessToken, refreshToken, profile, done) {
-		helpers.getUserInfo(profile.membershipId).then(user => {
+		helpers.getUserInfo(profile.membershipId, accessToken).then(user => {
 			return done(null, user);
 		}).catch((ex) => {
       console.log(ex);
@@ -36,7 +36,7 @@ passport.serializeUser(function(user, done) {
 	done(null, user);
 });
 
-passport.deserializeUser(function(user/*id*/, done) {
+passport.deserializeUser(function(user, done) {
 	done(null, user);
 });
 

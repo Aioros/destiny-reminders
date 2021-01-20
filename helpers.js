@@ -387,11 +387,14 @@ module.exports = {
 		return Object.values(choice).filter(c => c).join(" - ");
 	},
 
-	getUserInfo: async function(membershipId) {
-		var userInfo = await this.getData(
-			apiConfig.baseUrl + "/User/GetMembershipsById/"+membershipId+"/0/"
-		);
-		userInfo = userInfo.Response;
+	getUserInfo: async function(membershipId, token=null) {
+		var headers = {"X-API-Key": apiConfig.apiKey};
+		if (token) {
+			headers["Authorization"] = "Bearer " + token;
+		}
+		var userInfo = await fetch(apiConfig.baseUrl + "/User/GetMembershipsById/"+membershipId+"/0/", {headers})
+			.then(response => response.json())
+			.then(json => json.Response);
 
 	    var primaryMembership;
 	    if (!userInfo.destinyMemberships || userInfo.destinyMemberships.length == 0) {
@@ -402,7 +405,7 @@ module.exports = {
 	    if (!primaryMembership) {
 	        var checkValidMemberships = userInfo.destinyMemberships.map(m => {
 	            var profileUrl = apiConfig.baseUrl + "/Destiny2/" + m.membershipType + "/Profile/" + m.membershipId + "/?components=0";
-	            return fetch(profileUrl, {headers: {"X-API-Key": apiConfig.apiKey}})
+	            return fetch(profileUrl, {headers})
 	                .then(response => response.json())
 	                .then(json => {
 	                    m.isValidMembership = json.ErrorCode == 1;
