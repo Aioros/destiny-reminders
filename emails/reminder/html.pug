@@ -156,7 +156,7 @@ html(xmlns='http://www.w3.org/1999/xhtml', xmlns:o='urn:schemas-microsoft-com:of
                           div(style="line-height: 1.2; font-size: 12px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #ffffff; mso-line-height-alt: 14px;")
                             p(style="font-size: 30px; line-height: 1.2; word-break: break-word; text-align: center; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; mso-line-height-alt: 36px; margin: 0;")
                               span(style='font-size: 30px;')
-                                strong #{category}: #{choice}
+                                strong #{categoryDesc}: #{choiceDesc}
                         //if mso
                         //if mso
                           table(width='100%', cellpadding='0', cellspacing='0', border='0')
@@ -179,7 +179,7 @@ html(xmlns='http://www.w3.org/1999/xhtml', xmlns:o='urn:schemas-microsoft-com:of
                                       w:anchorlock
                                         v:textbox(inset='0,0,0,0')
                                           center(style='color:#ffffff; font-family:Arial, sans-serif; font-size:24px')
-                          a(href="https://destinyreminders.net/renew?k=1&i="+id+"&h="+newHash, style="-webkit-text-size-adjust: none; text-decoration: none; display: inline-block; color: #ffffff; background-color: #b88c24; border-radius: 0px; -webkit-border-radius: 0px; -moz-border-radius: 0px; width: auto; width: auto; border-top: 0px solid #2B79A6; border-right: 0px solid #2B79A6; border-bottom: 0px solid #897239; border-left: 0px solid #2B79A6; padding-top: 5px; padding-bottom: 5px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; text-align: center; mso-border-alt: none; word-break: keep-all;", target='_blank')
+                          a(href="https://destinyreminders.net/renew?ct="+encodeURIComponent(category)+"&ch="+encodeURIComponent(choice), style="-webkit-text-size-adjust: none; text-decoration: none; display: inline-block; color: #ffffff; background-color: #b88c24; border-radius: 0px; -webkit-border-radius: 0px; -moz-border-radius: 0px; width: auto; width: auto; border-top: 0px solid #2B79A6; border-right: 0px solid #2B79A6; border-bottom: 0px solid #897239; border-left: 0px solid #2B79A6; padding-top: 5px; padding-bottom: 5px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; text-align: center; mso-border-alt: none; word-break: keep-all;", target='_blank')
                             span(style='padding-left:20px;padding-right:20px;font-size:24px;display:inline-block;')
                               span(style="font-size: 16px; line-height: 2; word-break: break-word; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; mso-line-height-alt: 32px;")
                                 strong

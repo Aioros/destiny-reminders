@@ -6,5 +6,5 @@ block content
 			if !valid
 				p Sorry, the reminder was not found
 			else
-				p= user.bungieNetUser.displayName + ", your reminder for " + helpers.capitalize(wishlist[category].description) + ": " + helpers.capitalize(choice) + " has been extended."
+				p= user.bungieNetUser.displayName + ", your reminder for " + helpers.capitalize(wishlist[category].description) + ": " + helpers.capitalize(helpers.getChoiceDescription(category, choice)) + " has been extended."
 	

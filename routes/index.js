@@ -47,7 +47,7 @@ router.get("/", async function(req, res, next) {
 
 router.get("/reminders", function(req, res, next) {
 	if (!req.isAuthenticated()) {
-		res.redirect("/auth/login?returnTo="+encodeURIComponent("/reminders"));
+		return res.redirect("/auth/login?returnTo="+encodeURIComponent("/reminders"));
 	} else {
 		return next();
 	}
@@ -77,21 +77,27 @@ router.get("/reminders", function(req, res, next) {
 	}
 });
 
-router.get("/renew", async function(req, res, next) {
-
-	var [id, keep, hash] = [req.query.i, req.query.k, req.query.h];
+router.get("/renew", function(req, res, next) {
+	if (!req.isAuthenticated()) {
+		return res.redirect("/auth/login?returnTo="+encodeURIComponent(req.originalUrl));
+	} else {
+		return next();
+	}
+}, async function(req, res, next) {
+	var [category, choice] = [req.query.ct, req.query.ch].map(decodeURIComponent);
 	var valid = true;
 	try {
-		var [result,] = await db.query("SELECT user, category, choice, keep " +
-			"FROM reminder WHERE id = ? AND hash = ?", [id, hash]);
+		var [result,] = await db.query("SELECT id " +
+			"FROM " + helpers.getReminderTable() + " WHERE user = ? AND category = ? AND choice = ?",
+			[req.user.bungieNetUser.membershipId, category, choice]
+		);
 		if (result.length == 0) {
 			valid = false;
 		} else {
-			var {user, category, choice} = result[0];
-			user = await helpers.getUserInfo(user);
-			await db.query("UPDATE reminder " +
-				"SET keep = ?, hash = NULL " +
-				"WHERE id = ?", [Number(keep), id]);
+			var {id} = result[0];
+			await db.query("UPDATE " + helpers.getReminderTable() +
+				" SET keep = 1, hash = NULL " +
+				"WHERE id = ?", [id]);
 		}
 	} catch (ex) {
 		console.log("error: ", ex);
@@ -99,7 +105,7 @@ router.get("/renew", async function(req, res, next) {
 	}
 
 	res.render("renew", {
-		user: user,
+		user: req.user,
 		helpers: helpers,
 		wishlist: require("../wishlist.js")(),
 		category: category,
