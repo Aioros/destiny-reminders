@@ -113,6 +113,28 @@ main {
 	text-transform: uppercase;
 }
 
+.filter-btns {
+	margin-top: 4px;
+	margin-bottom: 10px;
+}
+
+.filter-btns button, .filter-btns button:hover {
+	color: white;
+	border-width: 2px;
+}
+
+.filter-btns button.current.active {
+	background-color: initial;
+	border-color: #3c527f;
+	font-weight: bold;
+}
+
+.filter-btns button.needed.active {
+	background-color: initial;
+	border-color: rgba(183,140,37,0.8);
+	font-weight: bold;
+}
+
 .choice {
 	margin: 4px 0px;
 	padding: 6px;

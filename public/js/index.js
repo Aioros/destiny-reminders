@@ -107,6 +107,7 @@ function expandCategory(category) {
 	$("#selection_header").removeClass("d-none");
 	$("#parked > div."+category+"-container").appendTo($("#main_selection"))
 	if (["vendor", "list"].includes(categoryType)) {
+		// show search input if more than 10 choices
 		var nChoices = $("div."+category+"-container > div:has(.choice[data-category='"+category+"'])").length;
 		if (nChoices > 10) {
 			$("#selection_header .search-choice").removeClass("d-none");
@@ -124,10 +125,10 @@ function expandChoice(choice) {
 		$("#combo_choose").prop("disabled", false);
 	}
 	$("#reminder_modal .modal-title").text("Reminder for: " + capitalize(choice.name));
-	$("#reminder_current").toggleClass("d-none", (!choice.data || !choice.data.current));
+	$("#reminder_current").toggleClass("d-none", (!choice.data || choice.data.current === undefined));
 	$("#reminder_needed")
-		.toggleClass("d-none", (!choice.data || !choice.data.needed))
-		.html("You might need this activity for "
+		.toggleClass("d-none", (!choice.data || choice.data.needed === undefined))
+		.html("You might need this for "
 			+ joinCommaAnd(choice.data.neededFor.map(function(n) {
 				var str;
 				switch (n.type) {
@@ -302,6 +303,23 @@ $(document).ready(function() {
 			}
 		});
 		$("#combo_choose").prop("disabled", empty);
+	});
+
+	$(".filter-btns button").click(function() {
+		var buttons = $(this).closest(".filter-btns");
+		if ($(this).is(".current, .needed")) {
+			$(this).toggleClass("active");
+		} else {
+			$(".filter-btns button").removeClass("active");
+		}
+		var buttonCurrent = buttons.find("button.current");
+		var buttonNeeded = buttons.find("button.needed");
+		$(this).closest(".cat-container").find(".choice").each(function() {
+			$(this).toggle(
+				(!buttonCurrent.hasClass("active") || $(this).hasClass("current")) &&
+				(!buttonNeeded.hasClass("active") || $(this).hasClass("needed"))
+			);
+		});
 	});
 
 	$(window).scroll(function () {

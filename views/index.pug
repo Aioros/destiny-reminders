@@ -22,6 +22,7 @@ block content
 							data-type=category.type,
 							data-needed=isNeeded,
 							data-description=helpers.capitalize(category.description)
+							title=isNeeded ? "Suggested" : ""
 						)
 							div.row.h-100.no-gutters.align-items-center
 								div.col-3
@@ -31,6 +32,10 @@ block content
 				each category, key in wishlist
 					div.col-12(class=key+"-container cat-container")
 						if (["list", "vendor"].includes(category.type))
+							div.filter-btns.btn-group.col-sm-12.col-md-6(role="group" aria-label="Filter")
+								button.btn.current(type="button") Current
+								button.btn.needed(type="button") Suggested
+								button.btn.all.btn-secondary(type="button") All
 							each choice in category.values
 								-
 									var isCurrent = helpers.isCurrent(key, choice.name, current);
@@ -40,11 +45,14 @@ block content
 										class=isCurrent ? "current" : "",
 										class=neededFor.length > 0 ? "needed" : "",
 										data-category=key,
-										//data-choice=helpers.capitalize(choice.name)
 										data-id=choice.name,
 										data-needed=neededFor.length > 0,
 										data-needed-for=JSON.stringify(neededFor),
-										data-current=isCurrent
+										data-current=isCurrent,
+										title=[
+											(neededFor.length > 0 ? "Suggested" : ""),
+											(isCurrent ? "Available now" : "")
+										].filter(t => t).join("\n")
 									)= helpers.capitalize(choice.name)
 						else if (category.type == "combo")
 							-
@@ -89,7 +97,7 @@ block content
 						form
 							div.modal-body
 								div.form-group
-									small#reminder_current.form-text.d-none This activity is available now
+									small#reminder_current.form-text.d-none This choice is available now
 									small#reminder_needed.form-text.d-none
 								div.form-group
 									label(for="reminder_email") Email
