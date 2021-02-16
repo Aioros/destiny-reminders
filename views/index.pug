@@ -32,7 +32,7 @@ block content
 				each category, key in wishlist
 					div.col-12(class=key+"-container cat-container")
 						if (["list", "vendor"].includes(category.type))
-							div.filter-btns.btn-group.col-sm-12.col-md-6(role="group" aria-label="Filter")
+							div.filter-btns.btn-group.col-sm-12.col-md-6.offset-md-3(role="group" aria-label="Filter")
 								button.btn.current(type="button") Current
 								button.btn.needed(type="button") Suggested
 								button.btn.all.btn-secondary(type="button") All
