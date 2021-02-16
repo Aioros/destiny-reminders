@@ -12,7 +12,8 @@ async function getActivityInfo(user) {
 
 	var vendorInfo;
 	var banshee, bansheeAllItems, bansheeMods, bansheeSales, availableBanshee;
-	var spider, spiderAllItems, spiderBounties, spiderSales, availableSpider;
+	var spider, spiderAllItems, spiderMatsAndBounties, spiderSales, availableSpider;
+	var xur, xurAllItems, xurExotics, xurSales, availableXur;
 	var [
 		activityData,
 		//milestoneInfo,
@@ -26,7 +27,7 @@ async function getActivityInfo(user) {
 		//helpers.getMilestoneInfo(),
 		Promise.all([
 				helpers.getVendorInfo(),
-				helpers.getDefinitionsByField("vendor", "$.displayProperties.name", ["Banshee-44", "Spider"])
+				helpers.getDefinitionsByField("vendor", "$.displayProperties.name", ["Banshee-44", "Spider", "Xûr"])
 			]).then(result => {
 				vendorInfo = result[0];
 				banshee = result[1].find(v => v.name == "Banshee-44").data;
@@ -35,12 +36,21 @@ async function getActivityInfo(user) {
 				spider = result[1].find(v => v.name == "Spider").data;
 				spiderAllItems = spider.itemList;
 				spiderSales = vendorInfo.sales.data[spider.hash].saleItems;
+				xur = result[1].find(v => v.name == "Xûr").data;
+				xurAllItems = xur.itemList;
+				xurSales = vendorInfo.sales.data[xur.hash].saleItems;
 			}).then(() => Promise.all([
 				helpers.getItems(bansheeAllItems.map(i => i.itemHash), '% mod\"'),
 				helpers.getItems(
 					spiderAllItems
 						.filter(i => ["Wanted Bounties", "Material Exchange"].includes(i.displayCategory))
 						.map(i => i.itemHash)
+				),
+				helpers.getItems(
+					xurAllItems
+						.filter(i => i.displayCategory != "Exotic Ciphers")
+						.map(i => i.itemHash)
+						, '\"exotic %'
 				)
 			])).then(result => {
 				bansheeMods = result[0];
@@ -55,6 +65,13 @@ async function getActivityInfo(user) {
 					.map(m => m.name);
 				wishlist.spider.values = spiderMatsAndBounties.map(m => ({name: m.name, neededFor: [{value: false}]}));
 				wishlist.spider.values.sort((a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
+				xurExotics = result[2];
+				availableXur = xurExotics
+					.filter(ex => Object.values(xurSales).find(s => s.itemHash == ex.hash))
+					.map(m => m.name)
+					.filter(ex => ex.toLowerCase() != 'exotic engram');
+				wishlist.xur.values = xurExotics.map(m => ({name: m.name, neededFor: [{value: false}]}));
+				wishlist.xur.values.sort((a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
 			}),
 		//helpers.getDefinitionByField("milestone", "$.friendlyName", "Hotspot"),
 		!user ? {} : helpers.getProfileInfo(user)
@@ -107,6 +124,7 @@ async function getActivityInfo(user) {
 			],
 			banshee: availableBanshee,
 			spider: availableSpider,
+			xur: availableXur,
 			nightmareHunts: [...new Set(weeklyNightmareHunts.map(n => n.displayProperties.description))],
 			ordeals: weeklyOrdeals[0].displayProperties.description,
 			curses: pickByDateDiff(wishlist.curses.values, weekDiff).name,

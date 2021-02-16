@@ -18,6 +18,14 @@ module.exports = () => ({
 		setNeeded: function() {}
 	},
 
+	xur: {
+		description: "xûr",
+		frequency: "weekly",
+		type: "vendor",
+		values: [],
+		setNeeded: function() {}
+	},
+
 	lostSectors: {
 		description: "lost sector",
 		frequency: "daily",

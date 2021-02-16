@@ -274,7 +274,7 @@ module.exports = {
 					"WHERE i.hash IN (?) ";
 		var params = [itemHashes];
 		if (typeFilter) {
-			query += "AND LOWER(JSON_EXTRACT(i.data, '$.itemTypeDisplayName')) LIKE ?"; //% mod\"
+			query += "AND LOWER(JSON_EXTRACT(i.data, '$.itemTypeAndTierDisplayName')) LIKE ?"; //% mod\"
 			params.push(typeFilter);
 		}
 		try {
