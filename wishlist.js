@@ -39,17 +39,24 @@ module.exports = () => ({
 				]}
 			],
 			sector: [
+				{name: "k1 revelation", neededFor: []},
+				{name: "concealed void", neededFor: [{type: "objective", name: "Europa Lost Sectors", value: false}]},
 				{name: "bunker E15", neededFor: [{type: "objective", name: "Europa Lost Sectors", value: false}]},
 				{name: "perdition", neededFor: [{type: "objective", name: "Europa Lost Sectors", value: false}]},
 				{name: "exodus garden 2A", neededFor: []},
 				{name: "veles labyrinth", neededFor: []},
 				{name: "K1 logistics", neededFor: []},
 				{name: "K1 communion", neededFor: []},
-				{name: "k1 crew quarters", neededFor: []},
-				{name: "k1 revelation", neededFor: []},
-				{name: "concealed void", neededFor: [{type: "objective", name: "Europa Lost Sectors", value: false}]},
+				{name: "k1 crew quarters", neededFor: []}
+				
 			],
 			reward: [
+				{name: "head", neededFor: [
+					{type: "item", name: "dawn chorus", value: false},
+					{type: "item", name: "precious scars", value: false},
+					{type: "item", name: "mask of bakris", value: false}
+				]},
+				{name: "legs"}
 				{name: "arms", neededFor: [
 					{type: "item", name: "necrotic grip", value: false},
 					{type: "item", name: "icefall mantle", value: false},
@@ -59,13 +66,7 @@ module.exports = () => ({
 					{type: "item", name: "mantle of battle harmony", value: false},
 					{type: "item", name: "cuirass of the falling star", value: false},
 					{type: "item", name: "omnioculus", value: false}
-				]},
-				{name: "head", neededFor: [
-					{type: "item", name: "dawn chorus", value: false},
-					{type: "item", name: "precious scars", value: false},
-					{type: "item", name: "mask of bakris", value: false}
-				]},
-				{name: "legs"}
+				]}
 			]
 		},
 		setNeeded: async function(profileInfo) {
