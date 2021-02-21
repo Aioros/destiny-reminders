@@ -56,7 +56,7 @@ module.exports = () => ({
 					{type: "item", name: "precious scars", value: false},
 					{type: "item", name: "mask of bakris", value: false}
 				]},
-				{name: "legs"}
+				{name: "legs"},
 				{name: "arms", neededFor: [
 					{type: "item", name: "necrotic grip", value: false},
 					{type: "item", name: "icefall mantle", value: false},
