@@ -39,7 +39,6 @@ module.exports = () => ({
 				]}
 			],
 			sector: [
-				{name: "concealed void", neededFor: [{type: "objective", name: "Europa Lost Sectors", value: false}]},
 				{name: "bunker E15", neededFor: [{type: "objective", name: "Europa Lost Sectors", value: false}]},
 				{name: "perdition", neededFor: [{type: "objective", name: "Europa Lost Sectors", value: false}]},
 				{name: "exodus garden 2A", neededFor: []},
@@ -47,10 +46,10 @@ module.exports = () => ({
 				{name: "K1 logistics", neededFor: []},
 				{name: "K1 communion", neededFor: []},
 				{name: "k1 crew quarters", neededFor: []},
-				{name: "k1 revelation", neededFor: []}
+				{name: "k1 revelation", neededFor: []},
+				{name: "concealed void", neededFor: [{type: "objective", name: "Europa Lost Sectors", value: false}]},
 			],
 			reward: [
-				{name: "legs"},
 				{name: "arms", neededFor: [
 					{type: "item", name: "necrotic grip", value: false},
 					{type: "item", name: "icefall mantle", value: false},
@@ -65,7 +64,8 @@ module.exports = () => ({
 					{type: "item", name: "dawn chorus", value: false},
 					{type: "item", name: "precious scars", value: false},
 					{type: "item", name: "mask of bakris", value: false}
-				]}
+				]},
+				{name: "legs"}
 			]
 		},
 		setNeeded: async function(profileInfo) {
