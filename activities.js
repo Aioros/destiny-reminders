@@ -92,7 +92,7 @@ async function getActivityInfo(user) {
 
 	//var weeklyLegacyNFs = weeklyNightfalls.filter(a => !a.displayProperties.name.toLowerCase().includes("ordeal"));
 
-	var weeklyOrdeals = weeklyNightfalls.filter(a => a.displayProperties.name.toLowerCase().includes("ordeal"));
+	//var weeklyOrdeals = weeklyNightfalls.filter(a => a.displayProperties.name.toLowerCase().includes("ordeal"));
 
 	//var flashpointQuest = milestoneInfo[flashpointMilestone.hash].availableQuests[0].questItemHash;
 	//var flashpoint = flashpointMilestone.quests[flashpointQuest];
@@ -107,7 +107,7 @@ async function getActivityInfo(user) {
 	var start = moment("2020-07-14 17Z");
 	var weekDiff = today.diff(start, "week");
 	var dayDiff = today.diff(start, "day");
-
+	
 	var activityInfo = {
 		current: {
 			lostSectors: [
@@ -126,7 +126,7 @@ async function getActivityInfo(user) {
 			spider: availableSpider,
 			xur: availableXur,
 			nightmareHunts: [...new Set(weeklyNightmareHunts.map(n => n.displayProperties.description))],
-			ordeals: weeklyOrdeals[0].displayProperties.description,
+			ordeals: weeklyNightfalls[0].displayProperties.description,
 			curses: pickByDateDiff(wishlist.curses.values, weekDiff).name,
 			ascendantChallenges: pickByDateDiff(wishlist.ascendantChallenges.values, weekDiff).name,
 			blindWell: pickByDateDiff(wishlist.blindWell.values, weekDiff).name,
