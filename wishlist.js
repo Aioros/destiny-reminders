@@ -2,6 +2,14 @@ const helpers = require("./helpers.js");
 
 module.exports = () => ({
 
+	ada: {
+		description: "ada-1",
+		frequency: "daily",
+		type: "vendor",
+		values: [],
+		setNeeded: function() {}
+	},
+
 	banshee: {
 		description: "banshee-44",
 		frequency: "daily",

@@ -11,6 +11,7 @@ async function getActivityInfo(user) {
 	var wishlist = require("./wishlist.js")();
 
 	var vendorInfo;
+	var ada, adaAllItems, adaMods, adaSales, availableAda;
 	var banshee, bansheeAllItems, bansheeMods, bansheeSales, availableBanshee;
 	var spider, spiderAllItems, spiderMatsAndBounties, spiderSales, availableSpider;
 	var xur, xurAllItems, xurExotics, xurSales, availableXur;
@@ -27,9 +28,12 @@ async function getActivityInfo(user) {
 		//helpers.getMilestoneInfo(),
 		Promise.all([
 				helpers.getVendorInfo(),
-				helpers.getDefinitionsByField("vendor", "$.displayProperties.name", ["Banshee-44", "Spider", "Xûr"])
+				helpers.getDefinitionsByField("vendor", "$.displayProperties.name", ["Ada-1", "Banshee-44", "Spider", "Xûr"])
 			]).then(result => {
 				vendorInfo = result[0];
+				ada = result[1].find(v => v.name == "Ada-1").data;
+				adaAllItems = ada.itemList;
+				adaSales = vendorInfo.sales.data[ada.hash].saleItems;
 				banshee = result[1].find(v => v.name == "Banshee-44").data;
 				bansheeAllItems = banshee.itemList;
 				bansheeSales = vendorInfo.sales.data[banshee.hash].saleItems;
@@ -40,6 +44,7 @@ async function getActivityInfo(user) {
 				xurAllItems = xur.itemList;
 				xurSales = vendorInfo.sales.data[xur.hash].saleItems;
 			}).then(() => Promise.all([
+				helpers.getItems(adaAllItems.map(i => i.itemHash), '% mod\"'),
 				helpers.getItems(bansheeAllItems.map(i => i.itemHash), '% mod\"'),
 				helpers.getItems(
 					spiderAllItems
@@ -53,19 +58,25 @@ async function getActivityInfo(user) {
 						, '\"exotic %'
 				)
 			])).then(result => {
-				bansheeMods = result[0];
+				adaMods = result[0];
+				availableAda = adaMods
+					.filter(mod => Object.values(adaSales).find(s => s.itemHash == mod.hash))
+					.map(m => m.name);
+				wishlist.ada.values = adaMods.map(m => ({name: m.name, neededFor: [{value: false}]}));
+				wishlist.ada.values.sort((a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
+				bansheeMods = result[1];
 				availableBanshee = bansheeMods
 					.filter(mod => Object.values(bansheeSales).find(s => s.itemHash == mod.hash))
 					.map(m => m.name);
 				wishlist.banshee.values = bansheeMods.map(m => ({name: m.name, neededFor: [{value: false}]}));
 				wishlist.banshee.values.sort((a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
-				spiderMatsAndBounties = result[1];
+				spiderMatsAndBounties = result[2];
 				availableSpider = spiderMatsAndBounties
 					.filter(mb => Object.values(spiderSales).find(s => s.itemHash == mb.hash))
 					.map(m => m.name);
 				wishlist.spider.values = spiderMatsAndBounties.map(m => ({name: m.name, neededFor: [{value: false}]}));
 				wishlist.spider.values.sort((a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
-				xurExotics = result[2];
+				xurExotics = result[3];
 				availableXur = xurExotics
 					.filter(ex => Object.values(xurSales).find(s => s.itemHash == ex.hash))
 					.map(m => m.name)
@@ -107,7 +118,7 @@ async function getActivityInfo(user) {
 	var start = moment("2020-07-14 17Z");
 	var weekDiff = today.diff(start, "week");
 	var dayDiff = today.diff(start, "day");
-	
+
 	var activityInfo = {
 		current: {
 			lostSectors: [
@@ -122,6 +133,7 @@ async function getActivityInfo(user) {
 					reward: pickByDateDiff(wishlist.lostSectors.values.reward, dayDiff-1).name
 				}
 			],
+			ada: availableAda,
 			banshee: availableBanshee,
 			spider: availableSpider,
 			xur: availableXur,
