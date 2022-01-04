@@ -471,7 +471,10 @@ module.exports = () => ({
 			}*/
 		],
 		setNeeded: async function(profileInfo) {
-			var records = await Promise.all(this.values.map(value => helpers.getDefinitionByName("record", value.neededFor[0].name)));
+			var records = await Promise.all(this.values
+					.filter(value => value.neededFor.length > 0)
+					.map(value => helpers.getDefinitionByName("record", value.neededFor[0].name))
+			);
 			records.forEach((record, i) => {
 				if (!record) {
 					this.values[i].neededFor[0].value = false;
