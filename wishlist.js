@@ -47,24 +47,24 @@ module.exports = () => ({
 				]}
 			],
 			sector: [
-				{name: "concealed void", neededFor: [{type: "objective", name: "Europa Lost Sectors", value: false}]},
-				{name: "bunker E15", neededFor: [{type: "objective", name: "Europa Lost Sectors", value: false}]},
-				{name: "perdition", neededFor: [{type: "objective", name: "Europa Lost Sectors", value: false}]},
-				{name: "the quarry", neededFor: []},
-				{name: "scavenger's den", neededFor: []},
-				{name: "excavation site XII", neededFor: []},
-				{name: "exodus garden 2A", neededFor: []},
-				{name: "veles labyrinth", neededFor: []},
+				{name: "chamber of starlight", neededFor: []},
+				{name: "aphelion's rest", neededFor: []},
 				{name: "the empty tank", neededFor: []},
 				{name: "K1 logistics", neededFor: []},
 				{name: "K1 communion", neededFor: []},
 				{name: "k1 crew quarters", neededFor: []},
-				{name: "k1 revelation", neededFor: []}				
+				{name: "k1 revelation", neededFor: []},
+				{name: "concealed void", neededFor: [{type: "objective", name: "Europa Lost Sectors", value: false}]},
+				{name: "bunker E15", neededFor: [{type: "objective", name: "Europa Lost Sectors", value: false}]},
+				{name: "perdition", neededFor: [{type: "objective", name: "Europa Lost Sectors", value: false}]},
+				{name: "bay of drowned wishes", neededFor: []}
 			],
 			reward: [
 				{name: "arms", neededFor: [
 					{type: "item", name: "necrotic grip", value: false},
+					{type: "item", name: "nothing manacles", value: false},
 					{type: "item", name: "icefall mantle", value: false},
+					{type: "item", name: "no backup plans", value: false},
 					{type: "item", name: "athrys's embrace", value: false}
 				]},
 				{name: "chest", neededFor: [
@@ -80,7 +80,8 @@ module.exports = () => ({
 				{name: "legs", neededFor: [
 					{type: "item", name: "boots of the assembler", value: false},
 					{type: "item", name: "the path of burning steps", value: false},
-					{type: "item", name: "star-eater scales", value: false}
+					{type: "item", name: "star-eater scales", value: false},
+					{type: "item", name: "radiant dance machines", value: false}
 				]}
 			]
 		},
@@ -415,6 +416,10 @@ module.exports = () => ({
 					type: "triumph",
 					name: "grandmaster: the scarlet keep"
 				}]
+			},
+			{
+				name: "the hollowed lair",
+				neededFor: []
 			}
 			/*{
 				name: "savathûn's song",

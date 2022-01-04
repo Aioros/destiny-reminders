@@ -17,15 +17,21 @@ async function getActivityInfo(user) {
 	var xur, xurAllItems, xurExotics, xurSales, availableXur;
 	var [
 		activityData,
-		//milestoneInfo,
+		nightfallActivity,
 		vendorStuff,
-		//flashpointMilestone,
 		profileNeededStuff
 	] = await Promise.all([
 		helpers.getActivityInfo()
 			.then(avActivityInfo => avActivityInfo.map(a => a.activityHash))
 			.then(helpers.getActivityData),
-		//helpers.getMilestoneInfo(),
+		Promise.all([
+				helpers.getMilestoneInfo(),
+				helpers.getDefinitionByField("milestone", "$.friendlyName", "MILESTONE_WEEKLY_NIGHTFALL"),
+			]).then(result => {
+				var [milestoneInfo, nightfallMilestone] = result;
+				var nfMilestone = milestoneInfo[nightfallMilestone.hash];
+				return helpers.getDefinition("activity", nfMilestone.activities[0].activityHash);
+			}),
 		Promise.all([
 				helpers.getVendorInfo(),
 				helpers.getDefinitionsByField("vendor", "$.displayProperties.name", ["Ada-1", "Banshee-44", "Spider", "Xûr"])
@@ -84,7 +90,6 @@ async function getActivityInfo(user) {
 				wishlist.xur.values = xurExotics.map(m => ({name: m.name, neededFor: [{value: false}]}));
 				wishlist.xur.values.sort((a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
 			}),
-		//helpers.getDefinitionByField("milestone", "$.friendlyName", "Hotspot"),
 		!user ? {} : helpers.getProfileInfo(user)
 			.then(profileInfo => Promise.all(Object.values(wishlist).map(c => c.setNeeded(profileInfo))))
 	]);
@@ -99,7 +104,7 @@ async function getActivityInfo(user) {
 	
 	var weeklyNightmareHunts = availableActivities.filter(a => a.displayProperties.name.toLowerCase().includes("nightmare hunt"));
 
-	var weeklyNightfalls = availableActivities.filter(a => a.displayProperties.name.toLowerCase().includes("nightfall"));
+	//var weeklyNightfalls = availableActivities.filter(a => a.displayProperties.name.toLowerCase().includes("nightfall"));
 
 	//var weeklyLegacyNFs = weeklyNightfalls.filter(a => !a.displayProperties.name.toLowerCase().includes("ordeal"));
 
@@ -138,7 +143,7 @@ async function getActivityInfo(user) {
 			spider: availableSpider,
 			xur: availableXur,
 			nightmareHunts: [...new Set(weeklyNightmareHunts.map(n => n.displayProperties.description))],
-			ordeals: weeklyNightfalls[0].displayProperties.description,
+			ordeals: nightfallActivity.displayProperties.description,
 			curses: pickByDateDiff(wishlist.curses.values, weekDiff).name,
 			ascendantChallenges: pickByDateDiff(wishlist.ascendantChallenges.values, weekDiff).name,
 			blindWell: pickByDateDiff(wishlist.blindWell.values, weekDiff).name,
