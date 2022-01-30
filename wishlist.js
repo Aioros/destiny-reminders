@@ -420,6 +420,10 @@ module.exports = () => ({
 			{
 				name: "the hollowed lair",
 				neededFor: []
+			},
+			{
+				name: "the devil's lair",
+				neededFor: []
 			}
 			/*{
 				name: "savathûn's song",
