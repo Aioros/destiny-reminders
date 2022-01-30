@@ -422,7 +422,7 @@ module.exports = () => ({
 				neededFor: []
 			},
 			{
-				name: "the devil's lair",
+				name: "the devils' lair",
 				neededFor: []
 			}
 			/*{
