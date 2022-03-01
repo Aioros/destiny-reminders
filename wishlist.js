@@ -18,13 +18,13 @@ module.exports = () => ({
 		setNeeded: function() {}
 	},
 
-	spider: {
+	/*spider: {
 		description: "spider",
 		frequency: "daily",
 		type: "vendor",
 		values: [],
 		setNeeded: function() {}
-	},
+	},*/
 
 	xur: {
 		description: "xûr",

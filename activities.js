@@ -13,7 +13,7 @@ async function getActivityInfo(user) {
 	var vendorInfo;
 	var ada, adaAllItems, adaMods, adaSales, availableAda;
 	var banshee, bansheeAllItems, bansheeMods, bansheeSales, availableBanshee;
-	var spider, spiderAllItems, spiderMatsAndBounties, spiderSales, availableSpider;
+	//var spider, spiderAllItems, spiderMatsAndBounties, spiderSales, availableSpider;
 	var xur, xurAllItems, xurExotics, xurSales, availableXur;
 	var [
 		activityData,
@@ -34,7 +34,7 @@ async function getActivityInfo(user) {
 			}),
 		Promise.all([
 				helpers.getVendorInfo(),
-				helpers.getDefinitionsByField("vendor", "$.displayProperties.name", ["Ada-1", "Banshee-44", "Spider", "Xûr"])
+				helpers.getDefinitionsByField("vendor", "$.displayProperties.name", ["Ada-1", "Banshee-44"/*, "Spider"*/, "Xûr"])
 			]).then(result => {
 				vendorInfo = result[0];
 				ada = result[1].find(v => v.name == "Ada-1").data;
@@ -43,20 +43,20 @@ async function getActivityInfo(user) {
 				banshee = result[1].find(v => v.name == "Banshee-44").data;
 				bansheeAllItems = banshee.itemList;
 				bansheeSales = vendorInfo.sales.data[banshee.hash].saleItems;
-				spider = result[1].find(v => v.name == "Spider").data;
-				spiderAllItems = spider.itemList;
-				spiderSales = vendorInfo.sales.data[spider.hash].saleItems;
+				//spider = result[1].find(v => v.name == "Spider").data;
+				//spiderAllItems = spider.itemList;
+				//spiderSales = vendorInfo.sales.data[spider.hash].saleItems;
 				xur = result[1].find(v => v.name == "Xûr").data;
 				xurAllItems = xur.itemList;
 				xurSales = vendorInfo.sales.data[xur.hash].saleItems;
 			}).then(() => Promise.all([
 				helpers.getItems(adaAllItems.map(i => i.itemHash), '% mod\"'),
 				helpers.getItems(bansheeAllItems.map(i => i.itemHash), '% mod\"'),
-				helpers.getItems(
-					spiderAllItems
-						.filter(i => ["Wanted Bounties", "Material Exchange"].includes(i.displayCategory))
-						.map(i => i.itemHash)
-				),
+				// helpers.getItems(
+				// 	spiderAllItems
+				// 		.filter(i => ["Wanted Bounties", "Material Exchange"].includes(i.displayCategory))
+				// 		.map(i => i.itemHash)
+				// ),
 				helpers.getItems(
 					xurAllItems
 						.filter(i => i.displayCategory != "Exotic Ciphers")
@@ -76,13 +76,13 @@ async function getActivityInfo(user) {
 					.map(m => m.name);
 				wishlist.banshee.values = bansheeMods.map(m => ({name: m.name, neededFor: [{value: false}]}));
 				wishlist.banshee.values.sort((a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
-				spiderMatsAndBounties = result[2];
-				availableSpider = spiderMatsAndBounties
-					.filter(mb => Object.values(spiderSales).find(s => s.itemHash == mb.hash))
-					.map(m => m.name);
-				wishlist.spider.values = spiderMatsAndBounties.map(m => ({name: m.name, neededFor: [{value: false}]}));
-				wishlist.spider.values.sort((a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
-				xurExotics = result[3];
+				// spiderMatsAndBounties = result[2];
+				// availableSpider = spiderMatsAndBounties
+				// 	.filter(mb => Object.values(spiderSales).find(s => s.itemHash == mb.hash))
+				// 	.map(m => m.name);
+				// wishlist.spider.values = spiderMatsAndBounties.map(m => ({name: m.name, neededFor: [{value: false}]}));
+				// wishlist.spider.values.sort((a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
+				xurExotics = result[2];
 				availableXur = xurExotics
 					.filter(ex => Object.values(xurSales).find(s => s.itemHash == ex.hash))
 					.map(m => m.name)
@@ -140,7 +140,6 @@ async function getActivityInfo(user) {
 			],
 			ada: availableAda,
 			banshee: availableBanshee,
-			spider: availableSpider,
 			xur: availableXur,
 			nightmareHunts: [...new Set(weeklyNightmareHunts.map(n => n.displayProperties.description))],
 			ordeals: nightfallActivity.displayProperties.description,
@@ -152,6 +151,7 @@ async function getActivityInfo(user) {
 			empireHunts: weeklyEmpireHunts[0].displayProperties.description,
 			exoChallenges: weeklyExoChallenges[0].displayProperties.name,
 			augments: pickByDateDiff(wishlist.augments.values, weekDiff).name
+			//spider: availableSpider,
 			//contact: wishlist.contact.values[weekDiff % wishlist.contact.values.length].name,
 			//interference: 'final encounter',//wishlist.interference.values[weekDiff % wishlist.interference.values.length].name,
 			//dailyMissions: dailyHeroicMissions.map(s => s.displayProperties.name),
