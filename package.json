@@ -21,7 +21,7 @@
     "moment": "^2.27.0",
     "morgan": "~1.9.1",
     "mysql2": "^2.1.0",
-    "node-fetch": "^2.6.1",
+    "node-fetch": "^2.6.7",
     "nodemailer": "^6.6.1",
     "passport": "^0.4.1",
     "passport-bungie-oauth2": "^1.0.0",
