@@ -134,8 +134,8 @@ async function getActivityInfo(user) {
 				},
 				{
 					level: "master",
-					sector: pickByDateDiff(wishlist.lostSectors.values.sector, dayDiff-1).name,
-					reward: pickByDateDiff(wishlist.lostSectors.values.reward, dayDiff-1).name
+					sector: pickByDateDiff(wishlist.lostSectors.values.sector, dayDiff/*-1*/).name,
+					reward: pickByDateDiff(wishlist.lostSectors.values.reward, dayDiff/*-1*/).name
 				}
 			],
 			ada: availableAda,

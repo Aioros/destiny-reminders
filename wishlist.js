@@ -47,41 +47,48 @@ module.exports = () => ({
 				]}
 			],
 			sector: [
-				{name: "chamber of starlight", neededFor: []},
-				{name: "aphelion's rest", neededFor: []},
-				{name: "the empty tank", neededFor: []},
-				{name: "K1 logistics", neededFor: []},
-				{name: "K1 communion", neededFor: []},
+				//{name: "k1 communion", neededFor: []},
+				//{name: "concealed void", neededFor: [{type: "objective", name: "Europa Lost Sectors", value: false}]},
+				//{name: "bunker E15", neededFor: [{type: "objective", name: "Europa Lost Sectors", value: false}]},
+				//{name: "perdition", neededFor: [{type: "objective", name: "Europa Lost Sectors", value: false}]},
 				{name: "k1 crew quarters", neededFor: []},
-				{name: "k1 revelation", neededFor: []},
-				{name: "concealed void", neededFor: [{type: "objective", name: "Europa Lost Sectors", value: false}]},
-				{name: "bunker E15", neededFor: [{type: "objective", name: "Europa Lost Sectors", value: false}]},
-				{name: "perdition", neededFor: [{type: "objective", name: "Europa Lost Sectors", value: false}]},
-				{name: "bay of drowned wishes", neededFor: []}
+				{name: "k1 logistics", neededFor: []},
+				{name: "metamorphosis", neededFor: []},
+				{name: "sepulcher", neededFor: []},
+				{name: "extraction", neededFor: []},
+				{name: "veles labyrinth", neededFor: []},
+				{name: "exodus garden 2A", neededFor: []},
+				{name: "aphelion's rest", neededFor: []},
+				{name: "bay of drowned wishes", neededFor: []},
+				{name: "chamber of starlight", neededFor: []},
+				{name: "k1 revelation", neededFor: []}
 			],
 			reward: [
-				{name: "arms", neededFor: [
-					{type: "item", name: "necrotic grip", value: false},
-					{type: "item", name: "nothing manacles", value: false},
-					{type: "item", name: "icefall mantle", value: false},
-					{type: "item", name: "no backup plans", value: false},
-					{type: "item", name: "athrys's embrace", value: false}
-				]},
 				{name: "chest", neededFor: [
 					{type: "item", name: "mantle of battle harmony", value: false},
 					{type: "item", name: "cuirass of the falling star", value: false},
-					{type: "item", name: "omnioculus", value: false}
+					{type: "item", name: "omnioculus", value: false},
+					{type: "item", name: "hoarfrost-z", value: false}
 				]},
 				{name: "head", neededFor: [
 					{type: "item", name: "dawn chorus", value: false},
 					{type: "item", name: "precious scars", value: false},
-					{type: "item", name: "mask of bakris", value: false}
+					{type: "item", name: "mask of bakris", value: false},
+					{type: "item", name: "loreley splendor", value: false},
+					{type: "item", name: "blight ranger", value: false}
 				]},
 				{name: "legs", neededFor: [
 					{type: "item", name: "boots of the assembler", value: false},
 					{type: "item", name: "the path of burning steps", value: false},
 					{type: "item", name: "star-eater scales", value: false},
 					{type: "item", name: "radiant dance machines", value: false}
+				]},
+				{name: "arms", neededFor: [
+					{type: "item", name: "necrotic grip", value: false},
+					{type: "item", name: "nothing manacles", value: false},
+					{type: "item", name: "icefall mantle", value: false},
+					{type: "item", name: "no backup plans", value: false},
+					{type: "item", name: "athrys's embrace", value: false}
 				]}
 			]
 		},
