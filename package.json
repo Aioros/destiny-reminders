@@ -18,7 +18,7 @@
     "jsnlog": "^2.29.0",
     "jsnlog-nodejs": "^2.29.0",
     "memorystore": "^1.6.2",
-    "moment": "^2.27.0",
+    "moment": "^2.29.2",
     "morgan": "~1.9.1",
     "mysql2": "^2.1.0",
     "node-fetch": "^2.6.7",
