@@ -47,29 +47,22 @@ module.exports = () => ({
 				]}
 			],
 			sector: [
-				//{name: "k1 communion", neededFor: []},
 				//{name: "concealed void", neededFor: [{type: "objective", name: "Europa Lost Sectors", value: false}]},
 				//{name: "bunker E15", neededFor: [{type: "objective", name: "Europa Lost Sectors", value: false}]},
 				//{name: "perdition", neededFor: [{type: "objective", name: "Europa Lost Sectors", value: false}]},
-				{name: "k1 crew quarters", neededFor: []},
-				{name: "k1 logistics", neededFor: []},
+				{name: "k1 communion", neededFor: []},
+				{name: "the conflux", neededFor: []},
 				{name: "metamorphosis", neededFor: []},
 				{name: "sepulcher", neededFor: []},
 				{name: "extraction", neededFor: []},
-				{name: "veles labyrinth", neededFor: []},
-				{name: "exodus garden 2A", neededFor: []},
-				{name: "aphelion's rest", neededFor: []},
-				{name: "bay of drowned wishes", neededFor: []},
-				{name: "chamber of starlight", neededFor: []},
+				{name: "excavation site XII", neededFor: []},
+				{name: "skydock IV", neededFor: []},
+				{name: "the quarry", neededFor: []},
+				{name: "k1 crew quarters", neededFor: []},
+				{name: "k1 logistics", neededFor: []},
 				{name: "k1 revelation", neededFor: []}
 			],
 			reward: [
-				{name: "chest", neededFor: [
-					{type: "item", name: "mantle of battle harmony", value: false},
-					{type: "item", name: "cuirass of the falling star", value: false},
-					{type: "item", name: "omnioculus", value: false},
-					{type: "item", name: "hoarfrost-z", value: false}
-				]},
 				{name: "head", neededFor: [
 					{type: "item", name: "dawn chorus", value: false},
 					{type: "item", name: "precious scars", value: false},
@@ -81,14 +74,25 @@ module.exports = () => ({
 					{type: "item", name: "boots of the assembler", value: false},
 					{type: "item", name: "the path of burning steps", value: false},
 					{type: "item", name: "star-eater scales", value: false},
-					{type: "item", name: "radiant dance machines", value: false}
+					{type: "item", name: "radiant dance machines", value: false},
+					{type: "item", name: "rain of fire", value: false},
+					{type: "item", name: "secant filaments", value: false}
 				]},
 				{name: "arms", neededFor: [
 					{type: "item", name: "necrotic grip", value: false},
 					{type: "item", name: "nothing manacles", value: false},
 					{type: "item", name: "icefall mantle", value: false},
 					{type: "item", name: "no backup plans", value: false},
-					{type: "item", name: "athrys's embrace", value: false}
+					{type: "item", name: "athrys's embrace", value: false},
+					{type: "item", name: "caliban's hand", value: false},
+					{type: "item", name: "renewal grasps", value: false},
+					{type: "item", name: "second chance", value: false}
+				]},
+				{name: "chest", neededFor: [
+					{type: "item", name: "mantle of battle harmony", value: false},
+					{type: "item", name: "cuirass of the falling star", value: false},
+					{type: "item", name: "omnioculus", value: false},
+					{type: "item", name: "hoarfrost-z", value: false}
 				]}
 			]
 		},
