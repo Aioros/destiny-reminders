@@ -4,7 +4,7 @@ steps:
   args: ['build', '-t', 'gcr.io/$PROJECT_ID/destiny-reminders:${SHORT_SHA}', '.']
   # push the container image to Container Registry
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['push', 'gcr.io/$PROJECT_ID/destiny-reminders']
+  args: ['push', 'gcr.io/$PROJECT_ID/destiny-reminders:${SHORT_SHA}']
   # deploy container image to Cloud Run
 - name: 'gcr.io/cloud-builders/gcloud'
   args: ['run', 'deploy', 'destiny-reminders', '--image', 'gcr.io/$PROJECT_ID/destiny-reminders:${SHORT_SHA}', '--region', 'us-central1', '--platform', 'managed', '--allow-unauthenticated']
