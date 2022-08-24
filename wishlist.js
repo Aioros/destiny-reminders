@@ -48,9 +48,9 @@ module.exports = () => ({
 			],
 			sector: [
 				//{name: "concealed void", neededFor: [{type: "objective", name: "Europa Lost Sectors", value: false}]},
-				//{name: "bunker E15", neededFor: [{type: "objective", name: "Europa Lost Sectors", value: false}]},
+				{name: "bunker E15", neededFor: [{type: "objective", name: "Europa Lost Sectors", value: false}]},
 				//{name: "perdition", neededFor: [{type: "objective", name: "Europa Lost Sectors", value: false}]},
-				{name: "k1 communion", neededFor: []},
+				/*{name: "k1 communion", neededFor: []},
 				{name: "the conflux", neededFor: []},
 				{name: "metamorphosis", neededFor: []},
 				{name: "sepulcher", neededFor: []},
@@ -60,7 +60,7 @@ module.exports = () => ({
 				{name: "the quarry", neededFor: []},
 				{name: "k1 crew quarters", neededFor: []},
 				{name: "k1 logistics", neededFor: []},
-				{name: "k1 revelation", neededFor: []}
+				{name: "k1 revelation", neededFor: []}*/
 			],
 			reward: [
 				{name: "head", neededFor: [
@@ -69,7 +69,7 @@ module.exports = () => ({
 					{type: "item", name: "mask of bakris", value: false},
 					{type: "item", name: "loreley splendor", value: false},
 					{type: "item", name: "blight ranger", value: false}
-				]},
+				]}/*,
 				{name: "legs", neededFor: [
 					{type: "item", name: "boots of the assembler", value: false},
 					{type: "item", name: "the path of burning steps", value: false},
@@ -93,7 +93,7 @@ module.exports = () => ({
 					{type: "item", name: "cuirass of the falling star", value: false},
 					{type: "item", name: "omnioculus", value: false},
 					{type: "item", name: "hoarfrost-z", value: false}
-				]}
+				]}*/
 			]
 		},
 		setNeeded: async function(profileInfo) {
