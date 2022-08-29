@@ -48,10 +48,10 @@ module.exports = () => ({
 			],
 			sector: [
 				//{name: "concealed void", neededFor: [{type: "objective", name: "Europa Lost Sectors", value: false}]},
-				{name: "bunker E15", neededFor: [{type: "objective", name: "Europa Lost Sectors", value: false}]},
+				//{name: "bunker E15", neededFor: [{type: "objective", name: "Europa Lost Sectors", value: false}]},
 				//{name: "perdition", neededFor: [{type: "objective", name: "Europa Lost Sectors", value: false}]},
-				/*{name: "k1 communion", neededFor: []},
-				{name: "the conflux", neededFor: []},
+				{name: "k1 communion", neededFor: []}
+				/*{name: "the conflux", neededFor: []},
 				{name: "metamorphosis", neededFor: []},
 				{name: "sepulcher", neededFor: []},
 				{name: "extraction", neededFor: []},
@@ -63,13 +63,13 @@ module.exports = () => ({
 				{name: "k1 revelation", neededFor: []}*/
 			],
 			reward: [
-				{name: "head", neededFor: [
+				/*{name: "head", neededFor: [
 					{type: "item", name: "dawn chorus", value: false},
 					{type: "item", name: "precious scars", value: false},
 					{type: "item", name: "mask of bakris", value: false},
 					{type: "item", name: "loreley splendor", value: false},
 					{type: "item", name: "blight ranger", value: false}
-				]}/*,
+				]},*/
 				{name: "legs", neededFor: [
 					{type: "item", name: "boots of the assembler", value: false},
 					{type: "item", name: "the path of burning steps", value: false},
@@ -77,7 +77,7 @@ module.exports = () => ({
 					{type: "item", name: "radiant dance machines", value: false},
 					{type: "item", name: "rain of fire", value: false},
 					{type: "item", name: "secant filaments", value: false}
-				]},
+				]}/*,
 				{name: "arms", neededFor: [
 					{type: "item", name: "necrotic grip", value: false},
 					{type: "item", name: "nothing manacles", value: false},
