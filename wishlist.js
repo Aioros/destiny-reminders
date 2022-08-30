@@ -87,8 +87,8 @@ module.exports = () => ({
 					{type: "item", name: "athrys's embrace", value: false},
 					{type: "item", name: "caliban's hand", value: false},
 					{type: "item", name: "renewal grasps", value: false},
-					{type: "item", name: "second chance", value: false},
-					{type: "item", name: "point-contact cannon brace", value: false}
+					{type: "item", name: "second chance", value: false}
+					//{type: "item", name: "point-contact cannon brace", value: false}
 				]}/*,
 				{name: "chest", neededFor: [
 					{type: "item", name: "mantle of battle harmony", value: false},
