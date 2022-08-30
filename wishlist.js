@@ -70,15 +70,15 @@ module.exports = () => ({
 					{type: "item", name: "loreley splendor", value: false},
 					{type: "item", name: "blight ranger", value: false},
 					{type: "item", name: "fallen sunstar", value: false}
-				]},
-				{name: "legs", neededFor: [
+				]},*/
+				/*{name: "legs", neededFor: [
 					{type: "item", name: "boots of the assembler", value: false},
 					{type: "item", name: "the path of burning steps", value: false},
 					{type: "item", name: "star-eater scales", value: false},
 					{type: "item", name: "radiant dance machines", value: false},
 					{type: "item", name: "rain of fire", value: false},
 					{type: "item", name: "secant filaments", value: false}
-				]}*/,
+				]},*/
 				{name: "arms", neededFor: [
 					{type: "item", name: "necrotic grip", value: false},
 					{type: "item", name: "nothing manacles", value: false},
@@ -87,8 +87,8 @@ module.exports = () => ({
 					{type: "item", name: "athrys's embrace", value: false},
 					{type: "item", name: "caliban's hand", value: false},
 					{type: "item", name: "renewal grasps", value: false},
-					{type: "item", name: "second chance", value: false}
-					//{type: "item", name: "point-contact cannon brace", value: false}
+					{type: "item", name: "second chance", value: false},
+					{type: "item", name: "point-contact cannon brace", value: false}
 				]}/*,
 				{name: "chest", neededFor: [
 					{type: "item", name: "mantle of battle harmony", value: false},
