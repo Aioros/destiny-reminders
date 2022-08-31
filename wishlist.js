@@ -56,11 +56,12 @@ module.exports = () => ({
 				{name: "sepulcher", neededFor: []},
 				{name: "extraction", neededFor: []},
 				{name: "excavation site XII", neededFor: []},*/
-				{name: "skydock IV", neededFor: []}
+				//{name: "skydock IV", neededFor: []}
 				/*{name: "the quarry", neededFor: []},
 				{name: "k1 crew quarters", neededFor: []},
 				{name: "k1 logistics", neededFor: []},
 				{name: "k1 revelation", neededFor: []}*/
+				{name: "scavenger's den", neededFor: []}
 			],
 			reward: [
 				/*{name: "head", neededFor: [
@@ -79,7 +80,7 @@ module.exports = () => ({
 					{type: "item", name: "rain of fire", value: false},
 					{type: "item", name: "secant filaments", value: false}
 				]},*/
-				{name: "arms", neededFor: [
+				/*{name: "arms", neededFor: [
 					{type: "item", name: "necrotic grip", value: false},
 					{type: "item", name: "nothing manacles", value: false},
 					{type: "item", name: "icefall mantle", value: false},
@@ -89,14 +90,14 @@ module.exports = () => ({
 					{type: "item", name: "renewal grasps", value: false},
 					{type: "item", name: "second chance", value: false},
 					{type: "item", name: "point-contact cannon brace", value: false}
-				]}/*,
+				]},*/
 				{name: "chest", neededFor: [
 					{type: "item", name: "mantle of battle harmony", value: false},
 					{type: "item", name: "cuirass of the falling star", value: false},
 					{type: "item", name: "omnioculus", value: false},
 					{type: "item", name: "hoarfrost-z", value: false},
 					{type: "item", name: "gyrfalcon's hauberk", value: false}
-				]}*/
+				]}
 			]
 		},
 		setNeeded: async function(profileInfo) {
