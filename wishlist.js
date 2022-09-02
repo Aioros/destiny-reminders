@@ -54,32 +54,32 @@ module.exports = () => ({
 				/*{name: "the conflux", neededFor: []},
 				{name: "metamorphosis", neededFor: []},
 				{name: "sepulcher", neededFor: []},
-				{name: "extraction", neededFor: []},
-				{name: "excavation site XII", neededFor: []},*/
+				{name: "extraction", neededFor: []},*/
+				{name: "excavation site XII", neededFor: []}
 				//{name: "skydock IV", neededFor: []}
-				{name: "the quarry", neededFor: []}
+				//{name: "the quarry", neededFor: []}
 				/*{name: "k1 crew quarters", neededFor: []},
 				{name: "k1 logistics", neededFor: []},
 				{name: "k1 revelation", neededFor: []}*/
 				//{name: "scavenger's den", neededFor: []}
 			],
 			reward: [
-				{name: "head", neededFor: [
+				/*{name: "head", neededFor: [
 					{type: "item", name: "dawn chorus", value: false},
 					{type: "item", name: "precious scars", value: false},
 					{type: "item", name: "mask of bakris", value: false},
 					{type: "item", name: "loreley splendor", value: false},
 					{type: "item", name: "blight ranger", value: false},
 					{type: "item", name: "fallen sunstar", value: false}
-				]}
-				/*{name: "legs", neededFor: [
+				]}*/
+				{name: "legs", neededFor: [
 					{type: "item", name: "boots of the assembler", value: false},
 					{type: "item", name: "the path of burning steps", value: false},
 					{type: "item", name: "star-eater scales", value: false},
 					{type: "item", name: "radiant dance machines", value: false},
 					{type: "item", name: "rain of fire", value: false},
 					{type: "item", name: "secant filaments", value: false}
-				]},*/
+				]}
 				/*{name: "arms", neededFor: [
 					{type: "item", name: "necrotic grip", value: false},
 					{type: "item", name: "nothing manacles", value: false},
