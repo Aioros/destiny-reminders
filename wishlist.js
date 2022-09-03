@@ -47,31 +47,24 @@ module.exports = () => ({
 				]}
 			],
 			sector: [
-				//{name: "concealed void", neededFor: [{type: "objective", name: "Europa Lost Sectors", value: false}]},
-				//{name: "bunker E15", neededFor: [{type: "objective", name: "Europa Lost Sectors", value: false}]},
-				//{name: "perdition", neededFor: [{type: "objective", name: "Europa Lost Sectors", value: false}]},
-				//{name: "k1 communion", neededFor: []}
-				/*{name: "the conflux", neededFor: []},
-				{name: "metamorphosis", neededFor: []},
-				{name: "sepulcher", neededFor: []},
-				{name: "extraction", neededFor: []},*/
-				{name: "excavation site XII", neededFor: []}
-				//{name: "skydock IV", neededFor: []}
-				//{name: "the quarry", neededFor: []}
-				/*{name: "k1 crew quarters", neededFor: []},
+				{name: "concealed void", neededFor: [{type: "objective", name: "Europa Lost Sectors", value: false}]},
+				{name: "bunker E15", neededFor: [{type: "objective", name: "Europa Lost Sectors", value: false}]},
+				{name: "the conflux", neededFor: []},
+				{name: "the rift", neededFor: []},
+				{name: "k1 crew quarters", neededFor: []},
 				{name: "k1 logistics", neededFor: []},
-				{name: "k1 revelation", neededFor: []}*/
-				//{name: "scavenger's den", neededFor: []}
+				{name: "k1 communion", neededFor: []},
+				{name: "skydock IV", neededFor: []},
+				{name: "scavenger's den", neededFor: []},
+				{name: "the quarry", neededFor: []},
+				{name: "excavation site XII", neededFor: []}
+				//{name: "perdition", neededFor: [{type: "objective", name: "Europa Lost Sectors", value: false}]},
+				//{name: "metamorphosis", neededFor: []},
+				//{name: "sepulcher", neededFor: []},
+				//{name: "extraction", neededFor: []},
+				//{name: "k1 revelation", neededFor: []},
 			],
 			reward: [
-				/*{name: "head", neededFor: [
-					{type: "item", name: "dawn chorus", value: false},
-					{type: "item", name: "precious scars", value: false},
-					{type: "item", name: "mask of bakris", value: false},
-					{type: "item", name: "loreley splendor", value: false},
-					{type: "item", name: "blight ranger", value: false},
-					{type: "item", name: "fallen sunstar", value: false}
-				]}*/
 				{name: "legs", neededFor: [
 					{type: "item", name: "boots of the assembler", value: false},
 					{type: "item", name: "the path of burning steps", value: false},
@@ -79,8 +72,8 @@ module.exports = () => ({
 					{type: "item", name: "radiant dance machines", value: false},
 					{type: "item", name: "rain of fire", value: false},
 					{type: "item", name: "secant filaments", value: false}
-				]}
-				/*{name: "arms", neededFor: [
+				]},
+				{name: "arms", neededFor: [
 					{type: "item", name: "necrotic grip", value: false},
 					{type: "item", name: "nothing manacles", value: false},
 					{type: "item", name: "icefall mantle", value: false},
@@ -97,7 +90,15 @@ module.exports = () => ({
 					{type: "item", name: "omnioculus", value: false},
 					{type: "item", name: "hoarfrost-z", value: false},
 					{type: "item", name: "gyrfalcon's hauberk", value: false}
-				]}*/
+				]},
+				{name: "head", neededFor: [
+					{type: "item", name: "dawn chorus", value: false},
+					{type: "item", name: "precious scars", value: false},
+					{type: "item", name: "mask of bakris", value: false},
+					{type: "item", name: "loreley splendor", value: false},
+					{type: "item", name: "blight ranger", value: false},
+					{type: "item", name: "fallen sunstar", value: false}
+				]}
 			]
 		},
 		setNeeded: async function(profileInfo) {
