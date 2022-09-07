@@ -50,7 +50,8 @@ module.exports = () => ({
 				{name: "concealed void", neededFor: [{type: "objective", name: "Europa Lost Sectors", value: false}]},
 				{name: "bunker E15", neededFor: [{type: "objective", name: "Europa Lost Sectors", value: false}]},
 				{name: "the conflux", neededFor: []},
-				{name: "the rift", neededFor: []},
+				//{name: "the rift", neededFor: []},
+				{name: "perdition", neededFor: [{type: "objective", name: "Europa Lost Sectors", value: false}]},
 				{name: "k1 crew quarters", neededFor: []},
 				{name: "k1 logistics", neededFor: []},
 				{name: "k1 communion", neededFor: []},
@@ -58,7 +59,6 @@ module.exports = () => ({
 				{name: "scavenger's den", neededFor: []},
 				{name: "the quarry", neededFor: []},
 				{name: "excavation site XII", neededFor: []}
-				//{name: "perdition", neededFor: [{type: "objective", name: "Europa Lost Sectors", value: false}]},
 				//{name: "metamorphosis", neededFor: []},
 				//{name: "sepulcher", neededFor: []},
 				//{name: "extraction", neededFor: []},
